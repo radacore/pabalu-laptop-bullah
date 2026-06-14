@@ -1,0 +1,135 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e7]: laptop_mac
+      - generic [ref=e8]:
+        - heading "Pabalu Admin" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Internal Management
+    - list [ref=e11]:
+      - listitem [ref=e12]:
+        - link "dashboard Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e14]: dashboard
+          - generic [ref=e15]: Dashboard
+      - listitem [ref=e16]:
+        - link "laptop_mac Inventory" [ref=e17] [cursor=pointer]:
+          - /url: /laptops
+          - generic [ref=e18]: laptop_mac
+          - generic [ref=e19]: Inventory
+      - listitem [ref=e20]:
+        - link "build Services" [ref=e21] [cursor=pointer]:
+          - /url: /services
+          - generic [ref=e22]: build
+          - generic [ref=e23]: Services
+      - listitem [ref=e24]:
+        - link "group Customers" [ref=e25] [cursor=pointer]:
+          - /url: /customers
+          - generic [ref=e26]: group
+          - generic [ref=e27]: Customers
+      - listitem [ref=e28]:
+        - link "payments Finance" [ref=e29] [cursor=pointer]:
+          - /url: /financial-transactions
+          - generic [ref=e30]: payments
+          - generic [ref=e31]: Finance
+      - listitem [ref=e32]:
+        - link "database Master Data" [ref=e33] [cursor=pointer]:
+          - /url: /master-data
+          - generic [ref=e34]: database
+          - generic [ref=e35]: Master Data
+    - generic [ref=e36]:
+      - button "add Add New Ticket" [ref=e37]:
+        - generic [ref=e38]: add
+        - text: Add New Ticket
+      - generic [ref=e39]:
+        - link "settings Settings" [ref=e40] [cursor=pointer]:
+          - /url: /settings
+          - generic [ref=e41]: settings
+          - generic [ref=e42]: Settings
+        - button "logout Logout" [ref=e43]:
+          - generic [ref=e44]: logout
+          - generic [ref=e45]: Logout
+  - generic [ref=e46]:
+    - banner [ref=e47]:
+      - generic [ref=e48]:
+        - generic: search
+        - textbox "Search inventory, tickets, customers..." [ref=e49]
+      - generic [ref=e50]:
+        - button "notifications" [ref=e51]:
+          - generic [ref=e52]: notifications
+        - button "help" [ref=e54]:
+          - generic [ref=e55]: help
+        - generic [ref=e57]:
+          - generic [ref=e58]: Admin Pabalu
+          - generic [ref=e59]: Admin Panel
+        - generic [ref=e61]: A
+    - main [ref=e62]:
+      - generic [ref=e575]:
+        - generic [ref=e576]:
+          - generic [ref=e577]:
+            - generic [ref=e578]:
+              - heading "Laptop Test CRUD" [level=1] [ref=e579]
+              - paragraph [ref=e580]: "SKU: PBL-20260604-9073"
+            - generic [ref=e581]: Booking
+          - generic [ref=e582]:
+            - link "Kembali ke Daftar" [ref=e583] [cursor=pointer]:
+              - /url: /laptops
+              - img
+              - text: Kembali ke Daftar
+            - link "Edit" [ref=e584] [cursor=pointer]:
+              - /url: /laptops/17/edit
+              - img
+              - text: Edit
+        - generic [ref=e585]:
+          - generic [ref=e586]:
+            - generic [ref=e588]: Spesifikasi
+            - generic [ref=e590]:
+              - generic [ref=e591]:
+                - term [ref=e592]: Prosesor
+                - definition [ref=e593]: "-"
+              - generic [ref=e594]:
+                - term [ref=e595]: RAM
+                - definition [ref=e596]: "-"
+              - generic [ref=e597]:
+                - term [ref=e598]: Storage
+                - definition [ref=e599]: "-"
+              - generic [ref=e600]:
+                - term [ref=e601]: GPU/Grafis
+                - definition [ref=e602]: "-"
+              - generic [ref=e603]:
+                - term [ref=e604]: Layar
+                - definition [ref=e605]: "-"
+              - generic [ref=e606]:
+                - term [ref=e607]: Sistem Operasi
+                - definition [ref=e608]: "-"
+              - generic [ref=e609]:
+                - term [ref=e610]: Baterai
+                - definition [ref=e611]: "-"
+              - generic [ref=e612]:
+                - term [ref=e613]: Kondisi
+                - definition [ref=e614]: "-"
+          - generic [ref=e615]:
+            - generic [ref=e617]: Harga & Status
+            - generic [ref=e618]:
+              - generic [ref=e619]:
+                - generic [ref=e620]: Harga Jual
+                - generic [ref=e621]: Rp 6.999.000
+              - generic [ref=e622]:
+                - generic [ref=e623]:
+                  - term [ref=e624]: Harga Modal
+                  - definition [ref=e625]: Rp 5.000.000
+                - generic [ref=e626]:
+                  - term [ref=e627]: Biaya Plusan
+                  - definition [ref=e628]: Rp 0
+                - generic [ref=e629]:
+                  - term [ref=e630]: Margin
+                  - definition [ref=e631]: Rp 1.999.000
+                - generic [ref=e632]:
+                  - term [ref=e633]: Status
+                  - definition [ref=e634]:
+                    - generic [ref=e635]: Booking
+                - generic [ref=e636]:
+                  - term [ref=e637]: Source
+                  - definition [ref=e638]: "-"
+        - generic [ref=e640]:
+          - img [ref=e641]
+          - text: Tidak photos have been uploaded for this laptop.

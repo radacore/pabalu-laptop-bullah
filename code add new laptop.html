@@ -1,0 +1,737 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Pabalu Admin - Add New Laptop</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#000000',
+                            'on-surface': '#0b1c30',
+                            'on-error': '#ffffff',
+                            'tertiary-fixed': '#6ffbbe',
+                            'surface-container': '#e5eeff',
+                            'tertiary-container': '#002113',
+                            'surface-container-highest': '#d3e4fe',
+                            'on-tertiary': '#ffffff',
+                            tertiary: '#000000',
+                            'surface-dim': '#cbdbf5',
+                            'surface-variant': '#d3e4fe',
+                            'secondary-fixed': '#d8e2ff',
+                            'primary-fixed-dim': '#bec6e0',
+                            'on-tertiary-fixed': '#002113',
+                            'inverse-on-surface': '#eaf1ff',
+                            'error-container': '#ffdad6',
+                            'tertiary-fixed-dim': '#4edea3',
+                            'secondary-container': '#2170e4',
+                            outline: '#76777d',
+                            'on-surface-variant': '#45464d',
+                            'surface-container-lowest': '#ffffff',
+                            'on-primary': '#ffffff',
+                            'on-primary-fixed': '#131b2e',
+                            'on-background': '#0b1c30',
+                            background: '#f8f9ff',
+                            'surface-container-low': '#eff4ff',
+                            'on-primary-container': '#7c839b',
+                            'on-primary-fixed-variant': '#3f465c',
+                            'surface-tint': '#565e74',
+                            'surface-container-high': '#dce9ff',
+                            'primary-fixed': '#dae2fd',
+                            'secondary-fixed-dim': '#adc6ff',
+                            secondary: '#0058be',
+                            'primary-container': '#131b2e',
+                            'inverse-surface': '#213145',
+                            'inverse-primary': '#bec6e0',
+                            error: '#ba1a1a',
+                            'surface-bright': '#f8f9ff',
+                            'on-tertiary-fixed-variant': '#005236',
+                            'on-error-container': '#93000a',
+                            'outline-variant': '#c6c6cd',
+                            'on-tertiary-container': '#009668',
+                            surface: '#f8f9ff',
+                            'on-secondary-fixed-variant': '#004395',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#001a42',
+                            'on-secondary-container': '#fefcff',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.25rem',
+                            lg: '0.5rem',
+                            xl: '0.75rem',
+                            full: '9999px',
+                        },
+                        spacing: {
+                            'container-padding': '24px',
+                            unit: '4px',
+                            'stack-md': '16px',
+                            'stack-lg': '32px',
+                            'stack-sm': '8px',
+                            gutter: '16px',
+                        },
+                        fontFamily: {
+                            'headline-sm': ['Inter'],
+                            'label-md': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'mono-data': ['monospace'],
+                            'display-lg': ['Inter'],
+                            'headline-md': ['Inter'],
+                            'body-md': ['Inter'],
+                        },
+                        fontSize: {
+                            'headline-sm': [
+                                '20px',
+                                { lineHeight: '28px', fontWeight: '600' },
+                            ],
+                            'label-md': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-lg': [
+                                '16px',
+                                { lineHeight: '24px', fontWeight: '400' },
+                            ],
+                            'mono-data': [
+                                '13px',
+                                { lineHeight: '18px', fontWeight: '400' },
+                            ],
+                            'display-lg': [
+                                '36px',
+                                {
+                                    lineHeight: '44px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '700',
+                                },
+                            ],
+                            'headline-md': [
+                                '24px',
+                                {
+                                    lineHeight: '32px',
+                                    letterSpacing: '-0.01em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-md': [
+                                '14px',
+                                { lineHeight: '20px', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-surface text-on-surface flex min-h-screen">
+        <!-- SideNavBar -->
+        <nav
+            class="bg-surface-container-lowest border-outline-variant p-gutter fixed top-0 left-0 z-50 hidden h-full w-[280px] flex-col border-r md:flex"
+        >
+            <div class="mb-stack-lg gap-stack-sm flex items-center">
+                <span
+                    class="font-headline-md text-headline-md text-on-surface font-bold"
+                    >Pabalu Admin</span
+                >
+            </div>
+            <p
+                class="font-label-md text-label-md text-on-surface-variant mb-stack-md tracking-wider uppercase"
+            >
+                Internal Management
+            </p>
+            <div class="gap-unit flex flex-1 flex-col">
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        data-icon="dashboard"
+                        >dashboard</span
+                    >
+                    Dashboard
+                </a>
+                <a
+                    class="gap-stack-md bg-secondary-container text-on-secondary-container font-body-md text-body-md hover:bg-surface-container-high flex scale-[0.99] items-center rounded-lg px-4 py-3 font-bold transition-colors duration-150"
+                    href="#"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        data-icon="laptop_mac"
+                        style="font-variation-settings: 'FILL' 1"
+                        >laptop_mac</span
+                    >
+                    Inventory
+                </a>
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="build"
+                        >build</span
+                    >
+                    Services
+                </a>
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="group"
+                        >group</span
+                    >
+                    Customers
+                </a>
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="payments"
+                        >payments</span
+                    >
+                    Finance
+                </a>
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="database"
+                        >database</span
+                    >
+                    Master Data
+                </a>
+            </div>
+            <button
+                class="text-on-secondary font-label-md text-label-md mb-stack-lg w-full rounded-lg bg-secondary py-3 shadow-sm transition-opacity hover:opacity-90"
+            >
+                Add New Ticket
+            </button>
+            <div
+                class="gap-unit border-outline-variant pt-stack-md mt-auto flex flex-col border-t"
+            >
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="settings"
+                        >settings</span
+                    >
+                    Settings
+                </a>
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high font-body-md text-body-md flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined" data-icon="logout"
+                        >logout</span
+                    >
+                    Logout
+                </a>
+            </div>
+        </nav>
+        <!-- TopNavBar -->
+        <header
+            class="bg-surface border-outline-variant px-gutter fixed top-0 right-0 z-40 flex h-16 w-full items-center justify-between border-b shadow-sm md:w-[calc(100%-280px)]"
+        >
+            <div class="flex items-center md:hidden">
+                <span
+                    class="font-headline-sm text-headline-sm text-on-background font-black"
+                    >Pabalu Laptop</span
+                >
+            </div>
+            <div class="gap-stack-sm hidden flex-1 items-center md:flex">
+                <div class="relative w-64">
+                    <span
+                        class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2"
+                        data-icon="search"
+                        >search</span
+                    >
+                    <input
+                        class="bg-surface-container-lowest border-outline-variant font-body-md text-body-md text-on-surface w-full rounded-full border py-1.5 pr-4 pl-10 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                        placeholder="Search..."
+                        type="text"
+                    />
+                </div>
+            </div>
+            <div class="gap-stack-md flex items-center">
+                <span
+                    class="font-label-md text-label-md text-on-surface-variant hidden sm:block"
+                    >Admin Panel</span
+                >
+                <button
+                    class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 opacity-80 transition-colors"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        data-icon="notifications"
+                        >notifications</span
+                    >
+                </button>
+                <button
+                    class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 opacity-80 transition-colors"
+                >
+                    <span class="material-symbols-outlined" data-icon="help"
+                        >help</span
+                    >
+                </button>
+                <div
+                    class="bg-surface-container-high border-outline-variant h-8 w-8 overflow-hidden rounded-full border"
+                >
+                    <img
+                        alt="User Profile"
+                        class="h-full w-full object-cover"
+                        data-alt="A professional headshot of a person, well-lit against a neutral background. The lighting is soft and flattering, suitable for a corporate profile picture."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ8KBwymDURBuGpemwAKjYMznsugvcO8iYkuQK5oKNA2H5Zl8osUSLarW51HXuwUg2TyB2puyD8JRneGN8WUfVMn9GHJIhiRLdGkaZb5f7V2MjQ7D4t-HVhbCdF_f3uqxMJMh8y6ClBh5INPRQT6n7AFIkdJnBjfUgctuqqQpRN9V9pXplK_D9Q6dhU2oRz2D-O4MkWKJjN0l4sRH_n_uR570FQBIX42gJ1ev1FVntS9t3wyWrfEW1ycl6j9_glPI7kzu6teC-W94"
+                    />
+                </div>
+            </div>
+        </header>
+        <!-- Main Content -->
+        <main class="min-h-screen w-full bg-background pt-16 md:ml-[280px]">
+            <div class="p-container-padding mx-auto max-w-5xl">
+                <!-- Breadcrumbs & Header -->
+                <div class="mb-stack-lg">
+                    <nav
+                        aria-label="Breadcrumb"
+                        class="text-on-surface-variant font-label-md text-label-md mb-stack-sm flex"
+                    >
+                        <ol
+                            class="inline-flex items-center space-x-1 md:space-x-2"
+                        >
+                            <li class="inline-flex items-center">
+                                <a
+                                    class="transition-colors hover:text-primary"
+                                    href="#"
+                                    >Inventory</a
+                                >
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <span class="mx-2">/</span>
+                                    <span class="font-semibold text-primary"
+                                        >Add New Laptop</span
+                                    >
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                    <h1
+                        class="font-headline-md text-headline-md text-on-surface"
+                    >
+                        Add New Laptop
+                    </h1>
+                    <p
+                        class="font-body-md text-body-md text-on-surface-variant mt-1"
+                    >
+                        Enter complete details to track hardware through its
+                        lifecycle.
+                    </p>
+                </div>
+                <!-- Form -->
+                <form class="space-y-stack-lg">
+                    <!-- Section 1: Basic Information -->
+                    <section
+                        class="bg-surface-container-lowest border-outline-variant overflow-hidden rounded-xl border shadow-sm"
+                    >
+                        <div
+                            class="bg-surface-container-low border-outline-variant border-b px-6 py-4"
+                        >
+                            <h2
+                                class="font-headline-sm text-headline-sm text-on-surface"
+                            >
+                                Basic Information
+                            </h2>
+                        </div>
+                        <div
+                            class="gap-stack-md grid grid-cols-1 p-6 md:grid-cols-2"
+                        >
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >SKU</label
+                                >
+                                <input
+                                    class="border-outline-variant font-mono-data text-mono-data w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                    placeholder="Auto-generated if left blank"
+                                    type="text"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Laptop Name</label
+                                >
+                                <input
+                                    class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                    placeholder="e.g. ThinkPad T14 Gen 2"
+                                    required=""
+                                    type="text"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Brand</label
+                                >
+                                <select
+                                    class="border-outline-variant font-body-md text-body-md w-full rounded-lg border bg-white px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                >
+                                    <option value="">Select Brand</option>
+                                    <option value="lenovo">Lenovo</option>
+                                    <option value="dell">Dell</option>
+                                    <option value="hp">HP</option>
+                                    <option value="apple">Apple</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Model/Series</label
+                                >
+                                <input
+                                    class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                    placeholder="e.g. ThinkPad T-Series"
+                                    type="text"
+                                />
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Source</label
+                                >
+                                <select
+                                    class="border-outline-variant font-body-md text-body-md w-full rounded-lg border bg-white px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                >
+                                    <option value="trade-in">Trade-in</option>
+                                    <option value="marketplace">
+                                        Marketplace
+                                    </option>
+                                    <option value="wholesale">Wholesale</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Purchase Date</label
+                                >
+                                <input
+                                    class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                    type="date"
+                                />
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Section 2: Specifications -->
+                    <section
+                        class="bg-surface-container-lowest border-outline-variant overflow-hidden rounded-xl border shadow-sm"
+                    >
+                        <div
+                            class="bg-surface-container-low border-outline-variant border-b px-6 py-4"
+                        >
+                            <h2
+                                class="font-headline-sm text-headline-sm text-on-surface"
+                            >
+                                Specifications
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <div
+                                class="gap-stack-md mb-stack-md grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                            >
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Processor</label
+                                    >
+                                    <input
+                                        class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="e.g. i5-1135G7"
+                                        type="text"
+                                    />
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >RAM</label
+                                    >
+                                    <div class="relative">
+                                        <input
+                                            class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 pr-12 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                            placeholder="16"
+                                            type="number"
+                                        />
+                                        <span
+                                            class="text-on-surface-variant font-label-md text-label-md absolute top-1/2 right-4 -translate-y-1/2"
+                                            >GB</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Storage</label
+                                    >
+                                    <div class="relative">
+                                        <input
+                                            class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 pr-12 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                            placeholder="512"
+                                            type="number"
+                                        />
+                                        <span
+                                            class="text-on-surface-variant font-label-md text-label-md absolute top-1/2 right-4 -translate-y-1/2"
+                                            >GB</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >GPU</label
+                                    >
+                                    <input
+                                        class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="Integrated / Dedicated"
+                                        type="text"
+                                    />
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Screen Size</label
+                                    >
+                                    <div class="relative">
+                                        <input
+                                            class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 pr-12 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                            placeholder="14.0"
+                                            step="0.1"
+                                            type="number"
+                                        />
+                                        <span
+                                            class="text-on-surface-variant font-label-md text-label-md absolute top-1/2 right-4 -translate-y-1/2"
+                                            >IN</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >OS</label
+                                    >
+                                    <input
+                                        class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="Windows 11 Pro"
+                                        type="text"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                class="gap-stack-md mt-stack-md pt-stack-md border-outline-variant grid grid-cols-1 border-t md:grid-cols-2"
+                            >
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Battery Condition</label
+                                    >
+                                    <select
+                                        class="border-outline-variant font-body-md text-body-md w-full rounded-lg border bg-white px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                    >
+                                        <option value="excellent">
+                                            Excellent (&gt;90%)
+                                        </option>
+                                        <option value="good">
+                                            Good (70-90%)
+                                        </option>
+                                        <option value="fair">
+                                            Fair (50-70%)
+                                        </option>
+                                        <option value="poor">
+                                            Poor (&lt;50%)
+                                        </option>
+                                        <option value="replace">
+                                            Needs Replacement
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Accessories Included</label
+                                    >
+                                    <div class="flex flex-wrap gap-4 pt-2">
+                                        <label class="flex items-center gap-2">
+                                            <input
+                                                class="border-outline-variant rounded text-secondary focus:ring-secondary"
+                                                type="checkbox"
+                                            />
+                                            <span
+                                                class="font-body-md text-body-md"
+                                                >Charger</span
+                                            >
+                                        </label>
+                                        <label class="flex items-center gap-2">
+                                            <input
+                                                class="border-outline-variant rounded text-secondary focus:ring-secondary"
+                                                type="checkbox"
+                                            />
+                                            <span
+                                                class="font-body-md text-body-md"
+                                                >Box</span
+                                            >
+                                        </label>
+                                        <label class="flex items-center gap-2">
+                                            <input
+                                                class="border-outline-variant rounded text-secondary focus:ring-secondary"
+                                                type="checkbox"
+                                            />
+                                            <span
+                                                class="font-body-md text-body-md"
+                                                >Manuals</span
+                                            >
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 md:col-span-2">
+                                    <label
+                                        class="font-label-md text-label-md text-on-surface block"
+                                        >Minus Notes (Defects/Issues)</label
+                                    >
+                                    <textarea
+                                        class="border-outline-variant font-body-md text-body-md w-full rounded-lg border px-4 py-2 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="Describe any scratches, dents, or functional issues..."
+                                        rows="3"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Section 3: Pricing & Status -->
+                    <section
+                        class="bg-surface-container-lowest border-outline-variant overflow-hidden rounded-xl border shadow-sm"
+                    >
+                        <div
+                            class="bg-surface-container-low border-outline-variant border-b px-6 py-4"
+                        >
+                            <h2
+                                class="font-headline-sm text-headline-sm text-on-surface"
+                            >
+                                Pricing &amp; Status
+                            </h2>
+                        </div>
+                        <div
+                            class="gap-stack-md grid grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-4"
+                        >
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Cost Price</label
+                                >
+                                <div class="relative">
+                                    <span
+                                        class="text-on-surface-variant font-body-md text-body-md absolute top-1/2 left-4 -translate-y-1/2"
+                                        >$</span
+                                    >
+                                    <input
+                                        class="border-outline-variant font-mono-data text-mono-data w-full rounded-lg border py-2 pr-4 pl-8 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="0.00"
+                                        type="number"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Selling Price</label
+                                >
+                                <div class="relative">
+                                    <span
+                                        class="text-on-surface-variant font-body-md text-body-md absolute top-1/2 left-4 -translate-y-1/2"
+                                        >$</span
+                                    >
+                                    <input
+                                        class="border-outline-variant font-mono-data text-mono-data w-full rounded-lg border py-2 pr-4 pl-8 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="0.00"
+                                        type="number"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Additional Costs</label
+                                >
+                                <div class="relative">
+                                    <span
+                                        class="text-on-surface-variant font-body-md text-body-md absolute top-1/2 left-4 -translate-y-1/2"
+                                        >$</span
+                                    >
+                                    <input
+                                        class="border-outline-variant font-mono-data text-mono-data w-full rounded-lg border py-2 pr-4 pl-8 transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                        placeholder="0.00"
+                                        type="number"
+                                    />
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="font-label-md text-label-md text-on-surface block"
+                                    >Initial Status</label
+                                >
+                                <select
+                                    class="border-outline-variant font-body-md text-body-md text-tertiary-container bg-tertiary-fixed-dim/10 w-full rounded-lg border bg-white px-4 py-2 font-semibold transition-all outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                                >
+                                    <option value="available">Available</option>
+                                    <option value="in_repair">In Repair</option>
+                                    <option value="reserved">Reserved</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Actions -->
+                    <div class="pt-stack-sm pb-stack-lg flex justify-end gap-4">
+                        <button
+                            class="border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low rounded-lg border px-6 py-2.5 transition-colors"
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            class="text-on-secondary font-label-md text-label-md flex items-center gap-2 rounded-lg bg-secondary px-6 py-2.5 shadow-sm transition-colors hover:bg-secondary/90"
+                            type="submit"
+                        >
+                            <span
+                                class="material-symbols-outlined text-[18px]"
+                                data-icon="save"
+                                >save</span
+                            >
+                            Save Laptop
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

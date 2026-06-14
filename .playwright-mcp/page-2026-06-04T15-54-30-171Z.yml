@@ -1,0 +1,209 @@
+- generic:
+  - generic:
+    - generic:
+      - navigation:
+        - generic:
+          - generic:
+            - generic: laptop_mac
+          - generic:
+            - heading [level=1]: Pabalu Admin
+            - paragraph: Internal Management
+        - list:
+          - listitem:
+            - link:
+              - /url: /dashboard
+              - generic: dashboard
+              - generic: Dashboard
+          - listitem:
+            - link:
+              - /url: /laptops
+              - generic: laptop_mac
+              - generic: Inventory
+          - listitem:
+            - link:
+              - /url: /services
+              - generic: build
+              - generic: Services
+          - listitem:
+            - link:
+              - /url: /customers
+              - generic: group
+              - generic: Customers
+          - listitem:
+            - link:
+              - /url: /financial-transactions
+              - generic: payments
+              - generic: Finance
+          - listitem:
+            - link:
+              - /url: /master-data
+              - generic: database
+              - generic: Master Data
+        - generic:
+          - button:
+            - generic: add
+            - text: Add New Ticket
+          - generic:
+            - link:
+              - /url: /settings
+              - generic: settings
+              - generic: Settings
+            - button:
+              - generic: logout
+              - generic: Logout
+      - generic:
+        - banner:
+          - generic:
+            - generic: search
+            - textbox:
+              - /placeholder: Search inventory, tickets, customers...
+          - generic:
+            - button:
+              - generic: notifications
+            - button:
+              - generic: help
+            - generic:
+              - generic: Admin Pabalu
+              - generic: Admin Panel
+            - generic:
+              - generic: A
+        - main:
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=1]: Tambah Laptop Baru
+                - paragraph: Buat catatan inventaris baru
+              - link:
+                - /url: /laptops
+                - img
+                - text: Kembali ke Daftar
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Informasirmasi Produk
+                - generic:
+                  - generic:
+                    - generic: Nama
+                    - textbox: Laptop Test CRUD
+                  - generic:
+                    - generic: Merek
+                    - combobox [expanded]:
+                      - generic: Pilih merek
+                      - img
+                    - combobox
+                  - generic:
+                    - generic: Model/Series
+                    - textbox: TEST-001
+                  - generic:
+                    - generic: Kategori
+                    - combobox:
+                      - generic: Tidak category
+                      - img
+                    - combobox
+                  - generic:
+                    - generic: Source
+                    - combobox:
+                      - generic: Pilih sumber
+                      - img
+                    - combobox
+              - generic:
+                - generic:
+                  - generic: Harga & Status
+                - generic:
+                  - generic:
+                    - generic: Tanggal Pembelian
+                    - textbox: 2026-06-04
+                  - generic:
+                    - generic: Harga Modal/Harga Modal
+                    - spinbutton: "5000000"
+                  - generic:
+                    - generic: Harga Jual/Harga Jual
+                    - spinbutton: "6999000"
+                  - generic:
+                    - generic: Biaya Plusan
+                    - spinbutton: "0"
+                  - generic:
+                    - generic: Status
+                    - combobox:
+                      - generic: Booking
+                      - img
+                    - combobox
+              - generic:
+                - generic:
+                  - generic: Spesifikasi
+                - generic:
+                  - generic:
+                    - generic: Prosesor
+                    - textbox:
+                      - /placeholder: Intel Core i5
+                  - generic:
+                    - generic: RAM
+                    - textbox:
+                      - /placeholder: 8GB DDR4
+                  - generic:
+                    - generic: Storage
+                    - textbox:
+                      - /placeholder: 512GB SSD
+                  - generic:
+                    - generic: GPU/Grafis
+                    - textbox:
+                      - /placeholder: Intel Iris Xe
+                  - generic:
+                    - generic: Layar
+                    - textbox:
+                      - /placeholder: 14 inch FHD
+                  - generic:
+                    - generic: Sistem Operasi
+                    - textbox:
+                      - /placeholder: Windows 11
+                  - generic:
+                    - generic: Baterai Kondisi
+                    - textbox:
+                      - /placeholder: Good
+                  - generic:
+                    - generic: Physical Kondisi
+                    - textbox
+              - generic:
+                - generic:
+                  - generic: Catatans
+                - generic:
+                  - generic:
+                    - generic: Deskripsi
+                    - textbox
+                  - generic:
+                    - generic: Catatan Internals
+                    - textbox
+              - generic:
+                - link:
+                  - /url: /laptops
+                  - text: Batal
+                - button:
+                  - img
+                  - text: Save Laptop
+  - listbox [ref=e344]:
+    - option "Acer" [active] [ref=e345]:
+      - generic [ref=e347]: Acer
+    - option "Apple" [ref=e348]:
+      - generic [ref=e350]: Apple
+    - option "Asus" [ref=e351]:
+      - generic [ref=e353]: Asus
+    - option "Dell" [ref=e354]:
+      - generic [ref=e356]: Dell
+    - option "Fujitsu" [ref=e357]:
+      - generic [ref=e359]: Fujitsu
+    - option "HP" [ref=e360]:
+      - generic [ref=e362]: HP
+    - option "Huawei" [ref=e363]:
+      - generic [ref=e365]: Huawei
+    - option "Lenovo" [ref=e366]:
+      - generic [ref=e368]: Lenovo
+    - option "MSI" [ref=e369]:
+      - generic [ref=e371]: MSI
+    - option "Samsung" [ref=e372]:
+      - generic [ref=e374]: Samsung
+    - option "Sony" [ref=e375]:
+      - generic [ref=e377]: Sony
+    - option "Toshiba" [ref=e378]:
+      - generic [ref=e380]: Toshiba
+    - option "Xiaomi" [ref=e381]:
+      - generic [ref=e383]: Xiaomi

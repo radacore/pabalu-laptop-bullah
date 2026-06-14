@@ -1,0 +1,1131 @@
+<!doctype html>
+
+<html class="h-full" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Pabalu Laptop Admin Dashboard</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+            crossorigin=""
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-secondary-fixed-variant': '#004395',
+                            outline: '#76777d',
+                            surface: '#f8f9ff',
+                            'primary-fixed': '#dae2fd',
+                            error: '#ba1a1a',
+                            'inverse-primary': '#bec6e0',
+                            'on-secondary-container': '#fefcff',
+                            tertiary: '#000000',
+                            'on-primary-container': '#7c839b',
+                            'surface-container': '#e5eeff',
+                            'surface-bright': '#f8f9ff',
+                            'tertiary-container': '#002113',
+                            'on-tertiary-fixed-variant': '#005236',
+                            'on-tertiary': '#ffffff',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#001a42',
+                            'surface-variant': '#d3e4fe',
+                            background: '#f8f9ff',
+                            'on-primary-fixed': '#131b2e',
+                            'outline-variant': '#c6c6cd',
+                            'on-tertiary-container': '#009668',
+                            'tertiary-fixed': '#6ffbbe',
+                            primary: '#000000',
+                            'inverse-on-surface': '#eaf1ff',
+                            'error-container': '#ffdad6',
+                            'on-primary-fixed-variant': '#3f465c',
+                            'tertiary-fixed-dim': '#4edea3',
+                            'on-error': '#ffffff',
+                            'on-tertiary-fixed': '#002113',
+                            'inverse-surface': '#213145',
+                            'surface-container-low': '#eff4ff',
+                            secondary: '#0058be',
+                            'surface-container-high': '#dce9ff',
+                            'on-background': '#0b1c30',
+                            'on-surface': '#0b1c30',
+                            'secondary-fixed-dim': '#adc6ff',
+                            'surface-tint': '#565e74',
+                            'on-error-container': '#93000a',
+                            'surface-dim': '#cbdbf5',
+                            'primary-container': '#131b2e',
+                            'on-primary': '#ffffff',
+                            'secondary-fixed': '#d8e2ff',
+                            'on-surface-variant': '#45464d',
+                            'primary-fixed-dim': '#bec6e0',
+                            'surface-container-highest': '#d3e4fe',
+                            'secondary-container': '#2170e4',
+                            'surface-container-lowest': '#ffffff',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.25rem',
+                            lg: '0.5rem',
+                            xl: '0.75rem',
+                            full: '9999px',
+                        },
+                        spacing: {
+                            'stack-lg': '32px',
+                            gutter: '16px',
+                            unit: '4px',
+                            'stack-sm': '8px',
+                            'container-padding': '24px',
+                            'stack-md': '16px',
+                        },
+                        fontFamily: {
+                            'headline-sm': ['Inter', 'sans-serif'],
+                            'mono-data': ['monospace'],
+                            'headline-md': ['Inter', 'sans-serif'],
+                            'body-lg': ['Inter', 'sans-serif'],
+                            'label-md': ['Inter', 'sans-serif'],
+                            'display-lg': ['Inter', 'sans-serif'],
+                            'body-md': ['Inter', 'sans-serif'],
+                        },
+                        fontSize: {
+                            'headline-sm': [
+                                '20px',
+                                { lineHeight: '28px', fontWeight: '600' },
+                            ],
+                            'mono-data': [
+                                '13px',
+                                { lineHeight: '18px', fontWeight: '400' },
+                            ],
+                            'headline-md': [
+                                '24px',
+                                {
+                                    lineHeight: '32px',
+                                    letterSpacing: '-0.01em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-lg': [
+                                '16px',
+                                { lineHeight: '24px', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'display-lg': [
+                                '36px',
+                                {
+                                    lineHeight: '44px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '700',
+                                },
+                            ],
+                            'body-md': [
+                                '14px',
+                                { lineHeight: '20px', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .material-symbols-outlined {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
+            .material-symbols-outlined.fill {
+                font-variation-settings: 'FILL' 1;
+            }
+
+            /* Custom scrollbar for webkit */
+            ::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #c6c6cd;
+                border-radius: 10px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #76777d;
+            }
+        </style>
+    </head>
+    <body
+        class="flex h-full overflow-hidden bg-background font-body-md text-body-md text-on-background antialiased"
+    >
+        <!-- SideNavBar Component -->
+        <nav
+            class="fixed top-0 left-0 z-50 hidden h-full w-[280px] flex-col border-r border-outline-variant bg-surface-container-lowest p-gutter shadow-md md:flex"
+        >
+            <!-- Header -->
+            <div class="mb-stack-lg flex items-center gap-3">
+                <div
+                    class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-container text-on-primary-container shadow-sm"
+                >
+                    <span class="material-symbols-outlined">laptop_mac</span>
+                </div>
+                <div>
+                    <h1
+                        class="font-headline-md text-headline-md font-bold text-on-surface"
+                    >
+                        Pabalu Admin
+                    </h1>
+                    <p
+                        class="font-label-md text-label-md tracking-wider text-on-surface-variant uppercase"
+                    >
+                        Internal Management
+                    </p>
+                </div>
+            </div>
+            <!-- Main Navigation Tabs -->
+            <ul class="flex-1 space-y-1">
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg bg-secondary-container px-4 py-3 font-bold text-on-secondary-container shadow-sm transition-opacity hover:opacity-90"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined fill"
+                            >dashboard</span
+                        >
+                        <span class="text-[16px] font-semibold">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined"
+                            >laptop_mac</span
+                        >
+                        <span class="text-[16px]">Inventory</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">build</span>
+                        <span class="text-[16px]">Services</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">group</span>
+                        <span class="text-[16px]">Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">payments</span>
+                        <span class="text-[16px]">Finance</span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">database</span>
+                        <span class="text-[16px]">Master Data</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Footer / Bottom Section -->
+            <div class="mt-auto space-y-stack-md">
+                <!-- CTA Button -->
+                <button
+                    class="flex w-full items-center justify-center gap-2 rounded-lg border border-secondary bg-secondary px-4 py-3 font-label-md text-label-md font-bold tracking-wider text-on-secondary uppercase shadow-md transition-colors hover:bg-on-secondary-fixed-variant"
+                >
+                    <span class="material-symbols-outlined text-[18px]"
+                        >add</span
+                    >
+                    Add New Ticket
+                </button>
+                <div
+                    class="space-y-1 border-t border-outline-variant pt-stack-md"
+                >
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="text-[16px]">Settings</span>
+                    </a>
+                    <a
+                        class="flex items-center gap-stack-md rounded-lg px-4 py-3 font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="text-[16px]">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <!-- Main Content Wrapper (leaves space for sidebar) -->
+        <div class="flex h-full w-full flex-1 flex-col md:ml-[280px]">
+            <!-- TopNavBar Component -->
+            <header
+                class="sticky top-0 z-40 flex h-16 w-full flex-shrink-0 items-center justify-between border-b border-outline-variant bg-surface px-gutter shadow-sm"
+            >
+                <!-- Mobile Menu Toggle (hidden on desktop) -->
+                <button
+                    class="mr-4 rounded p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low md:hidden"
+                >
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <!-- Search Bar -->
+                <div class="relative mr-4 max-w-md flex-1">
+                    <span
+                        class="material-symbols-outlined pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-outline-variant"
+                        >search</span
+                    >
+                    <input
+                        class="w-full rounded-lg border border-outline-variant bg-white py-2 pr-4 pl-10 font-body-md text-body-md shadow-sm transition-all placeholder:text-outline focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                        placeholder="Search inventory, tickets, customers..."
+                        type="text"
+                    />
+                </div>
+                <!-- Trailing Actions -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button
+                        class="relative rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low"
+                    >
+                        <span class="material-symbols-outlined"
+                            >notifications</span
+                        >
+                        <span
+                            class="absolute top-1 right-1 h-2 w-2 rounded-full border border-surface bg-error"
+                        ></span>
+                    </button>
+                    <button
+                        class="hidden rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low sm:block"
+                    >
+                        <span class="material-symbols-outlined">help</span>
+                    </button>
+                    <div
+                        class="mx-1 hidden h-6 w-px bg-outline-variant sm:block"
+                    ></div>
+                    <div class="mr-2 hidden flex-col items-end sm:flex">
+                        <span
+                            class="font-label-md text-label-md font-bold text-primary"
+                            >Jane Doe</span
+                        >
+                        <span
+                            class="font-label-md text-label-md text-[10px] text-outline-variant"
+                            >Admin Panel</span
+                        >
+                    </div>
+                    <button
+                        class="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full border border-outline-variant bg-surface-container-highest shadow-sm transition-opacity hover:opacity-80"
+                    >
+                        <img
+                            alt="User Profile"
+                            class="h-full w-full object-cover"
+                            data-alt="A professional headshot of a woman used as a user profile avatar. Bright, clean lighting against a neutral background. High quality, modern corporate style."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB524o7KuG_Ypw1jYd1fr0SiE0t6kcAkIv_CSmQzT_A3HYF5n_HCfBGMztRC7WMOAEONvBCWbqNAdg7KckKslyPiiYPFN84hNsksZRoHSoKT0qq3wrBuy9H62vomTBR8Qx9XCwtAGvIZWN7Z1KQkXwkld8x6wbM9xWP8leGi3ZEHPAriogfXj8hD3I_JUPrdwSTEiayYbr_hMWyAJZw2DUlbRtpivLIZARPHXMIWNa3sFwCBcFBfCvl6wTLcu1EZlDk7TBRnihrFR8"
+                        />
+                    </button>
+                </div>
+            </header>
+            <!-- Main Scrollable Dashboard Content -->
+            <main
+                class="flex-1 overflow-y-auto bg-gray-50 p-container-padding pb-12"
+            >
+                <div
+                    class="mb-stack-lg flex flex-col justify-between gap-4 sm:flex-row sm:items-end"
+                >
+                    <div>
+                        <h2
+                            class="mb-1 font-display-lg text-display-lg font-black text-on-background"
+                        >
+                            Dashboard Overview
+                        </h2>
+                        <p
+                            class="font-body-md text-body-md font-medium text-on-surface-variant"
+                        >
+                            Welcome back. Here is the latest summary of your
+                            operations.
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button
+                            class="flex items-center gap-2 rounded-md border border-outline-variant bg-white px-3 py-1.5 font-label-md text-label-md font-bold text-on-surface shadow-sm transition-colors hover:bg-gray-100"
+                        >
+                            <span class="material-symbols-outlined text-[16px]"
+                                >calendar_month</span
+                            >
+                            This Month
+                        </button>
+                        <button
+                            class="flex items-center gap-2 rounded-md border border-outline-variant bg-white px-3 py-1.5 font-label-md text-label-md font-bold text-on-surface shadow-sm transition-colors hover:bg-gray-100"
+                        >
+                            <span class="material-symbols-outlined text-[16px]"
+                                >download</span
+                            >
+                            Export
+                        </button>
+                    </div>
+                </div>
+                <!-- Summary Cards Bento Grid -->
+                <div
+                    class="mb-stack-lg grid grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-4"
+                >
+                    <!-- Card 1 -->
+                    <div
+                        class="flex h-[140px] flex-col justify-between rounded-xl border border-blue-500/50 bg-blue-600 p-5 text-white shadow-md"
+                    >
+                        <div class="mb-2 flex items-start justify-between">
+                            <h3
+                                class="font-label-md text-label-md font-bold tracking-wider text-blue-100 uppercase"
+                            >
+                                Total Available
+                            </h3>
+                            <div
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[18px]"
+                                    >inventory_2</span
+                                >
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="font-headline-md text-headline-md font-black text-white"
+                            >
+                                142
+                            </div>
+                            <div
+                                class="mt-1 flex items-center gap-1 font-body-md text-body-md text-[12px] text-blue-100"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[14px] text-white"
+                                    >arrow_upward</span
+                                ><span class="font-bold text-white">+12</span>
+                                from last week
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div
+                        class="flex h-[140px] flex-col justify-between rounded-xl border border-emerald-500/50 bg-emerald-600 p-5 text-white shadow-md"
+                    >
+                        <div class="mb-2 flex items-start justify-between">
+                            <h3
+                                class="font-label-md text-label-md font-bold tracking-wider text-emerald-100 uppercase"
+                            >
+                                Sold This Month
+                            </h3>
+                            <div
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[18px]"
+                                    >shopping_cart</span
+                                >
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="font-headline-md text-headline-md font-black text-white"
+                            >
+                                38
+                            </div>
+                            <div
+                                class="mt-1 flex items-center gap-1 font-body-md text-body-md text-[12px] text-emerald-100"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[14px] text-white"
+                                    >arrow_upward</span
+                                ><span class="font-bold text-white">+5%</span>
+                                vs last month
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div
+                        class="flex h-[140px] flex-col justify-between rounded-xl border border-violet-500/50 bg-violet-600 p-5 text-white shadow-md"
+                    >
+                        <div class="mb-2 flex items-start justify-between">
+                            <h3
+                                class="font-label-md text-label-md font-bold tracking-wider text-violet-100 uppercase"
+                            >
+                                Active Services
+                            </h3>
+                            <div
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[18px]"
+                                    >build</span
+                                >
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="font-headline-md text-headline-md font-black text-white"
+                            >
+                                24
+                            </div>
+                            <div
+                                class="mt-1 flex items-center gap-1 font-body-md text-body-md text-[12px] text-violet-100"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[14px] text-red-300"
+                                    >arrow_downward</span
+                                ><span class="font-bold text-red-300">-3</span>
+                                overdue
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 (Highlight) -->
+                    <div
+                        class="relative flex h-[140px] flex-col justify-between overflow-hidden rounded-xl border border-white/20 bg-gradient-to-br from-indigo-800 to-black p-5 text-white shadow-lg"
+                    >
+                        <div
+                            class="pointer-events-none absolute inset-0 opacity-20"
+                            style="
+                                background-image: radial-gradient(
+                                    circle at 2px 2px,
+                                    white 1px,
+                                    transparent 0
+                                );
+                                background-size: 16px 16px;
+                            "
+                        ></div>
+                        <div
+                            class="relative z-10 mb-2 flex items-start justify-between"
+                        >
+                            <h3
+                                class="font-label-md text-label-md font-bold tracking-wider text-indigo-200 uppercase"
+                            >
+                                Total Revenue
+                            </h3>
+                            <div
+                                class="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[18px]"
+                                    >account_balance_wallet</span
+                                >
+                            </div>
+                        </div>
+                        <div class="relative z-10">
+                            <div
+                                class="font-headline-md text-headline-md font-black text-white"
+                            >
+                                $45,200
+                            </div>
+                            <div
+                                class="mt-1 flex items-center gap-1 font-body-md text-body-md text-[12px] font-medium text-indigo-200"
+                            >
+                                Sales $32k + Service $13.2k
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Middle Section: Charts & Urgent Tasks -->
+                <div
+                    class="mb-stack-lg grid grid-cols-1 gap-gutter lg:grid-cols-3"
+                >
+                    <!-- Chart Section -->
+                    <div
+                        class="flex h-[400px] flex-col rounded-xl border border-outline-variant bg-white p-6 shadow-md lg:col-span-2"
+                    >
+                        <div class="mb-6 flex items-center justify-between">
+                            <h3
+                                class="font-headline-sm text-headline-sm font-bold text-on-surface"
+                            >
+                                Revenue Over Time
+                            </h3>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="h-3 w-3 rounded border border-blue-800 bg-blue-600"
+                                    ></div>
+                                    <span
+                                        class="font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Sales</span
+                                    >
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="h-3 w-3 rounded border border-teal-800 bg-teal-600"
+                                    ></div>
+                                    <span
+                                        class="font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Service</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Simulated Bar Chart area -->
+                        <div
+                            class="relative flex w-full flex-1 items-end justify-between pt-4"
+                        >
+                            <!-- Y-axis labels -->
+                            <div
+                                class="absolute top-0 bottom-8 left-0 flex w-10 flex-col justify-between font-mono-data text-[10px] font-bold text-outline-variant"
+                            >
+                                <span>$20k</span>
+                                <span>$15k</span>
+                                <span>$10k</span>
+                                <span>$5k</span>
+                                <span>$0</span>
+                            </div>
+                            <!-- Grid lines -->
+                            <div
+                                class="pointer-events-none absolute top-0 right-0 bottom-8 left-10 flex flex-col justify-between"
+                            >
+                                <div
+                                    class="h-px w-full bg-outline-variant/50"
+                                ></div>
+                                <div
+                                    class="h-px w-full bg-outline-variant/50"
+                                ></div>
+                                <div
+                                    class="h-px w-full bg-outline-variant/50"
+                                ></div>
+                                <div
+                                    class="h-px w-full bg-outline-variant/50"
+                                ></div>
+                                <div
+                                    class="h-px w-full bg-outline-variant/50"
+                                ></div>
+                            </div>
+                            <!-- Chart Bars Container -->
+                            <div
+                                class="z-10 ml-10 flex h-full w-full items-end justify-around px-4 pb-8"
+                            >
+                                <!-- Jan -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[60%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[30%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Jan</span
+                                    >
+                                </div>
+                                <!-- Feb -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[45%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[25%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Feb</span
+                                    >
+                                </div>
+                                <!-- Mar -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[75%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[40%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Mar</span
+                                    >
+                                </div>
+                                <!-- Apr -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[55%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[35%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >Apr</span
+                                    >
+                                </div>
+                                <!-- May -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[85%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[45%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-bold text-on-surface-variant"
+                                        >May</span
+                                    >
+                                </div>
+                                <!-- Jun -->
+                                <div
+                                    class="group flex w-1/8 flex-col items-center gap-1"
+                                >
+                                    <div
+                                        class="flex h-[280px] w-full items-end justify-center gap-1"
+                                    >
+                                        <div
+                                            class="h-[70%] w-4 rounded-t-sm border border-blue-800 bg-blue-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                        <div
+                                            class="h-[60%] w-4 rounded-t-sm border border-teal-800 bg-teal-600 shadow-sm transition-opacity hover:opacity-80 sm:w-6"
+                                        ></div>
+                                    </div>
+                                    <span
+                                        class="mt-2 font-label-md text-label-md font-black text-on-surface text-on-surface-variant"
+                                        >Jun</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Urgent Tasks -->
+                    <div
+                        class="flex h-[400px] flex-col rounded-xl border border-outline-variant bg-white p-6 shadow-md"
+                    >
+                        <div class="mb-4 flex items-center justify-between">
+                            <h3
+                                class="flex items-center gap-2 font-headline-sm text-headline-sm font-bold text-on-surface"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-red-600"
+                                    >warning</span
+                                >
+                                Urgent Attention
+                            </h3>
+                        </div>
+                        <div class="flex-1 space-y-3 overflow-y-auto pr-2">
+                            <!-- Task 1 -->
+                            <div
+                                class="flex items-start gap-3 rounded-lg border border-red-300 bg-red-50 p-3 shadow-sm"
+                            >
+                                <div
+                                    class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-red-600 text-white"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[18px]"
+                                        >build_circle</span
+                                    >
+                                </div>
+                                <div>
+                                    <h4
+                                        class="mb-1 font-label-md text-label-md font-bold text-red-900"
+                                    >
+                                        Confirmation Pending
+                                    </h4>
+                                    <p
+                                        class="font-body-md text-body-md text-[13px] leading-tight font-medium text-red-900"
+                                    >
+                                        Ticket #SRV-102 awaits customer approval
+                                        for screen replacement.
+                                    </p>
+                                    <button
+                                        class="mt-2 font-label-md text-[11px] font-black tracking-wider text-red-700 uppercase hover:underline"
+                                    >
+                                        Review Quote
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Task 2 -->
+                            <div
+                                class="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-3 shadow-sm"
+                            >
+                                <div
+                                    class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-amber-600 text-white"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[18px]"
+                                        >laptop_mac</span
+                                    >
+                                </div>
+                                <div>
+                                    <h4
+                                        class="mb-1 font-label-md text-label-md font-bold text-amber-900"
+                                    >
+                                        Status: Broken
+                                    </h4>
+                                    <p
+                                        class="font-body-md text-body-md text-[13px] leading-tight font-medium text-amber-900"
+                                    >
+                                        Lenovo ThinkPad T490 (INV-882) marked as
+                                        broken during check-in.
+                                    </p>
+                                    <button
+                                        class="mt-2 font-label-md text-[11px] font-black tracking-wider text-amber-700 uppercase hover:underline"
+                                    >
+                                        Assess Damage
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Task 3 -->
+                            <div
+                                class="flex items-start gap-3 rounded-lg border border-blue-300 bg-blue-50 p-3 shadow-sm"
+                            >
+                                <div
+                                    class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-blue-600 text-white"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[18px]"
+                                        >payments</span
+                                    >
+                                </div>
+                                <div>
+                                    <h4
+                                        class="mb-1 font-label-md text-label-md font-bold text-blue-900"
+                                    >
+                                        Payment Overdue
+                                    </h4>
+                                    <p
+                                        class="font-body-md text-body-md text-[13px] leading-tight font-medium text-blue-900"
+                                    >
+                                        Invoice #INV-2219 is 5 days past due for
+                                        Corporate Client B.
+                                    </p>
+                                    <button
+                                        class="mt-2 font-label-md text-[11px] font-black tracking-wider text-blue-700 uppercase hover:underline"
+                                    >
+                                        Send Reminder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bottom Section: Recent Activity Table/List -->
+                <div
+                    class="overflow-hidden rounded-xl border border-outline-variant bg-white shadow-md"
+                >
+                    <div
+                        class="flex items-center justify-between border-b border-outline-variant bg-gray-100 p-5"
+                    >
+                        <h3
+                            class="font-headline-sm text-headline-sm font-bold text-on-surface"
+                        >
+                            Recent Activity
+                        </h3>
+                        <a
+                            class="font-label-md text-label-md font-bold tracking-wider text-secondary uppercase hover:underline"
+                            href="#"
+                            >View All</a
+                        >
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse text-left">
+                            <thead>
+                                <tr
+                                    class="border-b border-outline-variant bg-gray-50"
+                                >
+                                    <th
+                                        class="px-5 py-3 font-label-md text-label-md font-bold tracking-wider text-on-surface-variant uppercase"
+                                    >
+                                        Activity
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 font-label-md text-label-md font-bold tracking-wider text-on-surface-variant uppercase"
+                                    >
+                                        Entity
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 font-label-md text-label-md font-bold tracking-wider text-on-surface-variant uppercase"
+                                    >
+                                        User
+                                    </th>
+                                    <th
+                                        class="px-5 py-3 text-right font-label-md text-label-md font-bold tracking-wider text-on-surface-variant uppercase"
+                                    >
+                                        Time
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant/50">
+                                <tr
+                                    class="group transition-colors hover:bg-gray-50"
+                                >
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 bg-blue-100 text-blue-600 shadow-sm"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-[16px] font-bold"
+                                                    >add_box</span
+                                                >
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-body-md text-body-md font-bold text-on-surface"
+                                                    >New Laptop Added</span
+                                                >
+                                                <span
+                                                    class="block font-label-md text-label-md font-medium text-outline-variant"
+                                                    >Dell XPS 13 - 16GB
+                                                    RAM</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3">
+                                        <span
+                                            class="inline-flex items-center rounded-full border border-blue-800 bg-blue-600 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm"
+                                            >Inventory</span
+                                        >
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 font-body-md font-mono-data text-body-md font-bold text-on-surface-variant"
+                                    >
+                                        Mike T.
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 text-right font-body-md font-mono-data text-body-md font-medium text-outline-variant"
+                                    >
+                                        10 mins ago
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="group bg-gray-50/50 transition-colors hover:bg-gray-50"
+                                >
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-100 text-emerald-600 shadow-sm"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-[16px] font-bold"
+                                                    >check_circle</span
+                                                >
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-body-md text-body-md font-bold text-on-surface"
+                                                    >Service Completed</span
+                                                >
+                                                <span
+                                                    class="block font-label-md text-label-md font-medium text-outline-variant"
+                                                    >Ticket #SRV-102</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3">
+                                        <span
+                                            class="inline-flex items-center rounded-full border border-emerald-800 bg-emerald-600 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm"
+                                            >Service</span
+                                        >
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 font-body-md font-mono-data text-body-md font-bold text-on-surface-variant"
+                                    >
+                                        Sarah W.
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 text-right font-body-md font-mono-data text-body-md font-medium text-outline-variant"
+                                    >
+                                        45 mins ago
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="group transition-colors hover:bg-gray-50"
+                                >
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-violet-100 text-violet-600 shadow-sm"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-[16px] font-bold"
+                                                    >sell</span
+                                                >
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-body-md text-body-md font-bold text-on-surface"
+                                                    >Sale Recorded</span
+                                                >
+                                                <span
+                                                    class="block font-label-md text-label-md font-medium text-outline-variant"
+                                                    >MacBook Pro M1
+                                                    (INV-992)</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3">
+                                        <span
+                                            class="inline-flex items-center rounded-full border border-violet-800 bg-violet-600 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm"
+                                            >Finance</span
+                                        >
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 font-body-md font-mono-data text-body-md font-bold text-on-surface-variant"
+                                    >
+                                        Jane D.
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 text-right font-body-md font-mono-data text-body-md font-medium text-outline-variant"
+                                    >
+                                        2 hours ago
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="group bg-gray-50/50 transition-colors hover:bg-gray-50"
+                                >
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="flex h-8 w-8 items-center justify-center rounded-full border border-red-200 bg-red-100 text-red-600 shadow-sm"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-[16px] font-bold"
+                                                    >report</span
+                                                >
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-body-md text-body-md font-bold text-on-surface"
+                                                    >Status Updated:
+                                                    Broken</span
+                                                >
+                                                <span
+                                                    class="block font-label-md text-label-md font-medium text-outline-variant"
+                                                    >HP EliteBook
+                                                    (INV-882)</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3">
+                                        <span
+                                            class="inline-flex items-center rounded-full border border-blue-800 bg-blue-600 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm"
+                                            >Inventory</span
+                                        >
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 font-body-md font-mono-data text-body-md font-bold text-on-surface-variant"
+                                    >
+                                        System
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 text-right font-body-md font-mono-data text-body-md font-medium text-outline-variant"
+                                    >
+                                        3 hours ago
+                                    </td>
+                                </tr>
+                                <tr
+                                    class="group transition-colors hover:bg-gray-50"
+                                >
+                                    <td class="px-5 py-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="flex h-8 w-8 items-center justify-center rounded-full border border-indigo-200 bg-indigo-100 text-indigo-600 shadow-sm"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-[16px] font-bold"
+                                                    >person_add</span
+                                                >
+                                            </div>
+                                            <div>
+                                                <span
+                                                    class="block font-body-md text-body-md font-bold text-on-surface"
+                                                    >New Customer Created</span
+                                                >
+                                                <span
+                                                    class="block font-label-md text-label-md font-medium text-outline-variant"
+                                                    >Tech Solutions Inc.</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-5 py-3">
+                                        <span
+                                            class="inline-flex items-center rounded-full border border-indigo-800 bg-indigo-600 px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase shadow-sm"
+                                            >Customers</span
+                                        >
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 font-body-md font-mono-data text-body-md font-bold text-on-surface-variant"
+                                    >
+                                        Mike T.
+                                    </td>
+                                    <td
+                                        class="px-5 py-3 text-right font-body-md font-mono-data text-body-md font-medium text-outline-variant"
+                                    >
+                                        5 hours ago
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

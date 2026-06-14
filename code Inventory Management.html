@@ -1,0 +1,746 @@
+<!doctype html>
+
+<html class="h-full" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Pabalu Laptop - Inventory Management</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-secondary-fixed-variant': '#004395',
+                            outline: '#76777d',
+                            surface: '#f8f9ff',
+                            'primary-fixed': '#dae2fd',
+                            error: '#ba1a1a',
+                            'inverse-primary': '#bec6e0',
+                            'on-secondary-container': '#fefcff',
+                            tertiary: '#000000',
+                            'on-primary-container': '#7c839b',
+                            'surface-container': '#e5eeff',
+                            'surface-bright': '#f8f9ff',
+                            'tertiary-container': '#002113',
+                            'on-tertiary-fixed-variant': '#005236',
+                            'on-tertiary': '#ffffff',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#001a42',
+                            'surface-variant': '#d3e4fe',
+                            background: '#f8f9ff',
+                            'on-primary-fixed': '#131b2e',
+                            'outline-variant': '#c6c6cd',
+                            'on-tertiary-container': '#009668',
+                            'tertiary-fixed': '#6ffbbe',
+                            primary: '#000000',
+                            'inverse-on-surface': '#eaf1ff',
+                            'error-container': '#ffdad6',
+                            'on-primary-fixed-variant': '#3f465c',
+                            'tertiary-fixed-dim': '#4edea3',
+                            'on-error': '#ffffff',
+                            'on-tertiary-fixed': '#002113',
+                            'inverse-surface': '#213145',
+                            'surface-container-low': '#eff4ff',
+                            secondary: '#0058be',
+                            'surface-container-high': '#dce9ff',
+                            'on-background': '#0b1c30',
+                            'on-surface': '#0b1c30',
+                            'secondary-fixed-dim': '#adc6ff',
+                            'surface-tint': '#565e74',
+                            'on-error-container': '#93000a',
+                            'surface-dim': '#cbdbf5',
+                            'primary-container': '#131b2e',
+                            'on-primary': '#ffffff',
+                            'secondary-fixed': '#d8e2ff',
+                            'on-surface-variant': '#45464d',
+                            'primary-fixed-dim': '#bec6e0',
+                            'surface-container-highest': '#d3e4fe',
+                            'secondary-container': '#2170e4',
+                            'surface-container-lowest': '#ffffff',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.25rem',
+                            lg: '0.5rem',
+                            xl: '0.75rem',
+                            full: '9999px',
+                        },
+                        spacing: {
+                            'stack-lg': '32px',
+                            gutter: '16px',
+                            unit: '4px',
+                            'stack-sm': '8px',
+                            'container-padding': '24px',
+                            'stack-md': '16px',
+                        },
+                        fontFamily: {
+                            'headline-sm': ['Inter'],
+                            'mono-data': ['monospace'],
+                            'headline-md': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                        },
+                        fontSize: {
+                            'headline-sm': [
+                                '20px',
+                                { lineHeight: '28px', fontWeight: '600' },
+                            ],
+                            'mono-data': [
+                                '13px',
+                                { lineHeight: '18px', fontWeight: '400' },
+                            ],
+                            'headline-md': [
+                                '24px',
+                                {
+                                    lineHeight: '32px',
+                                    letterSpacing: '-0.01em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-lg': [
+                                '16px',
+                                { lineHeight: '24px', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'display-lg': [
+                                '36px',
+                                {
+                                    lineHeight: '44px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '700',
+                                },
+                            ],
+                            'body-md': [
+                                '14px',
+                                { lineHeight: '20px', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body
+        class="text-on-background font-body-md flex h-full overflow-hidden bg-background"
+    >
+        <!-- SideNavBar -->
+        <aside
+            class="bg-surface-container-lowest border-outline-variant p-gutter fixed top-0 left-0 z-50 flex h-full w-[280px] flex-col border-r"
+        >
+            <!-- Brand / Header -->
+            <div class="mb-stack-lg">
+                <h1 class="font-headline-md text-headline-md text-on-surface">
+                    Pabalu Admin
+                </h1>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                    Internal Management
+                </p>
+            </div>
+            <!-- Navigation Tabs -->
+            <nav class="gap-stack-sm flex flex-1 flex-col overflow-y-auto">
+                <!-- Dashboard (Inactive) -->
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="font-label-md text-label-md">Dashboard</span>
+                </a>
+                <!-- Inventory (Active) -->
+                <a
+                    class="gap-stack-md bg-secondary-container text-on-secondary-container flex items-center rounded-lg px-4 py-3 font-bold"
+                    href="#"
+                >
+                    <span
+                        class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1"
+                        >laptop_mac</span
+                    >
+                    <span class="font-label-md text-label-md">Inventory</span>
+                </a>
+                <!-- Services (Inactive) -->
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined">build</span>
+                    <span class="font-label-md text-label-md">Services</span>
+                </a>
+                <!-- Customers (Inactive) -->
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined">group</span>
+                    <span class="font-label-md text-label-md">Customers</span>
+                </a>
+                <!-- Finance (Inactive) -->
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined">payments</span>
+                    <span class="font-label-md text-label-md">Finance</span>
+                </a>
+                <!-- Master Data (Inactive) -->
+                <a
+                    class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                    href="#"
+                >
+                    <span class="material-symbols-outlined">database</span>
+                    <span class="font-label-md text-label-md">Master Data</span>
+                </a>
+            </nav>
+            <!-- CTA & Footer -->
+            <div class="gap-stack-md mt-auto flex flex-col">
+                <button
+                    class="text-on-secondary font-label-md text-label-md w-full rounded-lg bg-secondary px-4 py-3 transition-opacity hover:opacity-90"
+                >
+                    Add New Ticket
+                </button>
+                <div
+                    class="border-outline-variant pt-stack-md gap-stack-sm flex flex-col border-t"
+                >
+                    <a
+                        class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="font-label-md text-label-md"
+                            >Settings</span
+                        >
+                    </a>
+                    <a
+                        class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                        href="#"
+                    >
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="font-label-md text-label-md">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content Area -->
+        <div class="ml-[280px] flex h-full flex-1 flex-col">
+            <!-- TopNavBar -->
+            <header
+                class="bg-surface border-outline-variant px-gutter fixed top-0 right-0 z-40 flex h-16 w-[calc(100%-280px)] items-center justify-between border-b shadow-sm"
+            >
+                <div class="gap-stack-md flex items-center">
+                    <!-- Search on left -->
+                    <div class="relative w-64">
+                        <span
+                            class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-3 -translate-y-1/2 text-[20px]"
+                            >search</span
+                        >
+                        <input
+                            class="bg-surface-container-low font-body-md text-body-md w-full rounded-full border-none py-2 pr-4 pl-10 transition-shadow outline-none focus:ring-2 focus:ring-secondary"
+                            placeholder="Search inventory..."
+                            type="text"
+                        />
+                    </div>
+                </div>
+                <div class="gap-stack-lg flex items-center">
+                    <div class="gap-stack-md flex items-center">
+                        <button
+                            class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 opacity-100 transition-colors hover:opacity-80"
+                        >
+                            <span class="material-symbols-outlined"
+                                >notifications</span
+                            >
+                        </button>
+                        <button
+                            class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 opacity-100 transition-colors hover:opacity-80"
+                        >
+                            <span class="material-symbols-outlined">help</span>
+                        </button>
+                    </div>
+                    <div
+                        class="gap-stack-md border-outline-variant pl-stack-lg flex items-center border-l"
+                    >
+                        <span
+                            class="font-label-md text-label-md text-on-surface-variant"
+                            >Admin Panel</span
+                        >
+                        <div
+                            class="bg-surface-container-highest flex h-8 w-8 items-center justify-center overflow-hidden rounded-full"
+                        >
+                            <span
+                                class="material-symbols-outlined text-on-surface-variant"
+                                >person</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Page Content Canvas -->
+            <main
+                class="p-container-padding mt-16 flex-1 overflow-y-auto bg-background"
+            >
+                <!-- Page Header -->
+                <div class="mb-stack-lg flex items-center justify-between">
+                    <div>
+                        <h2
+                            class="font-display-lg text-display-lg text-on-background"
+                        >
+                            Inventory
+                        </h2>
+                        <p
+                            class="font-body-md text-body-md text-on-surface-variant mt-unit"
+                        >
+                            Manage all incoming and outgoing hardware.
+                        </p>
+                    </div>
+                    <button
+                        class="text-on-secondary font-label-md text-label-md hover:bg-on-secondary-fixed-variant flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 shadow-sm transition-colors"
+                    >
+                        <span class="material-symbols-outlined text-[18px]"
+                            >add</span
+                        >
+                        Add New Laptop
+                    </button>
+                </div>
+                <!-- Filters Bar -->
+                <div
+                    class="bg-surface-container-lowest p-stack-sm border-outline-variant mb-stack-lg gap-stack-md flex items-center rounded-lg border shadow-[0px_1px_3px_rgba(0,0,0,0.1)]"
+                >
+                    <div class="gap-stack-md flex flex-1">
+                        <select
+                            class="bg-surface border-outline-variant text-on-surface font-body-md text-body-md min-w-[150px] rounded border px-4 py-2 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+                        >
+                            <option>All Brands</option>
+                            <option>Apple</option>
+                            <option>Dell</option>
+                            <option>Lenovo</option>
+                        </select>
+                        <select
+                            class="bg-surface border-outline-variant text-on-surface font-body-md text-body-md min-w-[150px] rounded border px-4 py-2 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+                        >
+                            <option>All Statuses</option>
+                            <option>Available</option>
+                            <option>Booking</option>
+                            <option>Sold</option>
+                        </select>
+                        <select
+                            class="bg-surface border-outline-variant text-on-surface font-body-md text-body-md min-w-[150px] rounded border px-4 py-2 outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
+                        >
+                            <option>Any Price</option>
+                            <option>Under $500</option>
+                            <option>$500 - $1000</option>
+                            <option>Over $1000</option>
+                        </select>
+                    </div>
+                    <button
+                        class="font-label-md text-label-md hover:bg-surface-container-low flex items-center gap-2 rounded px-4 py-2 text-secondary transition-colors"
+                    >
+                        <span class="material-symbols-outlined text-[18px]"
+                            >filter_list</span
+                        >
+                        More Filters
+                    </button>
+                </div>
+                <!-- Data Table Grid -->
+                <div
+                    class="bg-surface-container-lowest border-outline-variant overflow-hidden rounded-lg border shadow-[0px_1px_3px_rgba(0,0,0,0.1)]"
+                >
+                    <table class="w-full border-collapse text-left">
+                        <thead>
+                            <tr
+                                class="bg-surface-container-low border-outline-variant border-b"
+                            >
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 tracking-wider uppercase"
+                                >
+                                    Item
+                                </th>
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 tracking-wider uppercase"
+                                >
+                                    Specs
+                                </th>
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 tracking-wider uppercase"
+                                >
+                                    Source
+                                </th>
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 text-right tracking-wider uppercase"
+                                >
+                                    Pricing
+                                </th>
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 text-center tracking-wider uppercase"
+                                >
+                                    Status
+                                </th>
+                                <th
+                                    class="font-label-md text-label-md text-on-surface-variant px-4 py-3 text-right tracking-wider uppercase"
+                                >
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-surface-container divide-y">
+                            <!-- Row 1: Available -->
+                            <tr
+                                class="hover:bg-surface-bright group transition-colors"
+                            >
+                                <td class="px-4 py-3">
+                                    <div class="gap-stack-md flex items-center">
+                                        <div
+                                            class="bg-surface-container-highest border-outline-variant relative h-12 w-12 flex-shrink-0 overflow-hidden rounded border"
+                                        >
+                                            <!-- Placeholder thumbnail -->
+                                            <div
+                                                class="from-surface-variant to-surface-dim absolute inset-0 bg-gradient-to-br opacity-50"
+                                            ></div>
+                                            <span
+                                                class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[24px]"
+                                                >laptop_mac</span
+                                            >
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-headline-sm text-headline-sm text-on-surface transition-colors group-hover:text-secondary"
+                                            >
+                                                MacBook Pro 14" 2021
+                                            </div>
+                                            <div
+                                                class="font-mono-data text-mono-data text-on-surface-variant mt-1"
+                                            >
+                                                SKU: MAC-21-0042
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="font-body-md text-body-md text-on-surface"
+                                            >M1 Pro (8-Core)</span
+                                        >
+                                        <span
+                                            class="font-body-md text-body-md text-on-surface-variant"
+                                            >16GB RAM • 512GB SSD</span
+                                        >
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="font-body-md text-body-md text-on-surface"
+                                        >Trade-in</span
+                                    >
+                                    <div
+                                        class="font-label-md text-label-md text-on-surface-variant mt-1"
+                                    >
+                                        Ref: TI-882
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div
+                                        class="font-mono-data text-mono-data text-on-surface-variant line-through"
+                                    >
+                                        $850
+                                    </div>
+                                    <div
+                                        class="font-headline-sm text-headline-sm text-on-surface"
+                                    >
+                                        $1,250
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-[#d1fae5] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[#065f46]"
+                                    >
+                                        AVAILABLE
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div
+                                        class="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <button
+                                            class="text-on-surface-variant hover:bg-surface-container rounded p-1.5 transition-colors hover:text-secondary"
+                                            title="View Detail"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px]"
+                                                >visibility</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="text-on-surface-variant hover:bg-surface-container rounded p-1.5 transition-colors hover:text-secondary"
+                                            title="Edit"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px]"
+                                                >edit</span
+                                            >
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 2: Booking -->
+                            <tr
+                                class="hover:bg-surface-bright group transition-colors"
+                            >
+                                <td class="px-4 py-3">
+                                    <div class="gap-stack-md flex items-center">
+                                        <div
+                                            class="bg-surface-container-highest border-outline-variant relative h-12 w-12 flex-shrink-0 overflow-hidden rounded border"
+                                        >
+                                            <div
+                                                class="from-surface-variant to-surface-dim absolute inset-0 bg-gradient-to-br opacity-50"
+                                            ></div>
+                                            <span
+                                                class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[24px]"
+                                                >laptop_windows</span
+                                            >
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-headline-sm text-headline-sm text-on-surface transition-colors group-hover:text-secondary"
+                                            >
+                                                ThinkPad T14 Gen 2
+                                            </div>
+                                            <div
+                                                class="font-mono-data text-mono-data text-on-surface-variant mt-1"
+                                            >
+                                                SKU: LNV-T14-089
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="font-body-md text-body-md text-on-surface"
+                                            >Intel Core i5-1135G7</span
+                                        >
+                                        <span
+                                            class="font-body-md text-body-md text-on-surface-variant"
+                                            >16GB RAM • 256GB SSD</span
+                                        >
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span
+                                        class="font-body-md text-body-md text-on-surface"
+                                        >Marketplace</span
+                                    >
+                                    <div
+                                        class="font-label-md text-label-md text-on-surface-variant mt-1"
+                                    >
+                                        Ref: FB-441
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div
+                                        class="font-mono-data text-mono-data text-on-surface-variant line-through"
+                                    >
+                                        $400
+                                    </div>
+                                    <div
+                                        class="font-headline-sm text-headline-sm text-on-surface"
+                                    >
+                                        $650
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-[#dbeafe] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[#1e40af]"
+                                    >
+                                        BOOKING
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div
+                                        class="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <button
+                                            class="text-on-surface-variant hover:bg-surface-container rounded p-1.5 transition-colors hover:text-secondary"
+                                            title="View Detail"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px]"
+                                                >visibility</span
+                                            >
+                                        </button>
+                                        <button
+                                            class="text-on-surface-variant hover:bg-surface-container rounded p-1.5 transition-colors hover:text-secondary"
+                                            title="Edit"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px]"
+                                                >edit</span
+                                            >
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Row 3: Sold -->
+                            <tr
+                                class="hover:bg-surface-bright bg-surface/50 group transition-colors"
+                            >
+                                <td class="px-4 py-3">
+                                    <div
+                                        class="gap-stack-md flex items-center opacity-70"
+                                    >
+                                        <div
+                                            class="bg-surface-container-highest border-outline-variant relative h-12 w-12 flex-shrink-0 overflow-hidden rounded border"
+                                        >
+                                            <div
+                                                class="from-surface-variant to-surface-dim absolute inset-0 bg-gradient-to-br opacity-30"
+                                            ></div>
+                                            <span
+                                                class="material-symbols-outlined text-on-surface-variant absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[24px]"
+                                                >laptop_mac</span
+                                            >
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="font-headline-sm text-headline-sm text-on-surface-variant decoration-outline-variant line-through"
+                                            >
+                                                MacBook Air M1 2020
+                                            </div>
+                                            <div
+                                                class="font-mono-data text-mono-data text-outline mt-1"
+                                            >
+                                                SKU: MAC-20-0112
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 opacity-70">
+                                    <div class="flex flex-col gap-1">
+                                        <span
+                                            class="font-body-md text-body-md text-on-surface-variant"
+                                            >M1 (7-Core GPU)</span
+                                        >
+                                        <span
+                                            class="font-body-md text-body-md text-outline"
+                                            >8GB RAM • 256GB SSD</span
+                                        >
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 opacity-70">
+                                    <span
+                                        class="font-body-md text-body-md text-on-surface-variant"
+                                        >Wholesale</span
+                                    >
+                                    <div
+                                        class="font-label-md text-label-md text-outline mt-1"
+                                    >
+                                        Ref: WS-990
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right opacity-70">
+                                    <div
+                                        class="font-mono-data text-mono-data text-outline line-through"
+                                    >
+                                        $550
+                                    </div>
+                                    <div
+                                        class="font-headline-sm text-headline-sm text-on-surface-variant"
+                                    >
+                                        $750
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-[#e2e8f0] bg-[#f1f5f9] px-2.5 py-1 text-[11px] font-bold tracking-wide text-[#475569]"
+                                    >
+                                        SOLD
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div
+                                        class="flex items-center justify-end gap-2 opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <button
+                                            class="text-on-surface-variant hover:bg-surface-container rounded p-1.5 transition-colors hover:text-secondary"
+                                            title="View Detail"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px]"
+                                                >visibility</span
+                                            >
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <div
+                        class="bg-surface-container-low border-outline-variant flex items-center justify-between border-t p-4"
+                    >
+                        <span
+                            class="font-body-md text-body-md text-on-surface-variant"
+                            >Showing 1-3 of 124 items</span
+                        >
+                        <div class="flex items-center gap-1">
+                            <button
+                                class="text-on-surface-variant hover:bg-surface-container rounded p-1"
+                                disabled=""
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[20px]"
+                                    >chevron_left</span
+                                >
+                            </button>
+                            <button
+                                class="text-on-secondary font-label-md text-label-md flex h-8 w-8 items-center justify-center rounded bg-secondary"
+                            >
+                                1
+                            </button>
+                            <button
+                                class="text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex h-8 w-8 items-center justify-center rounded"
+                            >
+                                2
+                            </button>
+                            <button
+                                class="text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex h-8 w-8 items-center justify-center rounded"
+                            >
+                                3
+                            </button>
+                            <span class="text-on-surface-variant px-1"
+                                >...</span
+                            >
+                            <button
+                                class="text-on-surface-variant hover:bg-surface-container rounded p-1"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-[20px]"
+                                    >chevron_right</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,172 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e7]: laptop_mac
+      - generic [ref=e8]:
+        - heading "Pabalu Admin" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Internal Management
+    - list [ref=e11]:
+      - listitem [ref=e12]:
+        - link "dashboard Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e14]: dashboard
+          - generic [ref=e15]: Dashboard
+      - listitem [ref=e16]:
+        - link "laptop_mac Inventory" [ref=e17] [cursor=pointer]:
+          - /url: /laptops
+          - generic [ref=e18]: laptop_mac
+          - generic [ref=e19]: Inventory
+      - listitem [ref=e20]:
+        - link "build Services" [ref=e21] [cursor=pointer]:
+          - /url: /services
+          - generic [ref=e22]: build
+          - generic [ref=e23]: Services
+      - listitem [ref=e24]:
+        - link "group Customers" [ref=e25] [cursor=pointer]:
+          - /url: /customers
+          - generic [ref=e26]: group
+          - generic [ref=e27]: Customers
+      - listitem [ref=e28]:
+        - link "payments Finance" [ref=e29] [cursor=pointer]:
+          - /url: /financial-transactions
+          - generic [ref=e30]: payments
+          - generic [ref=e31]: Finance
+      - listitem [ref=e32]:
+        - link "database Master Data" [ref=e33] [cursor=pointer]:
+          - /url: /master-data
+          - generic [ref=e34]: database
+          - generic [ref=e35]: Master Data
+    - generic [ref=e36]:
+      - button "add Add New Ticket" [ref=e37]:
+        - generic [ref=e38]: add
+        - text: Add New Ticket
+      - generic [ref=e39]:
+        - link "settings Settings" [ref=e40] [cursor=pointer]:
+          - /url: /settings
+          - generic [ref=e41]: settings
+          - generic [ref=e42]: Settings
+        - button "logout Logout" [ref=e43]:
+          - generic [ref=e44]: logout
+          - generic [ref=e45]: Logout
+  - generic [ref=e46]:
+    - banner [ref=e47]:
+      - generic [ref=e48]:
+        - generic: search
+        - textbox "Search inventory, tickets, customers..." [ref=e49]
+      - generic [ref=e50]:
+        - button "notifications" [ref=e51]:
+          - generic [ref=e52]: notifications
+        - button "help" [ref=e54]:
+          - generic [ref=e55]: help
+        - generic [ref=e57]:
+          - generic [ref=e58]: Admin Pabalu
+          - generic [ref=e59]: Admin Panel
+        - generic [ref=e61]: A
+    - main [ref=e62]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "Edit Laptop" [level=1] [ref=e66]
+            - paragraph [ref=e67]: Perbarui PBL-20260604-9073
+          - link "Kembali ke Detail" [ref=e68] [cursor=pointer]:
+            - /url: /laptops/17
+            - img
+            - text: Kembali ke Detail
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e72]: Informasirmasi Produk
+            - generic [ref=e73]:
+              - generic [ref=e74]:
+                - generic [ref=e75]: Nama
+                - textbox "Nama" [ref=e76]: Laptop Test CRUD
+              - generic [ref=e77]:
+                - generic [ref=e78]: Merek
+                - combobox [ref=e79]:
+                  - generic: Apple
+                  - img [ref=e80]
+                - combobox [ref=e82]
+              - generic [ref=e83]:
+                - generic [ref=e84]: Model/Series
+                - textbox "Model/Series" [ref=e85]: TEST-001
+              - generic [ref=e86]:
+                - generic [ref=e87]: Kategori
+                - combobox [ref=e88]:
+                  - generic: Tidak category
+                  - img [ref=e89]
+                - combobox [ref=e91]
+              - generic [ref=e92]:
+                - generic [ref=e93]: Source
+                - combobox [ref=e94]:
+                  - generic: Pilih sumber
+                  - img [ref=e95]
+                - combobox [ref=e97]
+          - generic [ref=e98]:
+            - generic [ref=e100]: Harga & Status
+            - generic [ref=e101]:
+              - generic [ref=e102]:
+                - generic [ref=e103]: Tanggal Pembelian
+                - textbox "Tanggal Pembelian" [ref=e104]: 2026-06-04
+              - generic [ref=e105]:
+                - generic [ref=e106]: Harga Modal/Harga Modal
+                - spinbutton "Harga Modal/Harga Modal" [ref=e107]: "5000000.00"
+              - generic [ref=e108]:
+                - generic [ref=e109]: Harga Jual/Harga Jual
+                - spinbutton "Harga Jual/Harga Jual" [ref=e110]: "7499000.00"
+              - generic [ref=e111]:
+                - generic [ref=e112]: Biaya Plusan
+                - spinbutton "Biaya Plusan" [ref=e113]: "0.00"
+              - generic [ref=e114]:
+                - generic [ref=e115]: Status
+                - combobox [ref=e116]:
+                  - generic: Booking
+                  - img [ref=e117]
+                - combobox [ref=e119]
+          - generic [ref=e120]:
+            - generic [ref=e122]: Spesifikasi
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: Prosesor
+                - textbox "Prosesor" [ref=e126]:
+                  - /placeholder: Intel Core i5
+              - generic [ref=e127]:
+                - generic [ref=e128]: RAM
+                - textbox "RAM" [ref=e129]:
+                  - /placeholder: 8GB DDR4
+              - generic [ref=e130]:
+                - generic [ref=e131]: Storage
+                - textbox "Storage" [ref=e132]:
+                  - /placeholder: 512GB SSD
+              - generic [ref=e133]:
+                - generic [ref=e134]: GPU/Grafis
+                - textbox "GPU/Grafis" [ref=e135]:
+                  - /placeholder: Intel Iris Xe
+              - generic [ref=e136]:
+                - generic [ref=e137]: Layar
+                - textbox "Layar" [ref=e138]:
+                  - /placeholder: 14 inch FHD
+              - generic [ref=e139]:
+                - generic [ref=e140]: Sistem Operasi
+                - textbox "Sistem Operasi" [ref=e141]:
+                  - /placeholder: Windows 11
+              - generic [ref=e142]:
+                - generic [ref=e143]: Baterai Kondisi
+                - textbox "Baterai Kondisi" [ref=e144]:
+                  - /placeholder: Good
+              - generic [ref=e145]:
+                - generic [ref=e146]: Physical Kondisi
+                - textbox "Physical Kondisi" [ref=e147]
+          - generic [ref=e148]:
+            - generic [ref=e150]: Catatans
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]: Deskripsi
+                - textbox "Deskripsi" [ref=e154]
+              - generic [ref=e155]:
+                - generic [ref=e156]: Catatan Internals
+                - textbox "Catatan Internals" [ref=e157]
+          - generic [ref=e158]:
+            - link "Batal" [ref=e159] [cursor=pointer]:
+              - /url: /laptops/17
+            - button "Save Changes" [ref=e160]:
+              - img
+              - text: Save Changes

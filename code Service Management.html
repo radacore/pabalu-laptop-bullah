@@ -1,0 +1,731 @@
+<!doctype html>
+
+<html class="h-full" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Service Management - Pabalu Laptop</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        colors: {
+                            'on-secondary-fixed-variant': '#004395',
+                            outline: '#76777d',
+                            surface: '#f8f9ff',
+                            'primary-fixed': '#dae2fd',
+                            error: '#ba1a1a',
+                            'inverse-primary': '#bec6e0',
+                            'on-secondary-container': '#fefcff',
+                            tertiary: '#000000',
+                            'on-primary-container': '#7c839b',
+                            'surface-container': '#e5eeff',
+                            'surface-bright': '#f8f9ff',
+                            'tertiary-container': '#002113',
+                            'on-tertiary-fixed-variant': '#005236',
+                            'on-tertiary': '#ffffff',
+                            'on-secondary': '#ffffff',
+                            'on-secondary-fixed': '#001a42',
+                            'surface-variant': '#d3e4fe',
+                            background: '#f8f9ff',
+                            'on-primary-fixed': '#131b2e',
+                            'outline-variant': '#c6c6cd',
+                            'on-tertiary-container': '#009668',
+                            'tertiary-fixed': '#6ffbbe',
+                            primary: '#000000',
+                            'inverse-on-surface': '#eaf1ff',
+                            'error-container': '#ffdad6',
+                            'on-primary-fixed-variant': '#3f465c',
+                            'tertiary-fixed-dim': '#4edea3',
+                            'on-error': '#ffffff',
+                            'on-tertiary-fixed': '#002113',
+                            'inverse-surface': '#213145',
+                            'surface-container-low': '#eff4ff',
+                            secondary: '#0058be',
+                            'surface-container-high': '#dce9ff',
+                            'on-background': '#0b1c30',
+                            'on-surface': '#0b1c30',
+                            'secondary-fixed-dim': '#adc6ff',
+                            'surface-tint': '#565e74',
+                            'on-error-container': '#93000a',
+                            'surface-dim': '#cbdbf5',
+                            'primary-container': '#131b2e',
+                            'on-primary': '#ffffff',
+                            'secondary-fixed': '#d8e2ff',
+                            'on-surface-variant': '#45464d',
+                            'primary-fixed-dim': '#bec6e0',
+                            'surface-container-highest': '#d3e4fe',
+                            'secondary-container': '#2170e4',
+                            'surface-container-lowest': '#ffffff',
+                        },
+                        borderRadius: {
+                            DEFAULT: '0.25rem',
+                            lg: '0.5rem',
+                            xl: '0.75rem',
+                            full: '9999px',
+                        },
+                        spacing: {
+                            'stack-lg': '32px',
+                            gutter: '16px',
+                            unit: '4px',
+                            'stack-sm': '8px',
+                            'container-padding': '24px',
+                            'stack-md': '16px',
+                        },
+                        fontFamily: {
+                            'headline-sm': ['Inter'],
+                            'mono-data': ['monospace'],
+                            'headline-md': ['Inter'],
+                            'body-lg': ['Inter'],
+                            'label-md': ['Inter'],
+                            'display-lg': ['Inter'],
+                            'body-md': ['Inter'],
+                        },
+                        fontSize: {
+                            'headline-sm': [
+                                '20px',
+                                { lineHeight: '28px', fontWeight: '600' },
+                            ],
+                            'mono-data': [
+                                '13px',
+                                { lineHeight: '18px', fontWeight: '400' },
+                            ],
+                            'headline-md': [
+                                '24px',
+                                {
+                                    lineHeight: '32px',
+                                    letterSpacing: '-0.01em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'body-lg': [
+                                '16px',
+                                { lineHeight: '24px', fontWeight: '400' },
+                            ],
+                            'label-md': [
+                                '12px',
+                                {
+                                    lineHeight: '16px',
+                                    letterSpacing: '0.05em',
+                                    fontWeight: '600',
+                                },
+                            ],
+                            'display-lg': [
+                                '36px',
+                                {
+                                    lineHeight: '44px',
+                                    letterSpacing: '-0.02em',
+                                    fontWeight: '700',
+                                },
+                            ],
+                            'body-md': [
+                                '14px',
+                                { lineHeight: '20px', fontWeight: '400' },
+                            ],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            .status-chip-inprogress {
+                background-color: rgba(33, 112, 228, 0.1);
+                color: #2170e4;
+            }
+            .status-chip-waiting {
+                background-color: rgba(217, 119, 6, 0.1);
+                color: #d97706;
+            }
+            .status-chip-completed {
+                background-color: rgba(0, 150, 104, 0.1);
+                color: #009668;
+            }
+        </style>
+    </head>
+    <body
+        class="text-on-background font-body-md flex h-full overflow-hidden bg-background"
+    >
+        <!-- SideNavBar -->
+        <nav
+            class="bg-surface-container-lowest border-outline-variant fixed top-0 left-0 z-50 hidden h-full w-[280px] flex-col border-r md:flex"
+        >
+            <div class="p-gutter flex h-full flex-col">
+                <div class="mb-stack-lg gap-stack-sm flex items-center">
+                    <span
+                        class="material-symbols-outlined text-secondary"
+                        data-weight="fill"
+                        style="font-size: 32px"
+                        >laptop_mac</span
+                    >
+                    <div>
+                        <h1
+                            class="font-headline-md text-headline-md text-on-surface font-bold"
+                        >
+                            Pabalu Admin
+                        </h1>
+                        <p class="font-label-md text-label-md text-outline">
+                            Internal Management
+                        </p>
+                    </div>
+                </div>
+                <button
+                    class="text-on-secondary font-headline-sm text-headline-sm mb-stack-lg flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-3 shadow-[0px_1px_3px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
+                >
+                    <span class="material-symbols-outlined">add</span> Add New
+                    Ticket
+                </button>
+                <ul class="flex flex-grow flex-col gap-1">
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="dashboard"
+                                >dashboard</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Dashboard</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="laptop_mac"
+                                >laptop_mac</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Inventory</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md bg-secondary-container text-on-secondary-container flex scale-[0.99] items-center rounded-lg px-4 py-3 font-bold transition-transform duration-150"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="build"
+                                data-weight="fill"
+                                style="font-variation-settings: 'FILL' 1"
+                                >build</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Services</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="group"
+                                >group</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Customers</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="payments"
+                                >payments</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Finance</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="database"
+                                >database</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Master Data</span
+                            >
+                        </a>
+                    </li>
+                </ul>
+                <ul
+                    class="border-outline-variant mt-auto flex flex-col gap-1 border-t pt-4"
+                >
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="settings"
+                                >settings</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Settings</span
+                            >
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="gap-stack-md text-on-surface-variant hover:bg-surface-container-high flex items-center rounded-lg px-4 py-3 transition-colors"
+                            href="#"
+                        >
+                            <span
+                                class="material-symbols-outlined"
+                                data-icon="logout"
+                                >logout</span
+                            >
+                            <span class="font-label-md text-label-md"
+                                >Logout</span
+                            >
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- Main Content Area -->
+        <main
+            class="relative flex h-full flex-1 flex-col overflow-y-auto bg-background md:ml-[280px]"
+        >
+            <!-- TopNavBar (Web) -->
+            <header
+                class="px-gutter bg-surface sticky top-0 z-40 hidden h-16 w-full items-center justify-between shadow-sm md:flex"
+            >
+                <div class="flex w-1/3 items-center gap-4">
+                    <div class="relative w-full max-w-md">
+                        <span
+                            class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2"
+                            >search</span
+                        >
+                        <input
+                            class="bg-surface-container-lowest border-outline-variant font-body-md text-body-md text-on-surface w-full rounded-full border py-2 pr-4 pl-10 transition-all focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                            placeholder="Search tickets, customers, devices..."
+                            type="text"
+                        />
+                    </div>
+                </div>
+                <div class="flex w-1/3 items-center justify-center">
+                    <h2
+                        class="font-headline-sm text-headline-sm text-on-background font-black"
+                    >
+                        Pabalu Laptop
+                    </h2>
+                </div>
+                <div class="flex w-1/3 items-center justify-end gap-4">
+                    <span
+                        class="font-label-md text-label-md text-on-surface-variant"
+                        >Admin Panel</span
+                    >
+                    <button
+                        class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 transition-colors transition-opacity hover:opacity-80"
+                    >
+                        <span
+                            class="material-symbols-outlined"
+                            data-icon="notifications"
+                            >notifications</span
+                        >
+                    </button>
+                    <button
+                        class="text-on-surface-variant hover:bg-surface-container-low rounded-full p-2 transition-colors transition-opacity hover:opacity-80"
+                    >
+                        <span class="material-symbols-outlined" data-icon="help"
+                            >help</span
+                        >
+                    </button>
+                    <img
+                        alt="User Profile"
+                        class="border-outline-variant h-8 w-8 rounded-full border"
+                        data-alt="A small, circular profile picture of a professional male in a modern corporate setting. He is wearing a dark suit against a soft, bright office background, fitting a sleek corporate UI design."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1Ai8mP-iaGieoKXZwZDbXDm3-u_Gagp-V4jkl_WPfkreSqI6QZLN8AmzwyuV50wQFB0rnIO0yEyf5LSbnM7HS8I1DY8zvdCarqzUvb89ZQBFNOkOKTwo9pCiSRArquHGc0Iyx_wRLdCzjIgD7zOgQZs2aZ94JzNaXUINkgAq6VPj6fGuXRn1Uwd-WquNLuzg5E6GmmAdJC3Wx09AACHdSRneNdk1RWD3vxvP-YU6urQtyD3NoPFuc4mByyIe8m7K_LwoMK73Uf2w"
+                    />
+                </div>
+            </header>
+            <!-- Page Content -->
+            <div class="p-container-padding flex-1">
+                <!-- Header Section -->
+                <div
+                    class="mb-stack-lg flex flex-col items-start justify-between gap-4 md:flex-row md:items-center"
+                >
+                    <div>
+                        <h2
+                            class="font-display-lg text-display-lg text-on-surface mb-unit"
+                        >
+                            Active Services
+                        </h2>
+                        <p
+                            class="font-body-lg text-body-lg text-on-surface-variant"
+                        >
+                            Manage and track ongoing repair tickets.
+                        </p>
+                    </div>
+                    <button
+                        class="text-on-secondary font-headline-sm text-headline-sm flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 shadow-[0px_1px_3px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
+                    >
+                        <span class="material-symbols-outlined">add</span>
+                        New Service Ticket
+                    </button>
+                </div>
+                <!-- Filters Area -->
+                <div
+                    class="bg-surface-container-lowest mb-stack-md flex flex-wrap items-center gap-4 rounded-xl border border-[#e2e8f0] p-4 shadow-[0px_1px_3px_rgba(0,0,0,0.1)]"
+                >
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-outline"
+                            >filter_list</span
+                        >
+                        <span
+                            class="font-label-md text-label-md text-on-surface font-semibold uppercase"
+                            >Filters:</span
+                        >
+                    </div>
+                    <select
+                        class="bg-surface-bright border-outline-variant font-body-md text-body-md text-on-surface rounded-lg border px-3 py-2 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                    >
+                        <option value="">All Statuses</option>
+                        <option value="in-progress">In-Progress</option>
+                        <option value="waiting">Waiting for Parts</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <select
+                        class="bg-surface-bright border-outline-variant font-body-md text-body-md text-on-surface rounded-lg border px-3 py-2 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                    >
+                        <option value="">All Technicians</option>
+                        <option value="tech1">Alex J.</option>
+                        <option value="tech2">Sarah M.</option>
+                        <option value="tech3">David K.</option>
+                    </select>
+                    <div class="ml-auto">
+                        <button
+                            class="font-label-md text-label-md text-secondary hover:underline"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+                <!-- Data Table Container -->
+                <div
+                    class="bg-surface-container-lowest overflow-hidden rounded-xl border border-[#e2e8f0] shadow-[0px_1px_3px_rgba(0,0,0,0.1)]"
+                >
+                    <div class="overflow-x-auto">
+                        <table
+                            class="w-full min-w-[800px] border-collapse text-left"
+                        >
+                            <thead>
+                                <tr
+                                    class="bg-surface-bright border-b border-[#e2e8f0]"
+                                >
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Ticket ID
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Customer
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Device
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Complaint
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Technician
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Status
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 uppercase"
+                                    >
+                                        Received
+                                    </th>
+                                    <th
+                                        class="font-label-md text-label-md text-on-surface-variant px-4 py-3 text-right uppercase"
+                                    >
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="font-body-md text-body-md text-on-surface"
+                            >
+                                <!-- Row 1 -->
+                                <tr
+                                    class="hover:bg-surface-container-low group border-b border-[#e2e8f0] transition-colors"
+                                >
+                                    <td
+                                        class="font-mono-data text-mono-data px-4 py-[12px] font-semibold"
+                                    >
+                                        #SRV-1001
+                                    </td>
+                                    <td class="px-4 py-[12px]">John Doe</td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Asus ROG Zephyrus
+                                    </td>
+                                    <td class="px-4 py-[12px]">
+                                        LCD Replacement
+                                    </td>
+                                    <td class="px-4 py-[12px]">Alex J.</td>
+                                    <td class="px-4 py-[12px]">
+                                        <span
+                                            class="font-label-md text-label-md status-chip-inprogress inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                                        >
+                                            <span
+                                                class="h-1.5 w-1.5 rounded-full bg-secondary"
+                                            ></span>
+                                            In-Progress
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Oct 24, 2023
+                                    </td>
+                                    <td class="px-4 py-[12px] text-right">
+                                        <a
+                                            class="hover:text-on-secondary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 text-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                                            href="#"
+                                        >
+                                            Track
+                                            <span
+                                                class="material-symbols-outlined text-[16px]"
+                                                >open_in_new</span
+                                            >
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr
+                                    class="bg-surface-bright hover:bg-surface-container-low group border-b border-[#e2e8f0] transition-colors"
+                                >
+                                    <td
+                                        class="font-mono-data text-mono-data px-4 py-[12px] font-semibold"
+                                    >
+                                        #SRV-1002
+                                    </td>
+                                    <td class="px-4 py-[12px]">Jane Smith</td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        MacBook Pro 16"
+                                    </td>
+                                    <td class="px-4 py-[12px]">
+                                        Battery Swelling
+                                    </td>
+                                    <td class="px-4 py-[12px]">Sarah M.</td>
+                                    <td class="px-4 py-[12px]">
+                                        <span
+                                            class="font-label-md text-label-md status-chip-waiting inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                                        >
+                                            <span
+                                                class="h-1.5 w-1.5 rounded-full bg-amber-600"
+                                            ></span>
+                                            Waiting for Parts
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Oct 22, 2023
+                                    </td>
+                                    <td class="px-4 py-[12px] text-right">
+                                        <a
+                                            class="hover:text-on-secondary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 text-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                                            href="#"
+                                        >
+                                            Track
+                                            <span
+                                                class="material-symbols-outlined text-[16px]"
+                                                >open_in_new</span
+                                            >
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr
+                                    class="hover:bg-surface-container-low group border-b border-[#e2e8f0] transition-colors"
+                                >
+                                    <td
+                                        class="font-mono-data text-mono-data px-4 py-[12px] font-semibold"
+                                    >
+                                        #SRV-1003
+                                    </td>
+                                    <td class="px-4 py-[12px]">
+                                        Tech Solutions Inc.
+                                    </td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Dell XPS 13
+                                    </td>
+                                    <td class="px-4 py-[12px]">
+                                        Motherboard Repair
+                                    </td>
+                                    <td class="px-4 py-[12px]">David K.</td>
+                                    <td class="px-4 py-[12px]">
+                                        <span
+                                            class="font-label-md text-label-md status-chip-inprogress inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                                        >
+                                            <span
+                                                class="h-1.5 w-1.5 rounded-full bg-secondary"
+                                            ></span>
+                                            In-Progress
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Oct 25, 2023
+                                    </td>
+                                    <td class="px-4 py-[12px] text-right">
+                                        <a
+                                            class="hover:text-on-secondary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 text-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                                            href="#"
+                                        >
+                                            Track
+                                            <span
+                                                class="material-symbols-outlined text-[16px]"
+                                                >open_in_new</span
+                                            >
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr
+                                    class="hover:bg-surface-container-low group bg-surface-bright transition-colors"
+                                >
+                                    <td
+                                        class="font-mono-data text-mono-data px-4 py-[12px] font-semibold"
+                                    >
+                                        #SRV-0998
+                                    </td>
+                                    <td class="px-4 py-[12px]">Robert Chen</td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Lenovo ThinkPad T14
+                                    </td>
+                                    <td class="px-4 py-[12px]">
+                                        Keyboard Replacement
+                                    </td>
+                                    <td class="px-4 py-[12px]">Alex J.</td>
+                                    <td class="px-4 py-[12px]">
+                                        <span
+                                            class="font-label-md text-label-md status-chip-completed inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                                        >
+                                            <span
+                                                class="h-1.5 w-1.5 rounded-full bg-emerald-600"
+                                            ></span>
+                                            Completed
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="text-on-surface-variant px-4 py-[12px]"
+                                    >
+                                        Oct 20, 2023
+                                    </td>
+                                    <td class="px-4 py-[12px] text-right">
+                                        <a
+                                            class="hover:text-on-secondary-fixed-variant font-label-md text-label-md inline-flex items-center gap-1 text-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                                            href="#"
+                                        >
+                                            Track
+                                            <span
+                                                class="material-symbols-outlined text-[16px]"
+                                                >open_in_new</span
+                                            >
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div
+                        class="bg-surface-container-lowest flex items-center justify-between border-t border-[#e2e8f0] p-4"
+                    >
+                        <span
+                            class="font-body-md text-body-md text-on-surface-variant"
+                            >Showing 1 to 4 of 24 tickets</span
+                        >
+                        <div class="flex gap-2">
+                            <button
+                                class="border-outline-variant hover:bg-surface-container-low rounded border px-3 py-1 transition-colors disabled:opacity-50"
+                                disabled=""
+                            >
+                                Prev
+                            </button>
+                            <button
+                                class="text-on-secondary rounded bg-secondary px-3 py-1"
+                            >
+                                1
+                            </button>
+                            <button
+                                class="border-outline-variant hover:bg-surface-container-low rounded border px-3 py-1 transition-colors"
+                            >
+                                2
+                            </button>
+                            <button
+                                class="border-outline-variant hover:bg-surface-container-low rounded border px-3 py-1 transition-colors"
+                            >
+                                3
+                            </button>
+                            <button
+                                class="border-outline-variant hover:bg-surface-container-low rounded border px-3 py-1 transition-colors"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+- generic [ref=e3]:
+  - main [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e8]: admin_panel_settings
+        - heading "Pabalu Admin" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Silakan masuk dengan akun Anda.
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Alamat Email
+          - generic [ref=e14]:
+            - generic [ref=e15]: mail
+            - textbox "Alamat Email" [active] [ref=e16]:
+              - /placeholder: admin@pabalu.com
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]: Kata Sandi
+            - link "Lupa Kata Sandi?" [ref=e20] [cursor=pointer]:
+              - /url: "[object Object]"
+          - generic [ref=e21]:
+            - generic [ref=e22]: lock
+            - textbox "Kata Sandi" [ref=e23]:
+              - /placeholder: ••••••••
+        - generic [ref=e24]:
+          - checkbox "Ingat Saya" [ref=e25]
+          - generic [ref=e26]: Ingat Saya
+        - button "Masuk ke Dashboard arrow_forward" [ref=e27]:
+          - generic [ref=e28]: Masuk ke Dashboard
+          - generic [ref=e29]: arrow_forward
+      - generic [ref=e30]:
+        - generic [ref=e31]: shield_lock
+        - paragraph [ref=e32]: Akses aman untuk personel yang berwenang. Semua aktivitas dipantau.
+  - contentinfo [ref=e33]:
+    - paragraph [ref=e34]: © 2024 Pabalu Systems. Portal Manajemen Internal.
+    - generic [ref=e35]:
+      - link "Kebijakan Privasi" [ref=e36] [cursor=pointer]:
+        - /url: "#"
+      - link "Ketentuan Layanan" [ref=e37] [cursor=pointer]:
+        - /url: "#"
+      - link "Status Sistem" [ref=e38] [cursor=pointer]:
+        - /url: "#"
