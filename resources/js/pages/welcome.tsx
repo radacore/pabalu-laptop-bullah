@@ -1,7 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import {
     ArrowRight,
-    Check,
     ChevronRight,
     Clock,
     Cpu,
@@ -12,7 +11,6 @@ import {
     Navigation,
     Phone,
     Quote,
-    Search,
     ShieldCheck,
     Sparkles,
     Star,
@@ -21,8 +19,6 @@ import {
     type LucideIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import type { Laptop, Testimonial, WebsiteSetting } from '@/types';
 
 interface Props {
@@ -38,14 +34,6 @@ const currencyFormatter = new Intl.NumberFormat('id-ID', {
 });
 
 export default function Welcome({ laptops, testimonials, website }: Props) {
-    const searchForm = useForm({ code: '' });
-    const trackCode = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchForm.data.code.trim()) {
-            router.get(`/services/track/${searchForm.data.code.trim()}`);
-        }
-    };
-
     const services: { title: string; desc: string; icon: LucideIcon }[] = [
         { title: 'Upgrade Hardware', desc: 'Tingkatkan kecepatan laptop dengan RAM baru, SSD kencang, atau penggantian baterai original bergaransi.', icon: Cpu },
         { title: 'Software Cleanup', desc: 'Pembersihan virus, instalasi OS legal, optimasi sistem, dan pembersihan data sampah.', icon: Wrench },
@@ -67,7 +55,6 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                             <Link href="/" className="text-sm font-semibold text-blue-800">Home</Link>
                             <a href="#shop" className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-800">Shop</a>
                             <a href="#services" className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-800">Services</a>
-                            <a href="#status" className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-800">Check Status</a>
                             <a href="#contact" className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-800">Contact</a>
                         </nav>
                     </div>
@@ -93,25 +80,15 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                             <p className="max-w-lg text-lg leading-relaxed text-slate-600">
                                 Temukan koleksi laptop refurbished berkualitas dengan garansi resmi, atau percayakan perbaikan hardware & software laptop Anda pada teknisi ahli kami.
                             </p>
-                            {/* Status search */}
-                            <form id="status" onSubmit={trackCode} className="max-w-lg pt-2">
-                                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5 shadow-sm">
-                                    <div className="flex flex-1 items-center gap-2 px-3">
-                                        <Search className="h-5 w-5 text-slate-400" />
-                                        <input
-                                            type="text"
-                                            value={searchForm.data.code}
-                                            onChange={(e) => searchForm.setData('code', e.target.value)}
-                                            placeholder="Masukkan ID Servis (contoh: TR-202401)"
-                                            className="w-full border-none bg-transparent py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400"
-                                        />
-                                    </div>
-                                    <button type="submit" className="rounded-lg bg-blue-800 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-900">
-                                        Cek Status Servis
-                                    </button>
-                                </div>
-                                <p className="mt-2 ml-3 text-xs text-slate-500">Masukkan kode unik untuk memantau proses pengerjaan laptop Anda secara real-time.</p>
-                            </form>
+                            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+                                <a href="#shop" className="inline-flex items-center justify-center rounded-lg bg-blue-800 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-900">
+                                    Lihat Laptop Pilihan
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </a>
+                                <a href="#services" className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-blue-200 hover:text-blue-800">
+                                    Lihat Layanan Servis
+                                </a>
+                            </div>
                         </div>
                         <div className="relative hidden lg:block">
                             <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-blue-200 opacity-40 blur-3xl" />
@@ -122,14 +99,9 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                                     className="h-[480px] w-full object-cover"
                                     src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=1200"
                                 />
-                                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur">
-                                    <div>
-                                        <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800">Status Perbaikan</p>
-                                        <p className="mt-1 text-lg font-bold text-slate-900">Unit TR-9921 Ready!</p>
-                                    </div>
-                                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                                        <Check className="h-6 w-6" />
-                                    </span>
+                                <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur">
+                                    <p className="text-[11px] font-bold uppercase tracking-wider text-blue-800">Laptop Pilihan</p>
+                                    <p className="mt-1 text-lg font-bold text-slate-900">Unit siap pakai, bergaransi, dan sudah lulus inspeksi.</p>
                                 </div>
                             </div>
                         </div>
@@ -381,7 +353,6 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                         <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-blue-800">Perusahaan</h4>
                         <ul className="space-y-2 text-sm">
                             <li><a href="#" className="text-slate-600 transition-colors hover:text-blue-800">Tentang Kami</a></li>
-                            <li><a href="#status" className="text-slate-600 transition-colors hover:text-blue-800">Cek Status Servis</a></li>
                             <li><a href="#" className="text-slate-600 transition-colors hover:text-blue-800">Privacy Policy</a></li>
                             <li><a href="#" className="text-slate-600 transition-colors hover:text-blue-800">Terms of Service</a></li>
                         </ul>
@@ -415,8 +386,8 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 {[
                     { icon: Wrench, label: 'Home', href: '/', active: true },
                     { icon: Sparkles, label: 'Shop', href: '/laptops' },
-                    { icon: Wrench, label: 'Service', href: '#status' },
-                    { icon: Search, label: 'Status', href: '#status' },
+                    { icon: Wrench, label: 'Service', href: '#services' },
+                    { icon: MessageCircle, label: 'Kontak', href: '#contact' },
                     { icon: MessageCircle, label: 'Profile', href: '/login' },
                 ].map((item, i) => (
                     <a key={i} href={item.href} className={`flex flex-col items-center gap-1 ${item.active ? 'text-blue-800' : 'text-slate-500'}`}>
