@@ -4,6 +4,29 @@ Pabalu Laptop adalah aplikasi manajemen operasional toko laptop dan jasa servis.
 
 Repository: `https://github.com/radacore/pabalu-laptop-bullah`
 
+## Database
+
+Project ini memakai **MySQL penuh**, termasuk untuk development lokal.
+
+Database default:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_pabalu_laptop
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sebelum menjalankan migrasi, buat database lokal:
+
+```sql
+CREATE DATABASE db_pabalu_laptop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Jika password MySQL lokal berbeda, sesuaikan `DB_USERNAME` dan `DB_PASSWORD` di `.env`.
+
 ## Ringkasan Fitur
 
 ### Admin Panel
@@ -96,6 +119,114 @@ Halaman publik memakai gaya visual Precision Tech System, terpisah dari gaya adm
 
 Homepage mengambil data laptop tersedia, testimoni aktif, dan pengaturan website dari database.
 
+## Flow Penting
+
+### Flow akses aplikasi
+
+```mermaid
+flowchart TD
+    A[User buka aplikasi] --> B{Sudah login?}
+    B -- Tidak --> C[Halaman login]
+    C --> D[Fortify validasi email dan password]
+    D --> E{Role user}
+    B -- Ya --> E
+    E -- admin --> F[Dashboard dan semua modul admin]
+    E -- staff --> G[Dashboard, servis, update servis, part, foto laptop]
+    E -- customer --> H[Tracking publik sesuai kode servis]
+```
+
+### Flow input laptop sampai tampil publik
+
+```mermaid
+flowchart TD
+    A[Admin buka /laptops/create] --> B[Isi SN opsional, merek, model, sumber, harga, mines, spesifikasi]
+    B --> C[LaptopController store]
+    C --> D[Generate SKU otomatis jika kosong]
+    D --> E[Set status default Tersedia]
+    E --> F[Simpan laptop dan spesifikasi]
+    F --> G[Upload foto laptop jika ada]
+    G --> H[Laptop muncul di inventaris admin]
+    H --> I[Laptop tersedia tampil di homepage]
+    I --> J[Pengunjung buka /laptops/id]
+```
+
+### Flow servis dan tracking publik
+
+```mermaid
+flowchart TD
+    A[Admin buka /services/create] --> B[Pilih pelanggan dan isi data perangkat]
+    B --> C[Isi keluhan, kelengkapan, biaya, teknisi, status]
+    C --> D{Ada sparepart?}
+    D -- Ya --> E[Tambah sparepart used atau sold]
+    D -- Tidak --> F[Simpan servis]
+    E --> F
+    F --> G[Generate service_code dan tracking_code]
+    G --> H[ServiceUpdate awal: Servis diterima]
+    H --> I[Customer buka /services/track/trackingCode]
+    I --> J[Lihat status, progress, timeline, part, biaya]
+```
+
+### Flow sparepart servis
+
+```mermaid
+flowchart LR
+    A[Form Sparepart] --> B{Mode}
+    B -- Pengambilan untuk servis --> C[kind = used]
+    B -- Penjualan ke customer --> D[kind = sold]
+    C --> E[Simpan ke service_parts]
+    D --> E
+    E --> F[Hitung total modal, jual, dan jasa pasang]
+    F --> G[Estimasi biaya servis dapat otomatis terisi]
+```
+
+### Flow transaksi keuangan
+
+```mermaid
+flowchart TD
+    A[Admin buka /financial-transactions/create] --> B[Pilih tipe: pemasukan atau pengeluaran]
+    B --> C[Kategori difilter sesuai tipe]
+    C --> D[Isi jumlah, metode pembayaran, tanggal, deskripsi]
+    D --> E[Generate transaction_code]
+    E --> F[Simpan transaksi]
+    F --> G[Masuk tabel keuangan]
+    G --> H[Summary pemasukan, pengeluaran, saldo diperbarui]
+    H --> I[Grafik Tren Arus Kas memakai data transaksi tidak terpaginasikan]
+```
+
+### Flow pengaturan website ke halaman publik
+
+```mermaid
+flowchart TD
+    A[Admin buka /website-settings] --> B[Isi nama website, logo, alamat, WA, jam, maps, sosial]
+    B --> C[WebsiteSettingController update]
+    C --> D[Simpan ke website_settings]
+    D --> E[HomeController dan ServiceController ambil WebsiteSetting current]
+    E --> F[Homepage memakai data website]
+    E --> G[Detail laptop memakai data website]
+    E --> H[Tracking servis memakai data website]
+```
+
+### Relasi data utama
+
+```mermaid
+erDiagram
+    USERS ||--o{ LAPTOPS : creates
+    USERS ||--o{ SERVICES : creates
+    CUSTOMERS ||--o{ SERVICES : owns
+    LAPTOPS ||--|| LAPTOP_SPECIFICATIONS : has
+    LAPTOPS ||--o{ LAPTOP_PHOTOS : has
+    LAPTOP_SOURCES ||--o{ LAPTOPS : classifies
+    LAPTOP_STATUSES ||--o{ LAPTOPS : classifies
+    SERVICES ||--o{ SERVICE_UPDATES : has
+    SERVICES ||--o{ SERVICE_PARTS : has
+    SERVICE_STATUSES ||--o{ SERVICES : classifies
+    SPAREPART_TYPES ||--o{ SERVICE_PARTS : classifies
+    TRANSACTION_CATEGORIES ||--o{ FINANCIAL_TRANSACTIONS : classifies
+    PAYMENT_METHODS ||--o{ FINANCIAL_TRANSACTIONS : used_by
+    USERS ||--o{ FINANCIAL_TRANSACTIONS : creates
+    USERS ||--o{ WEBSITE_SETTINGS : updates
+```
+
 ## Role Pengguna
 
 Aplikasi memakai role sederhana:
@@ -115,8 +246,7 @@ Proteksi route menggunakan middleware `EnsureUserHasRole`.
 - PHP `^8.3`.
 - Laravel `^13.7`.
 - Laravel Fortify `^1.37.2`.
-- SQLite untuk development lokal.
-- MySQL dapat digunakan untuk production.
+- MySQL untuk development lokal dan production.
 - Pest PHP `^4.7`.
 
 ### Frontend
@@ -307,6 +437,23 @@ cp .env.example .env
 php artisan key:generate
 ```
 
+Buat database MySQL lokal:
+
+```sql
+CREATE DATABASE db_pabalu_laptop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+Pastikan konfigurasi database di `.env` memakai MySQL:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_pabalu_laptop
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
 Jalankan migrasi dan seeder:
 
 ```bash
@@ -361,19 +508,6 @@ Test backend:
 
 ```bash
 php artisan test
-```
-
-## Catatan Database
-
-Development lokal dapat memakai SQLite sesuai konfigurasi `.env`. Untuk production, gunakan MySQL dan sesuaikan variabel berikut:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=db_pabalu_laptop
-DB_USERNAME=root
-DB_PASSWORD=
 ```
 
 ## Catatan Repository
