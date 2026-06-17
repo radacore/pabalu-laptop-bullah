@@ -37,3 +37,7 @@ test-*.js
 verify_login.js
 tests/
 test-results/
+
+# Working documents & code references
+DESIGN*.md
+code*.html
