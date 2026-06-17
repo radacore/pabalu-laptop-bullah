@@ -29,3 +29,11 @@ yarn-error.log
 /.zed
 /.playwright-mcp
 /.sisyphus
+
+# Test & debug files
+*.png
+build_output.txt
+test-*.js
+verify_login.js
+tests/
+test-results/
