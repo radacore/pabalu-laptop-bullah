@@ -15,6 +15,9 @@ export default defineConfig({
                 bunny('Inter', {
                     weights: [400, 500, 600, 700],
                 }),
+                bunny('Outfit', {
+                    weights: [400, 500, 600, 700, 800],
+                }),
             ],
         }),
         inertia(),

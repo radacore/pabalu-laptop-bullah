@@ -1,5 +1,16 @@
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import {
+    MagnifyingGlass,
+    List,
+    X,
+    Bell,
+    CaretDown,
+    UserCircle,
+    Gear,
+    SignOut,
+    SidebarSimple,
+} from '@phosphor-icons/react';
 
 const navItems = [
     { title: 'Dashboard', href: '/dashboard', icon: 'dashboard' },
@@ -10,7 +21,7 @@ const navItems = [
     { title: 'Master Data', href: '/master-data', icon: 'database' },
 ];
 
-function MobileSidebar({ onClose }: { onClose: () => void }) {
+function MobileSidebar({ onClose, collapsed }: { onClose: () => void; collapsed: boolean }) {
     const { url } = usePage();
 
     function isActive(href: string) {
@@ -19,22 +30,34 @@ function MobileSidebar({ onClose }: { onClose: () => void }) {
     }
 
     return (
-        <div className="bg-surface-container-lowest fixed top-0 left-0 z-50 flex h-full w-[280px] flex-col border-r p-gutter shadow-md md:hidden">
-            <div className="mb-stack-lg flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="bg-primary-container text-on-primary-container flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl">
-                        <span className="material-symbols-outlined text-[24px]">laptop_mac</span>
+        <div className={`fixed top-0 left-0 z-50 flex h-full flex-col border-r border-slate-200 bg-white p-5 shadow-xl md:hidden transition-all duration-300 ${
+            collapsed ? 'w-20' : 'w-64'
+        }`}>
+            <div className="mb-6 flex items-center justify-between">
+                {!collapsed && (
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm">
+                            <span className="material-symbols-outlined text-[22px]">laptop_mac</span>
+                        </div>
+                        <div>
+                            <h1 className="text-lg font-bold tracking-tight text-slate-900">Pabalu Admin</h1>
+                            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-slate-500">Management</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-xl font-bold tracking-tight text-on-surface">Pabalu Admin</h1>
-                        <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-on-surface-variant">Internal Management</p>
+                )}
+                {collapsed && (
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm mx-auto">
+                        <span className="material-symbols-outlined text-[22px]">laptop_mac</span>
                     </div>
-                </div>
-                <button onClick={onClose} className="text-on-surface-variant hover:bg-surface-container-low rounded-lg p-1">
-                    <span className="material-symbols-outlined">close</span>
+                )}
+                <button
+                    onClick={onClose}
+                    className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                >
+                    <X className="h-5 w-5" weight="bold" />
                 </button>
             </div>
-            <ul className="flex-1 space-y-1">
+            <ul className="flex-1 space-y-0.5">
                 {navItems.map((item) => {
                     const active = isActive(item.href);
                     return (
@@ -42,14 +65,22 @@ function MobileSidebar({ onClose }: { onClose: () => void }) {
                             <a
                                 href={item.href}
                                 onClick={onClose}
-                                className={
+                                className={`flex items-center rounded-lg text-[14px] font-medium transition-all ${
+                                    collapsed ? 'justify-center px-3 py-3' : 'gap-3 px-3 py-2.5'
+                                } ${
                                     active
-                                        ? 'bg-secondary-container text-on-secondary-container flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold'
-                                        : 'text-on-surface-variant hover:bg-surface-container-high flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-semibold'
-                                }
+                                        ? 'bg-blue-50 text-blue-700 shadow-sm'
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                }`}
                             >
-                                <span className={`material-symbols-outlined text-[22px]${active ? ' fill' : ''}`}>{item.icon}</span>
-                                <span>{item.title}</span>
+                                <span
+                                    className={`material-symbols-outlined text-[20px] ${
+                                        active ? 'fill text-blue-600' : 'text-slate-400'
+                                    }`}
+                                >
+                                    {item.icon}
+                                </span>
+                                {!collapsed && <span>{item.title}</span>}
                             </a>
                         </li>
                     );
@@ -59,56 +90,165 @@ function MobileSidebar({ onClose }: { onClose: () => void }) {
     );
 }
 
-export function AppSidebarHeader() {
+interface AppSidebarHeaderProps {
+    onToggleCollapse: () => void;
+    collapsed: boolean;
+}
+
+export function AppSidebarHeader({ onToggleCollapse, collapsed }: AppSidebarHeaderProps) {
     const { auth } = usePage().props as unknown as { auth: { user: { name: string } } };
     const { props } = usePage<{ q?: string }>();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
     const currentQuery = (props as { q?: string }).q ?? '';
 
     return (
         <>
             {mobileMenuOpen && (
-                <div className="fixed inset-0 z-40 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+                <div
+                    className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
             )}
-            {mobileMenuOpen && <MobileSidebar onClose={() => setMobileMenuOpen(false)} />}
+            {mobileMenuOpen && <MobileSidebar onClose={() => setMobileMenuOpen(false)} collapsed={collapsed} />}
 
-            <header className="bg-surface border-outline-variant sticky top-0 z-40 flex h-[72px] w-full flex-shrink-0 items-center justify-between border-b px-gutter shadow-sm">
-                <button
-                    onClick={() => setMobileMenuOpen(true)}
-                    className="text-on-surface-variant hover:bg-surface-container-low mr-3 rounded-lg p-2 transition-colors md:hidden"
-                >
-                    <span className="material-symbols-outlined">menu</span>
-                </button>
+            <header className={`fixed top-0 right-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 transition-all duration-300 ${
+                collapsed ? 'md:left-20' : 'md:left-64'
+            } left-0`}>
+                <div className="flex items-center gap-4">
+                    {/* Mobile menu button */}
+                    <button
+                        onClick={() => setMobileMenuOpen(true)}
+                        className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 md:hidden"
+                    >
+                        <List className="h-6 w-6" weight="bold" />
+                    </button>
 
+                    {/* Collapse toggle button */}
+                    <button
+                        onClick={onToggleCollapse}
+                        className="hidden rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 md:block"
+                        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    >
+                        <SidebarSimple className="h-5 w-5" weight="bold" />
+                    </button>
+                </div>
+
+                {/* Search bar */}
                 <form
                     method="GET"
                     action="/search"
-                    className="relative mr-4 max-w-xl flex-1"
+                    className="relative mx-6 max-w-xl flex-1"
                 >
-                    <span className="material-symbols-outlined text-outline-variant pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[20px]">search</span>
+                    <MagnifyingGlass
+                        className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400"
+                        weight="duotone"
+                    />
                     <input
                         name="q"
                         defaultValue={currentQuery}
-                        className="bg-surface-container-low border-outline-variant placeholder:text-outline w-full rounded-xl border py-2.5 pr-24 pl-11 text-[15px] transition-all focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pr-28 pl-12 text-[14px] text-slate-900 transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                         placeholder="Cari inventaris, tiket, pelanggan..."
                         type="text"
                     />
                     <button
                         type="submit"
-                        className="absolute top-1/2 right-2 -translate-y-1/2 inline-flex items-center gap-1.5 rounded-lg bg-secondary px-3.5 py-1.5 text-[13px] font-semibold text-on-secondary shadow-sm transition-colors hover:bg-on-secondary-fixed-variant"
+                        className="absolute top-1/2 right-2 -translate-y-1/2 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.98]"
                     >
-                        <span className="material-symbols-outlined text-[16px]">search</span>
-                        Cari
+                        <MagnifyingGlass className="h-4 w-4" weight="bold" />
+                        Search
                     </button>
                 </form>
 
-                <div className="flex items-center gap-3">
-                    <div className="hidden flex-col items-end sm:flex">
-                        <span className="text-[14px] font-semibold text-on-surface">{auth.user.name}</span>
-                        <span className="text-[10px] font-medium uppercase tracking-wider text-on-surface-variant">Admin Panel</span>
-                    </div>
-                    <div className="bg-primary-container text-on-primary-container flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full text-sm font-bold">
-                        {auth.user.name.charAt(0).toUpperCase()}
+                {/* Right side */}
+                <div className="flex items-center gap-4">
+                    {/* Notifications */}
+                    <button className="relative rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900">
+                        <Bell className="h-5 w-5" weight="duotone" />
+                        <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
+                    </button>
+
+                    {/* User menu */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                            className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-slate-50"
+                        >
+                            <div className="hidden flex-col items-end sm:flex">
+                                <span className="text-[14px] font-semibold text-slate-900">
+                                    {auth.user.name}
+                                </span>
+                                <span className="text-[11px] font-medium text-slate-500">Admin</span>
+                            </div>
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-sm font-bold text-white shadow-sm">
+                                {auth.user.name.charAt(0).toUpperCase()}
+                            </div>
+                            <CaretDown
+                                className={`h-4 w-4 text-slate-400 transition-transform ${
+                                    userMenuOpen ? 'rotate-180' : ''
+                                }`}
+                                weight="bold"
+                            />
+                        </button>
+
+                        {/* Dropdown */}
+                        {userMenuOpen && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setUserMenuOpen(false)}
+                                />
+                                <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-2 shadow-xl">
+                                    <div className="border-b border-slate-100 px-4 py-3">
+                                        <p className="text-[14px] font-semibold text-slate-900">
+                                            {auth.user.name}
+                                        </p>
+                                        <p className="text-[12px] text-slate-500">Administrator</p>
+                                    </div>
+                                    <div className="py-1">
+                                        <a
+                                            href="/profile"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-[14px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                                        >
+                                            <UserCircle className="h-5 w-5 text-slate-400" weight="duotone" />
+                                            Profile
+                                        </a>
+                                        <a
+                                            href="/settings"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-[14px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                                        >
+                                            <Gear className="h-5 w-5 text-slate-400" weight="duotone" />
+                                            Settings
+                                        </a>
+                                    </div>
+                                    <div className="border-t border-slate-100 py-1">
+                                        <button
+                                            onClick={() => {
+                                                const form = document.createElement('form');
+                                                form.method = 'POST';
+                                                form.action = '/logout';
+                                                const token = document
+                                                    .querySelector('meta[name="csrf-token"]')
+                                                    ?.getAttribute('content');
+                                                if (token) {
+                                                    const input = document.createElement('input');
+                                                    input.type = 'hidden';
+                                                    input.name = '_token';
+                                                    input.value = token;
+                                                    form.appendChild(input);
+                                                }
+                                                document.body.appendChild(form);
+                                                form.submit();
+                                            }}
+                                            className="flex w-full items-center gap-3 px-4 py-2.5 text-[14px] font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700"
+                                        >
+                                            <SignOut className="h-5 w-5 text-slate-400" weight="duotone" />
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>

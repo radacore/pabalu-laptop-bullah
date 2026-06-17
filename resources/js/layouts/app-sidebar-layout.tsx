@@ -21,13 +21,13 @@ export default function AppSidebarLayout({ children }: AppSidebarLayoutProps) {
             {/* Sidebar */}
             <AppSidebar collapsed={collapsed} />
 
-            {/* Main content - pt-16 = 64px matches navbar h-16 */}
+            {/* Main content */}
             <main
-                className={`pt-16 pb-6 transition-all duration-300 ${
+                className={`transition-all duration-300 pt-16 ${
                     collapsed ? 'md:pl-20' : 'md:pl-64'
                 }`}
             >
-                <div className="px-6">
+                <div className="p-6">
                     {children}
                 </div>
             </main>

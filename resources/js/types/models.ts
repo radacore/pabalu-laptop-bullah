@@ -26,6 +26,11 @@ export type PaginatedResponse<T> = {
     total: number;
     from: number | null;
     to: number | null;
+    links?: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
 };
 
 export type User = {

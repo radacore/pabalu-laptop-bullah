@@ -117,6 +117,7 @@ class ServiceController extends Controller
     {
         $service = Service::query()
             ->where('tracking_code', $trackingCode)
+            ->orWhere('service_code', $trackingCode)
             ->with([
                 'customer',
                 'status',
