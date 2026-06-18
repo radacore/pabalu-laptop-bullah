@@ -26,7 +26,9 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('shop', [HomeController::class, 'laptopCatalog'])->name('laptops.catalog');
 Route::get('laptops/{laptop}', [HomeController::class, 'laptopShow'])->name('laptops.public.show');
-Route::get('services/track/{trackingCode}', [ServiceController::class, 'track'])->name('services.track');
+Route::get('services/track/{trackingCode}', [ServiceController::class, 'track'])
+    ->middleware('throttle:10,1')
+    ->name('services.track');
 
 Route::middleware(['auth', 'verified', 'role:admin,staff'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

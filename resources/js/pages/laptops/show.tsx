@@ -29,7 +29,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
     const margin =
         Number(laptop.selling_price ?? 0) -
         Number(laptop.cost_price ?? 0) -
-        Number(laptop.additional_cost ?? 0);
+        Number(laptop.repair_cost ?? 0);
     const specificationRows = [
         ['Prosesor', specification?.processor],
         ['RAM', specification?.ram],
@@ -44,16 +44,17 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
 
     return (
         <>
-            <Head title={laptop.name} />
+            <Head title={laptop.name ?? undefined} />
             <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
                 <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-3">
                         <div className="space-y-1">
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                {laptop.name}
+                                {laptop.brand?.name} {laptop.model}
                             </h1>
                             <p className="text-sm text-muted-foreground">
                                 SKU: {laptop.sku}
+                                {laptop.name && ` - ${laptop.name}`}
                             </p>
                         </div>
                         <StatusBadge
@@ -125,10 +126,10 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                 </div>
                                 <div className="flex items-center justify-between gap-4">
                                     <dt className="text-muted-foreground">
-                                        Biaya Plusan
+                                        Biaya Perbaikan
                                     </dt>
                                     <dd className="font-medium">
-                                        {formatCurrency(laptop.additional_cost)}
+                                        {formatCurrency(laptop.repair_cost)}
                                     </dd>
                                 </div>
                                 <div className="flex items-center justify-between gap-4 border-t pt-3">
@@ -173,7 +174,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                 >
                                     <img
                                         src={photo.file_path}
-                                        alt={photo.caption ?? laptop.name}
+                                        alt={photo.caption ?? laptop.name ?? undefined}
                                         className="aspect-video w-full object-cover"
                                     />
                                     {photo.caption && (

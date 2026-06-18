@@ -17,7 +17,7 @@ class LaptopPhotoController extends Controller
     public function store(Request $request, Laptop $laptop): RedirectResponse
     {
         $validated = $request->validate([
-            'photo' => ['required', 'image', 'max:10240'],
+            'photo' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:10240'],
             'caption' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);

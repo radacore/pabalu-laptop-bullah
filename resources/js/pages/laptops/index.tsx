@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type {
+    Brand,
     Laptop,
     LaptopSource,
     LaptopStatus,
@@ -18,9 +19,11 @@ interface LaptopsIndexHalamanProps {
     laptops: PaginatedResponse<Laptop>;
     filters: {
         search?: string;
+        brand_id?: string;
         laptop_status_id?: string;
         laptop_source_id?: string;
     };
+    brands: Brand[];
     statuses: LaptopStatus[];
     sources: LaptopSource[];
 }
@@ -46,6 +49,7 @@ function buildLaptopsUrl(
     const params = new URLSearchParams();
 
     if (filters.search) params.set('search', filters.search);
+    if (filters.brand_id) params.set('brand_id', filters.brand_id);
     if (filters.laptop_status_id)
         params.set('laptop_status_id', filters.laptop_status_id);
     if (filters.laptop_source_id)
@@ -60,10 +64,12 @@ function buildLaptopsUrl(
 const LaptopsIndex: HalamanComponent = ({
     laptops,
     filters,
+    brands,
     statuses,
     sources,
 }) => {
     const [search, setSearch] = useState(filters.search ?? '');
+    const [brandId, setBrandId] = useState(filters.brand_id ?? 'all');
     const [statusId, setStatusId] = useState(filters.laptop_status_id ?? 'all');
     const [sourceId, setSourceId] = useState(filters.laptop_source_id ?? 'all');
     const [toDelete, setToDelete] = useState<Laptop | null>(null);
@@ -73,6 +79,7 @@ const LaptopsIndex: HalamanComponent = ({
             '/laptops',
             {
                 search: search || undefined,
+                brand_id: brandId === 'all' ? undefined : brandId,
                 laptop_status_id: statusId === 'all' ? undefined : statusId,
                 laptop_source_id: sourceId === 'all' ? undefined : sourceId,
             },
@@ -82,6 +89,7 @@ const LaptopsIndex: HalamanComponent = ({
 
     function clearFilters() {
         setSearch('');
+        setBrandId('all');
         setStatusId('all');
         setSourceId('all');
         router.get('/laptops', {}, { preserveState: true, replace: true });
@@ -131,6 +139,35 @@ const LaptopsIndex: HalamanComponent = ({
                             placeholder="Cari nama, merek, model, atau SKU..."
                             className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
                         />
+                    </div>
+                    <div className="relative w-56">
+                        <select
+                            value={brandId}
+                            onChange={(event) => setBrandId(event.target.value)}
+                            className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pl-4 pr-10 text-base text-slate-700 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                        >
+                            <option value="all">Semua merek</option>
+                            {brands.map((brand) => (
+                                <option key={brand.id} value={String(brand.id)}>
+                                    {brand.name}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500">
+                            <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M19 9l-7 7-7-7"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                />
+                            </svg>
+                        </div>
                     </div>
                     <div className="relative w-56">
                         <select
@@ -269,7 +306,7 @@ const LaptopsIndex: HalamanComponent = ({
                                                     {laptop.name ?? '-'}
                                                 </td>
                                                 <td className="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
-                                                    {laptop.brand}
+                                                    {laptop.brand?.name ?? '-'}
                                                 </td>
                                                 <td className="px-6 py-4 text-sm text-slate-600">
                                                     {laptop.model}

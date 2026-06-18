@@ -1,94 +1,169 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Edit, Plus, Trash2 } from 'lucide-react';
+import { MagnifyingGlass, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import DeleteDialog from '@/components/shared/delete-dialog';
-import HalamanHeader from '@/components/layout/page-header';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { PaginatedResponse, TransactionCategory } from '@/types';
 
-interface TransactionKategoriData {
-    id: number; name: string; is_active?: boolean;
-    description?: string | null; type?: 'income' | 'expense';
-}
-
-interface IndexProps {
-    transactionCategories: { data: TransactionKategoriData[]; current_page: number; last_page: number; total: number; from: number | null; to: number | null };
+interface TransactionCategoriesIndexProps {
+    transactionCategories: PaginatedResponse<TransactionCategory>;
     filters: { search?: string };
 }
 
-export default function TransactionKategoriIndex({ transactionCategories: data, filters }: IndexProps) {
-    const [deleteId, setDeleteId] = useState<number | null>(null);
+function buildUrl(page: number, search: string | undefined) {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (page > 1) params.set('page', String(page));
+    const query = params.toString();
+    return query ? `/master-data/transaction-categories?${query}` : '/master-data/transaction-categories';
+}
+
+const TransactionCategoriesIndex = ({ transactionCategories, filters }: TransactionCategoriesIndexProps) => {
+    const [toDelete, setToDelete] = useState<TransactionCategory | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
 
-    function handleDelete() {
-        if (!deleteId) return;
-        router.delete(`/master-data/transaction-categories/${deleteId}`, { preserveState: true, replace: true, onSuccess: () => setDeleteId(null) });
-    }
-
-    function handleSearch(value: string) {
+    function applySearch(value: string) {
         setSearch(value);
         router.get('/master-data/transaction-categories', { search: value || undefined }, { preserveState: true, replace: true });
     }
 
-    function goToHalaman(page: number) {
-        router.get(`/master-data/transaction-categories?page=${page}`, { search: search || undefined }, { preserveState: true, replace: true });
+    function handleDelete() {
+        if (!toDelete) return;
+        router.delete(`/master-data/transaction-categories/${toDelete.id}`, {
+            preserveState: true,
+            replace: true,
+            onSuccess: () => setToDelete(null),
+        });
     }
 
     return (
         <>
-            <Head title="Transaction Kategori" />
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
-                <HalamanHeader title="Transaction Kategori" description="Manage income and expense categories" actions={[<Button key="create" asChild><Link href="/master-data/transaction-categories/create"><Plus className="mr-2 size-4" />Add Kategori</Link></Button>]} />
-                <Card className="overflow-hidden py-0">
-                    <div className="border-b px-4 py-4 sm:px-6">
+            <Head title="Kategori Transaksi" />
+            <div className="mx-auto flex max-w-7xl flex-col gap-6 p-6">
+                <header className="flex items-end justify-between">
+                    <div>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                            Kategori Transaksi
+                        </h2>
+                        <p className="mt-1.5 text-sm text-slate-500">
+                            Kelola tipe pemasukan dan pengeluaran
+                        </p>
+                    </div>
+                    <Link
+                        href="/master-data/transaction-categories/create"
+                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    >
+                        <Plus className="size-4" weight="bold" />
+                        Tambah Kategori
+                    </Link>
+                </header>
+
+                <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                    <div className="border-b border-slate-200 p-4 sm:px-6">
                         <div className="relative w-full sm:max-w-sm">
-                            <input type="search" placeholder="Cari kategori..." className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 w-full rounded-md border bg-transparent px-3 py-2 pl-9 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]" value={search} onChange={(e) => handleSearch(e.target.value)} />
-                            <svg className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="search"
+                                value={search}
+                                onChange={(event) => applySearch(event.target.value)}
+                                placeholder="Cari kategori transaksi..."
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
                         </div>
                     </div>
-                    <CardContent className="px-0">
+
+                    {transactionCategories.data.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <h3 className="text-base font-semibold text-slate-900">
+                                Belum ada kategori transaksi
+                            </h3>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Tambahkan kategori pemasukan atau pengeluaran pertama Anda.
+                            </p>
+                        </div>
+                    ) : (
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead className="bg-muted/50 text-muted-foreground">
-                                    <tr className="border-b">
-                                        <th className="px-4 py-3 text-left font-medium sm:px-6">Nama</th>
-                                        <th className="px-4 py-3 text-left font-medium sm:px-6">Tipe</th>
-                                        <th className="px-4 py-3 text-left font-medium sm:px-6">Status</th>
-                                        <th className="px-4 py-3 text-right font-medium sm:px-6">Activity</th>
+                            <table className="min-w-full divide-y divide-slate-200">
+                                <thead className="bg-slate-50">
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Nama
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Tipe
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Aksi
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y">
-                                    {data.data.map((item: TransactionKategoriData) => (
-                                        <tr key={item.id} className="hover:bg-muted/30">
-                                            <td className="px-4 py-3 font-medium sm:px-6">{item.name}</td>
-                                            <td className="px-4 py-3 sm:px-6"><StatusBadge status={item.type ?? 'tidak-diketahui'} /></td>
-                                            <td className="px-4 py-3 sm:px-6"><StatusBadge status={item.is_active ? 'available' : 'error'} /></td>
-                                            <td className="px-4 py-3 text-right sm:px-6">
+                                <tbody className="divide-y divide-slate-100 bg-white">
+                                    {transactionCategories.data.map((category) => (
+                                        <tr key={category.id} className="transition-colors hover:bg-slate-50">
+                                            <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                                                {category.name}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <StatusBadge status={category.type ?? 'tidak-diketahui'} />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <StatusBadge status={category.is_active ? 'tersedia' : 'error'} />
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-1">
-                                                    <Button variant="success" size="sm" asChild><Link href={`/master-data/transaction-categories/${item.id}/edit`}><Edit className="mr-1 size-4" />Edit</Link></Button>
-                                                    <Button variant="destructive" size="sm" onClick={() => setDeleteId(item.id)}><Trash2 className="mr-1 size-4" />Hapus</Button>
+                                                    <Button asChild variant="success" size="sm">
+                                                        <Link href={`/master-data/transaction-categories/${category.id}/edit`}>
+                                                            <PencilSimple className="mr-1 size-4" weight="bold" />
+                                                            Edit
+                                                        </Link>
+                                                    </Button>
+                                                    <Button variant="destructive" size="sm" onClick={() => setToDelete(category)}>
+                                                        <Trash className="mr-1 size-4" weight="bold" />
+                                                        Hapus
+                                                    </Button>
                                                 </div>
                                             </td>
                                         </tr>
                                     ))}
-                                    {data.data.length === 0 && (<tr><td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">Tidak categories found.</td></tr>)}
                                 </tbody>
                             </table>
                         </div>
-                    </CardContent>
-                    {data.last_page > 1 && (
-                        <div className="flex items-center justify-between border-t px-6 py-3">
-                            <p className="text-sm text-muted-foreground">Menampilkan {data.from ?? 0} to {data.to ?? 0} of {data.total}</p>
-                            <div className="flex gap-1">
-                                <Button variant="outline" size="sm" disabled={data.current_page <= 1} onClick={() => goToHalaman(data.current_page - 1)}>Sebelumnya</Button>
-                                <Button variant="outline" size="sm" disabled={data.current_page >= data.last_page} onClick={() => goToHalaman(data.current_page + 1)}>Selanjutnya</Button>
-                            </div>
-                        </div>
                     )}
-                </Card>
+                </section>
+
+                <DeleteDialog
+                    open={toDelete !== null}
+                    onOpenChange={(open) => { if (!open) setToDelete(null); }}
+                    onKonfirmasi={handleDelete}
+                    title="Hapus Kategori Transaksi?"
+                    description={
+                        toDelete
+                            ? `Aksi ini tidak dapat dibatalkan. Kategori transaksi "${toDelete.name}" akan dihapus permanen.`
+                            : ''
+                    }
+                />
             </div>
-            <DeleteDialog open={deleteId !== null} onOpenChange={(open) => { if (!open) setDeleteId(null); }} onKonfirmasi={handleDelete} title="Trash2 Kategori" description="Apakah Anda yakin? Tindakan ini tidak dapat dibatalkan." />
         </>
     );
-}
+};
+
+TransactionCategoriesIndex.layout = (page: ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Data Master', href: '/master-data' },
+            { title: 'Kategori Transaksi', href: '/master-data/transaction-categories' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default TransactionCategoriesIndex;

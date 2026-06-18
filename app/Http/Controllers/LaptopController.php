@@ -23,17 +23,20 @@ class LaptopController extends Controller
     public function index(Request $request): Response
     {
         $laptops = Laptop::query()
-            ->with(['source', 'status', 'creator', 'specification'])
+            ->with(['source', 'status', 'creator', 'specification', 'brand'])
             ->when($request->string('search')->isNotEmpty(), function ($query) use ($request) {
                 $search = $request->string('search')->toString();
 
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('brand', 'like', "%{$search}%")
+                        ->orWhereHas('brand', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        })
                         ->orWhere('model', 'like', "%{$search}%")
                         ->orWhere('sku', 'like', "%{$search}%");
                 });
             })
+            ->when($request->filled('brand_id'), fn ($query) => $query->where('brand_id', $request->integer('brand_id')))
             ->when($request->filled('laptop_status_id'), fn ($query) => $query->where('laptop_status_id', $request->integer('laptop_status_id')))
             ->when($request->filled('laptop_source_id'), fn ($query) => $query->where('laptop_source_id', $request->integer('laptop_source_id')))
             ->latest()
@@ -42,7 +45,8 @@ class LaptopController extends Controller
 
         return Inertia::render('laptops/index', [
             'laptops' => $laptops,
-            'filters' => $request->only(['search', 'laptop_status_id', 'laptop_source_id']),
+            'filters' => $request->only(['search', 'brand_id', 'laptop_status_id', 'laptop_source_id']),
+            'brands' => Brand::query()->where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(),
             'sources' => LaptopSource::query()->orderBy('sort_order')->orderBy('name')->get(),
             'statuses' => LaptopStatus::query()->orderBy('sort_order')->orderBy('name')->get(),
         ]);
@@ -61,10 +65,15 @@ class LaptopController extends Controller
      */
     public function store(StoreLaptopRequest $request): RedirectResponse
     {
-        $data = $request->safe()->except(['specification', 'laptop_status_id']);
+        $data = $request->safe()->except(['specification', 'laptop_status_id', 'brand']);
         $data['created_by'] = Auth::id();
         $data['laptop_status_id'] = $request->input('laptop_status_id')
             ?? $this->defaultStatusId();
+
+        // Map brand_id from form input
+        if ($request->has('brand_id')) {
+            $data['brand_id'] = $request->input('brand_id');
+        }
 
         DB::transaction(function () use ($data, $request): void {
             $laptop = Laptop::query()->create($data);
@@ -82,7 +91,7 @@ class LaptopController extends Controller
     public function show(Laptop $laptop): Response
     {
         return Inertia::render('laptops/show', [
-            'laptop' => $laptop->load(['specification', 'photos', 'source', 'status', 'creator']),
+            'laptop' => $laptop->load(['specification', 'photos', 'source', 'status', 'creator', 'brand']),
         ]);
     }
 
@@ -103,7 +112,8 @@ class LaptopController extends Controller
     public function update(UpdateLaptopRequest $request, Laptop $laptop): RedirectResponse
     {
         DB::transaction(function () use ($request, $laptop): void {
-            $laptop->update($request->safe()->except('specification'));
+            $data = $request->safe()->except(['specification', 'brand']);
+            $laptop->update($data);
             $this->syncSpecification($laptop, $request->validated('specification', []));
         });
 

@@ -1,51 +1,181 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Edit, Plus, Trash2 } from 'lucide-react';
+import { MagnifyingGlass, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import DeleteDialog from '@/components/shared/delete-dialog';
-import HalamanHeader from '@/components/layout/page-header';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { PaginatedResponse, ServiceStatus } from '@/types';
 
-interface ItemData { id: number; name: string; is_active?: boolean; description?: string | null; color?: string | null; }
-interface IP { data: ItemData[]; current_page: number; last_page: number; total: number; from: number | null; to: number | null; }
-interface IndexProps { serviceStatuses: IP; filters: { search?: string }; }
-
-export default function ServiceStatusIndex({ serviceStatuses: data, filters }: IndexProps) {
-    const [did, setDid] = useState<number | null>(null);
-    const [q, setQ] = useState(filters.search ?? '');
-    function hd() { if (!did) return; router.delete(`/master-data/service-statuses/${did}`, { preserveState: true, replace: true, onSuccess: () => setDid(null) }); }
-    function hs(v: string) { setQ(v); router.get('/master-data/service-statuses', { search: v || undefined }, { preserveState: true, replace: true }); }
-    function gp(p: number) { router.get('/master-data/service-statuses?page='+p, {}, { preserveState: true, replace: true }); }
-    return (<><Head title="Status Servis" /><div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
-        <HalamanHeader title="Status Servis" description="Manage service statuses" actions={[<Button key="c" asChild><Link href="/master-data/service-statuses/create"><Plus className="mr-2 size-4" />Add</Link></Button>]} />
-        <Card className="overflow-hidden py-0">
-            <div className="border-b px-4 py-4 sm:px-6"><div className="relative w-full sm:max-w-sm">
-                <input type="search" placeholder="Cari status..." className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 w-full rounded-md border bg-transparent px-3 py-2 pl-9 text-sm shadow-xs outline-none focus-visible:ring-[3px]" value={q} onChange={(e) => hs(e.target.value)} />
-                <svg className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            </div></div>
-            <CardContent className="px-0">
-                <div className="overflow-x-auto"><table className="w-full text-sm">
-                    <thead className="bg-muted/50 text-muted-foreground"><tr><th className="px-4 py-3 text-left font-medium sm:px-6">Nama</th><th className="px-4 py-3 text-left font-medium sm:px-6">Status</th><th className="px-4 py-3 text-right font-medium sm:px-6">Activity</th></tr></thead>
-                    <tbody>{data.data.map((it: ItemData) => (<tr key={it.id}>
-                        <td className="px-4 py-3 sm:px-6">{it.color && <span className="inline-block size-3 rounded-full" style={{backgroundColor:it.color}}/>}{it.name}</td>
-                        <td className="px-4 py-3 sm:px-6"><StatusBadge status={it.is_active ? "available" : "error"} /></td>
-                        <td className="px-4 py-3 text-right sm:px-6">
-                            <div className="flex items-center justify-end gap-1">
-                                <Button variant="success" size="sm" asChild><Link href={"/master-data/service-statuses/"+it.id+"/edit"}><Edit className="mr-1 size-4" />Edit</Link></Button>
-                                <Button variant="destructive" size="sm" onClick={() => setDid(it.id)}><Trash2 className="mr-1 size-4" />Hapus</Button>
-                            </div>
-                        </td>
-                    </tr>))}
-                    {data.data.length===0 && <tr><td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">Tidak data.</td></tr>}
-                </tbody></table>
-            </div></CardContent>
-            {data.last_page>1 && <div className="flex items-center justify-between border-t px-6 py-3">
-                <p className="text-sm text-muted-foreground">Menampilkan {data.from??0} to {data.to??0} of {data.total}</p>
-                <div className="flex gap-1"><Button variant="outline" size="sm" disabled={data.current_page<=1} onClick={()=>gp(data.current_page-1)}>Sebelumnya</Button><Button variant="outline" size="sm" disabled={data.current_page>=data.last_page} onClick={()=>gp(data.current_page+1)}>Selanjutnya</Button></div>
-            </div>}
-        </Card>
-    </div>
-    <DeleteDialog open={did!==null} onOpenChange={(o)=>{if(!o)setDid(null);}} onKonfirmasi={hd} title="Delete" description="Apakah Anda yakin?" />
-    </>);
+interface ServiceStatusesIndexProps {
+    serviceStatuses: PaginatedResponse<ServiceStatus>;
+    filters: { search?: string };
 }
+
+function buildUrl(page: number, search: string | undefined) {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (page > 1) params.set('page', String(page));
+    const query = params.toString();
+    return query ? `/master-data/service-statuses?${query}` : '/master-data/service-statuses';
+}
+
+const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndexProps) => {
+    const [toDelete, setToDelete] = useState<ServiceStatus | null>(null);
+    const [search, setSearch] = useState(filters.search ?? '');
+
+    function applySearch(value: string) {
+        setSearch(value);
+        router.get('/master-data/service-statuses', { search: value || undefined }, { preserveState: true, replace: true });
+    }
+
+    function handleDelete() {
+        if (!toDelete) return;
+        router.delete(`/master-data/service-statuses/${toDelete.id}`, {
+            preserveState: true,
+            replace: true,
+            onSuccess: () => setToDelete(null),
+        });
+    }
+
+    return (
+        <>
+            <Head title="Status Servis" />
+            <div className="mx-auto flex max-w-7xl flex-col gap-6 p-6">
+                <header className="flex items-end justify-between">
+                    <div>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                            Status Servis
+                        </h2>
+                        <p className="mt-1.5 text-sm text-slate-500">
+                            Kelola tahapan alur kerja servis
+                        </p>
+                    </div>
+                    <Link
+                        href="/master-data/service-statuses/create"
+                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    >
+                        <Plus className="size-4" weight="bold" />
+                        Tambah Status
+                    </Link>
+                </header>
+
+                <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                    <div className="border-b border-slate-200 p-4 sm:px-6">
+                        <div className="relative w-full sm:max-w-sm">
+                            <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="search"
+                                value={search}
+                                onChange={(event) => applySearch(event.target.value)}
+                                placeholder="Cari status servis..."
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+
+                    {serviceStatuses.data.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <h3 className="text-base font-semibold text-slate-900">
+                                Belum ada status servis
+                            </h3>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Tambahkan tahapan servis pertama Anda.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-slate-200">
+                                <thead className="bg-slate-50">
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Nama
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Warna
+                                        </th>
+                                        <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 bg-white">
+                                    {serviceStatuses.data.map((status) => (
+                                        <tr key={status.id} className="transition-colors hover:bg-slate-50">
+                                            <td className="px-6 py-4 text-sm font-medium text-slate-900">
+                                                {status.name}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {status.color ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <span
+                                                            className="inline-block size-4 rounded-full border border-slate-200"
+                                                            style={{ backgroundColor: status.color }}
+                                                        />
+                                                        <span className="text-xs font-mono text-slate-500">
+                                                            {status.color}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-xs text-slate-400">-</span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <StatusBadge status={status.is_active ? 'tersedia' : 'error'} />
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <Button asChild variant="success" size="sm">
+                                                        <Link href={`/master-data/service-statuses/${status.id}/edit`}>
+                                                            <PencilSimple className="mr-1 size-4" weight="bold" />
+                                                            Edit
+                                                        </Link>
+                                                    </Button>
+                                                    <Button variant="destructive" size="sm" onClick={() => setToDelete(status)}>
+                                                        <Trash className="mr-1 size-4" weight="bold" />
+                                                        Hapus
+                                                    </Button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </section>
+
+                <DeleteDialog
+                    open={toDelete !== null}
+                    onOpenChange={(open) => { if (!open) setToDelete(null); }}
+                    onKonfirmasi={handleDelete}
+                    title="Hapus Status Servis?"
+                    description={
+                        toDelete
+                            ? `Aksi ini tidak dapat dibatalkan. Status servis "${toDelete.name}" akan dihapus permanen.`
+                            : ''
+                    }
+                />
+            </div>
+        </>
+    );
+};
+
+ServiceStatusesIndex.layout = (page: ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Data Master', href: '/master-data' },
+            { title: 'Status Servis', href: '/master-data/service-statuses' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default ServiceStatusesIndex;

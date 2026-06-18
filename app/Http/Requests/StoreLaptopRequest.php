@@ -32,7 +32,7 @@ class StoreLaptopRequest extends FormRequest
         return [
             'sku' => ['required', 'string', 'max:255', Rule::unique('laptops', 'sku')],
             'name' => ['nullable', 'string', 'max:255'],
-            'brand' => ['required', 'string', 'max:255'],
+            'brand_id' => ['required', 'integer', 'exists:brands,id'],
             'model' => ['required', 'string', 'max:255'],
             'laptop_source_id' => ['nullable', 'exists:laptop_sources,id'],
             'purchase_date' => ['required', 'date'],

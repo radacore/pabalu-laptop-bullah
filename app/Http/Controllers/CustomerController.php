@@ -91,7 +91,7 @@ class CustomerController extends Controller
     public function show(Customer $customer): Response
     {
         return Inertia::render('customers/show', [
-            'customer' => $customer->load(['user', 'services' => fn ($query) => $query->with('status')->latest()->limit(5)]),
+            'pelanggan' => $customer->load(['user', 'services' => fn ($query) => $query->with('status')->latest()->limit(5)]),
         ]);
     }
 

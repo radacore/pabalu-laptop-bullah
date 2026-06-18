@@ -44,7 +44,7 @@ export default function LaptopEdit({
     const form = useForm({
         sku: laptop.sku ?? '',
         name: nullableString(laptop.name),
-        brand: laptop.brand ?? '',
+        brand_id: laptop.brand_id ? String(laptop.brand_id) : '',
         model: laptop.model ?? '',
         laptop_source_id: laptop.laptop_source_id
             ? String(laptop.laptop_source_id)
@@ -55,7 +55,7 @@ export default function LaptopEdit({
         cost_price: String(laptop.cost_price ?? ''),
         selling_price: String(laptop.selling_price ?? ''),
         repair_cost: String(
-            (laptop.repair_cost ?? laptop.additional_cost ?? '') as
+            (laptop.repair_cost ?? '') as
                 | string
                 | number
                 | null,
@@ -83,7 +83,7 @@ export default function LaptopEdit({
                             Edit Laptop
                         </h1>
                         <p className="text-sm text-muted-foreground">
-                            {laptop.sku} — {laptop.brand} {laptop.model}
+                            {laptop.sku} — {laptop.brand?.name || 'N/A'} {laptop.model}
                         </p>
                     </div>
                     <Button variant="outline" asChild>
@@ -114,19 +114,19 @@ export default function LaptopEdit({
                                 <InputError message={form.errors.name} />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="brand">Merek</Label>
+                                <Label htmlFor="brand_id">Merek</Label>
                                 <Select
-                                    value={form.data.brand || emptySelectValue}
+                                    value={form.data.brand_id || emptySelectValue}
                                     onValueChange={(value) =>
                                         form.setData(
-                                            'brand',
+                                            'brand_id',
                                             value === emptySelectValue
                                                 ? ''
                                                 : value,
                                         )
                                     }
                                 >
-                                    <SelectTrigger id="brand">
+                                    <SelectTrigger id="brand_id">
                                         <SelectValue placeholder="Pilih merek" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -136,14 +136,14 @@ export default function LaptopEdit({
                                         {brands.map((brand) => (
                                             <SelectItem
                                                 key={brand.id}
-                                                value={brand.name}
+                                                value={String(brand.id)}
                                             >
                                                 {brand.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <InputError message={form.errors.brand} />
+                                <InputError message={form.errors.brand_id} />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="model">Model / Series</Label>

@@ -125,10 +125,14 @@ export default function WebsiteSettings({ setting }: Props) {
             <Head title="Pengaturan Website" />
 
             <form onSubmit={submit} className="mx-auto max-w-7xl space-y-6 p-6">
-                <PageHeader
-                    title="Pengaturan Website"
-                    description="Konfigurasi identitas, kontak, jam buka, dan tautan sosial yang ditampilkan di halaman publik."
-                />
+                <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">Pengaturan Website</h2>
+                        <p className="mt-1 text-sm text-slate-500">
+                            Konfigurasi identitas, kontak, jam buka, dan tautan sosial yang ditampilkan di halaman publik.
+                        </p>
+                    </div>
+                </header>
 
                 <div className="grid gap-6 lg:grid-cols-2">
                     {/* Identitas */}

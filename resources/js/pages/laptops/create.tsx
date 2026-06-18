@@ -28,7 +28,7 @@ const emptySelectValue = '__pabalu__empty__';
 export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) {
     const form = useForm({
         name: '',
-        brand: '',
+        brand_id: '',
         model: '',
         laptop_source_id: '',
         purchase_date: '',
@@ -86,17 +86,17 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                 <InputError message={form.errors.name} />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="brand">Merek</Label>
+                                <Label htmlFor="brand_id">Merek</Label>
                                 <Select
-                                    value={form.data.brand || emptySelectValue}
+                                    value={form.data.brand_id || emptySelectValue}
                                     onValueChange={(value) =>
                                         form.setData(
-                                            'brand',
+                                            'brand_id',
                                             value === emptySelectValue ? '' : value,
                                         )
                                     }
                                 >
-                                    <SelectTrigger id="brand">
+                                    <SelectTrigger id="brand_id">
                                         <SelectValue placeholder="Pilih merek" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -106,14 +106,14 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                         {brands.map((brand) => (
                                             <SelectItem
                                                 key={brand.id}
-                                                value={brand.name}
+                                                value={String(brand.id)}
                                             >
                                                 {brand.name}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <InputError message={form.errors.brand} />
+                                <InputError message={form.errors.brand_id} />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="model">Model / Series</Label>

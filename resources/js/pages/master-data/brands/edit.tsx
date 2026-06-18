@@ -1,78 +1,118 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, FloppyDisk } from '@phosphor-icons/react';
+import type { ReactNode } from 'react';
 import InputError from '@/components/shared/input-error';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { Brand } from '@/types';
 
-const textareaClassNama = 'border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive min-h-24 w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50';
-
-interface EditProps {
-    brand: { id: number; name: string; is_active: boolean; description?: string | null; };
+interface BrandsEditProps {
+    brand: Brand;
 }
 
-export default function MerekEdit({ brand }: EditProps) {
+const textareaClass =
+    'min-h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500';
+
+const BrandsEdit = ({ brand }: BrandsEditProps) => {
     const form = useForm({
         name: brand.name || '',
         is_active: brand.is_active ?? true,
         description: brand.description ?? '',
     });
 
-    function submit(e: { preventDefault: () => void }) {
-        e.preventDefault();
+    function submit(event: React.FormEvent) {
+        event.preventDefault();
         form.put(`/master-data/brands/${brand.id}`);
     }
 
     return (
         <>
             <Head title="Edit Merek" />
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
-                <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="space-y-1">
-                        <h1 className="text-2xl font-semibold tracking-tight">Edit Merek</h1>
-                        <p className="text-sm text-muted-foreground">Perbarui brand details</p>
+            <div className="mx-auto flex max-w-3xl flex-col gap-6 p-6">
+                <header className="flex items-end justify-between">
+                    <div>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                            Edit Merek
+                        </h2>
+                        <p className="mt-1.5 text-sm text-slate-500">
+                            Perbarui detail merek laptop
+                        </p>
                     </div>
                     <Button variant="outline" asChild>
                         <Link href="/master-data/brands">
-                            <ArrowLeft className="mr-2 size-4" />
-                            Back
+                            <ArrowLeft className="mr-2 size-4" weight="bold" />
+                            Kembali
                         </Link>
                     </Button>
                 </header>
-                <form onSubmit={submit} className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Informasi Merek</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Nama <span className="text-destructive">*</span></Label>
-                                <Input id="name" value={form.data.name} onChange={(e) => form.setData('name', e.target.value)} placeholder="Enter brand name" />
-                                <InputError message={form.errors.name} />
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Switch id="is_active" checked={form.data.is_active} onCheckedChange={(checked: boolean) => form.setData('is_active', checked)} />
-                                <Label htmlFor="is_active">Aktif</Label>
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="description">Deskripsi</Label>
-                                <textarea id="description" className={textareaClassNama} value={form.data.description} onChange={(e) => form.setData('description', e.target.value)} placeholder="Optional description" />
-                                <InputError message={form.errors.description} />
-                            </div>
-                        </CardContent>
-                    </Card>
+
+                <form onSubmit={submit} className="flex flex-col gap-6">
+                    <section className="flex flex-col gap-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">
+                                Nama <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="name"
+                                value={form.data.name}
+                                onChange={(event) => form.setData('name', event.target.value)}
+                                placeholder="Contoh: Dell, Lenovo, Asus"
+                            />
+                            <InputError message={form.errors.name} />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Switch
+                                id="is_active"
+                                checked={form.data.is_active}
+                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                            />
+                            <Label htmlFor="is_active">Aktif</Label>
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="description">Deskripsi</Label>
+                            <textarea
+                                id="description"
+                                className={textareaClass}
+                                value={form.data.description}
+                                onChange={(event) => form.setData('description', event.target.value)}
+                                placeholder="Deskripsi singkat tentang merek ini (opsional)"
+                            />
+                            <InputError message={form.errors.description} />
+                        </div>
+                    </section>
+
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" asChild>
                             <Link href="/master-data/brands">Batal</Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
-                            <Save className="mr-2 size-4" />Perbarui
+                            <FloppyDisk className="mr-2 size-4" weight="bold" />
+                            Perbarui
                         </Button>
                     </div>
                 </form>
             </div>
         </>
     );
-}
+};
+
+BrandsEdit.layout = (page: ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Data Master', href: '/master-data' },
+            { title: 'Merek', href: '/master-data/brands' },
+            { title: 'Edit', href: '#' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default BrandsEdit;

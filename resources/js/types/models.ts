@@ -65,7 +65,8 @@ export type Laptop = {
     id: number;
     sku: string;
     name?: string | null;
-    brand: string;
+    brand_id?: number | null;
+    brand?: MasterData | null;
     model: string;
     laptop_source_id?: number | null;
     laptop_status_id?: number | null;
@@ -73,7 +74,6 @@ export type Laptop = {
     cost_price: number | string;
     selling_price: number | string;
     repair_cost?: number | string | null;
-    additional_cost?: number | string | null;
     mines?: string | null;
     description?: string | null;
     internal_note?: string | null;
@@ -108,6 +108,8 @@ export type Service = {
     estimated_completion_date?: string | null;
     service_status_id?: number | null;
     status?: ServiceStatus | null;
+    technician_id?: number | null;
+    technician?: User | null;
     tracking_code?: string;
     payment_status?: string;
     received_at: string;

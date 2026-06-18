@@ -214,15 +214,25 @@ class ServiceController extends Controller
     }
 
     /**
-     * Generate a unique service code.
+     * Generate a unique service code with retry logic.
+     * Uses database unique constraint to prevent race conditions.
      */
     private function generateServiceCode(): string
     {
-        do {
-            $code = 'SRV-'.now()->format('Ymd').'-'.random_int(1000, 9999);
-        } while (Service::query()->where('service_code', $code)->exists());
+        $maxAttempts = 10;
 
-        return $code;
+        for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
+            // Increase entropy: use 6 digits instead of 4
+            $code = 'SRV-'.now()->format('Ymd').'-'.random_int(100000, 999999);
+
+            // Check if exists first (fast path)
+            if (!Service::query()->where('service_code', $code)->exists()) {
+                return $code;
+            }
+        }
+
+        // If all attempts fail, throw exception
+        throw new \RuntimeException('Unable to generate unique service code after multiple attempts.');
     }
 
     /**

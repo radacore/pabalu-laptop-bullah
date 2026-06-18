@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['sku', 'name', 'brand', 'model', 'laptop_source_id', 'purchase_date', 'cost_price', 'selling_price', 'repair_cost', 'mines', 'laptop_status_id', 'description', 'internal_note', 'sold_at', 'created_by'])]
+#[Fillable(['sku', 'name', 'brand_id', 'model', 'laptop_source_id', 'purchase_date', 'cost_price', 'selling_price', 'repair_cost', 'mines', 'laptop_status_id', 'description', 'internal_note', 'sold_at', 'created_by'])]
 class Laptop extends Model
 {
     use HasFactory;
@@ -45,6 +45,11 @@ class Laptop extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(LaptopStatus::class, 'laptop_status_id');
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
     public function creator(): BelongsTo
