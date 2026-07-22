@@ -1,3 +1,5 @@
+/* Hallmark · genre: modern-minimal · macrostructure: bento-grid · theme: cobalt */
+
 import { router } from '@inertiajs/react';
 import {
     ArrowRight,
@@ -121,262 +123,333 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
             website={website}
             title={`${website.website_name} | Laptop dan Servis Terpercaya`}
         >
-            {/* ─── Hero: Centered text + giant product image ─── */}
-            <section className="bg-cloud pt-12 pb-0 md:pt-16">
-                <div className="mx-auto max-w-[980px] px-4 text-center">
-                    <h1 className="mx-auto max-w-3xl apple-display text-graphite">
-                        Laptop bersih, jelas,
-                        <br className="hidden sm:block" />
-                        <span className="sm:hidden"> </span>
-                        dan siap dipakai.
-                    </h1>
-                    <p className="mx-auto mt-5 max-w-2xl apple-body-lg text-slate-2">
-                        {website.tagline ??
-                            'Temukan laptop bekas terkurasi, konsultasikan servis, dan pantau progres pengerjaan dari satu tempat yang mudah dipakai.'}
-                    </p>
-                    <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                        <a
-                            href="/shop"
-                            className="inline-flex h-10 items-center justify-center rounded-pill bg-button-blue px-6 apple-body text-paper transition hover:bg-deep-link-blue"
-                        >
-                            Lihat katalog
-                        </a>
-                        <a
-                            href="#status"
-                            className="inline-flex h-10 items-center justify-center rounded-pill border border-apple-blue bg-transparent px-6 apple-body text-apple-blue transition hover:border-deep-link-blue hover:text-deep-link-blue"
-                        >
-                            Lacak servis
-                        </a>
+            {/* ─── Hero — left-aligned text + product image ─── */}
+            <section className="bg-paper">
+                <div className="mx-auto grid max-w-[980px] items-center gap-10 px-5 py-16 md:grid-cols-[1fr_1.1fr] md:py-24">
+                    <div>
+                        <p className="cobalt-caption text-ink-2/60">
+                            Pabalu Laptop
+                        </p>
+                        <h1 className="mt-4 cobalt-display text-ink">
+                            Laptop bersih,
+                            <br />
+                            jelas, siap dipakai.
+                        </h1>
+                        <p className="mt-5 max-w-md cobalt-body-lg text-ink-2">
+                            {website.tagline ??
+                                'Temukan laptop bekas terkurasi, konsultasikan servis, dan pantau progres pengerjaan dari satu tempat yang mudah dipakai.'}
+                        </p>
+                        <div className="mt-8 flex flex-wrap gap-3">
+                            <a
+                                href="/shop"
+                                className="inline-flex h-10 items-center gap-2 rounded-btn bg-accent px-5 cobalt-body-sm font-medium text-accent-ink transition hover:opacity-90"
+                            >
+                                Lihat katalog
+                                <ArrowRight className="h-3.5 w-3.5" weight="bold" />
+                            </a>
+                            <a
+                                href="#status"
+                                className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
+                            >
+                                Lacak servis
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="relative flex items-center justify-center">
+                        {heroImage ? (
+                            <a
+                                href={heroLaptop ? `/laptops/${heroLaptop.id}` : '/shop'}
+                                className="block w-full overflow-hidden rounded-card shadow-product"
+                            >
+                                <img
+                                    src={heroImage}
+                                    alt={
+                                        heroLaptop?.name ??
+                                        `${brandLabel(heroLaptop?.brand, '')} ${heroLaptop?.model ?? ''}`
+                                    }
+                                    className="h-auto w-full object-contain"
+                                />
+                            </a>
+                        ) : (
+                            <div className="flex w-full flex-col items-center gap-3 rounded-card border border-rule bg-surface p-10 text-center">
+                                <LaptopIcon
+                                    className="h-10 w-10 text-ink-2/60"
+                                    weight="duotone"
+                                />
+                                <p className="cobalt-body-sm text-ink-2/60">
+                                    Foto laptop akan muncul di sini
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
-
-                {heroImage ? (
-                    <div className="mx-auto mt-12 max-w-[1100px] px-4">
-                        <a
-                            href={heroLaptop ? `/laptops/${heroLaptop.id}` : '/shop'}
-                            className="block overflow-hidden"
-                        >
-                            <img
-                                src={heroImage}
-                                alt={
-                                    heroLaptop?.name ??
-                                    `${brandLabel(heroLaptop?.brand, '')} ${heroLaptop?.model ?? ''}`
-                                }
-                                className="mx-auto h-auto w-full max-w-[900px] object-contain"
-                                style={{
-                                    filter: 'drop-shadow(0 30px 50px rgba(0, 0, 0, 0.18))',
-                                }}
-                            />
-                        </a>
-                    </div>
-                ) : (
-                    <div className="mx-auto mt-12 max-w-md rounded-card border border-bone bg-paper p-10 text-center">
-                        <LaptopIcon
-                            className="mx-auto h-12 w-12 text-fog"
-                            weight="duotone"
-                        />
-                        <p className="mt-3 apple-body text-slate-2">
-                            Tambahkan foto laptop di katalog untuk menampilkannya
-                            di sini.
-                        </p>
-                    </div>
-                )}
             </section>
 
             {/* ─── Status tracker ─── */}
             <section
                 id="status"
-                className="scroll-mt-16 bg-paper py-16 md:py-20"
+                className="scroll-mt-16 border-t border-rule bg-surface"
             >
-                <div className="mx-auto max-w-[640px] px-4 text-center">
-                    <h2 className="apple-subheading text-graphite">
+                <div className="mx-auto max-w-[640px] px-5 py-16 text-center md:py-20">
+                    <p className="cobalt-caption text-accent">Status</p>
+                    <h2 className="mt-3 cobalt-heading-lg text-ink">
                         Lacak status servis
                     </h2>
-                    <p className="mt-3 apple-body text-slate-2">
+                    <p className="mx-auto mt-3 max-w-md cobalt-body text-ink-2">
                         Masukkan kode tiket untuk melihat progres pengerjaan
                         laptop Anda.
                     </p>
 
                     <form
                         onSubmit={submitStatusSearch}
-                        className="mx-auto mt-7 max-w-md"
+                        className="mx-auto mt-8 max-w-md"
                     >
-                        <label
-                            htmlFor="service-code"
-                            className="flex h-11 items-center gap-3 rounded-pill border border-bone bg-paper px-4 transition focus-within:border-apple-blue focus-within:ring-4 focus-within:ring-apple-blue/20"
-                        >
+                        <div className="flex h-11 overflow-hidden rounded-btn border border-rule bg-paper transition focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/10">
                             <input
                                 id="service-code"
                                 name="code"
                                 type="text"
                                 placeholder="Kode servis (contoh: SRV-20240613-XXXXX)"
-                                className="min-w-0 flex-1 border-none bg-transparent apple-body text-graphite outline-none placeholder:text-fog"
+                                className="min-w-0 flex-1 border-none bg-transparent px-4 cobalt-body-sm text-ink outline-none placeholder:text-ink-2/60"
                             />
                             <button
                                 type="submit"
-                                className="inline-flex h-8 items-center justify-center rounded-pill bg-button-blue px-4 apple-caption text-paper transition hover:bg-deep-link-blue"
+                                className="inline-flex h-full items-center justify-center bg-accent px-5 cobalt-caption text-accent-ink transition hover:opacity-90"
                             >
                                 Lacak
                             </button>
-                        </label>
+                        </div>
                     </form>
 
-                    <ol className="mx-auto mt-10 max-w-md space-y-2 text-left">
-                        <li className="apple-body-sm text-slate-2">
-                            <span className="text-fog">01.</span> Diagnosa dan
-                            estimasi dikonfirmasi dulu.
+                    <ol className="mx-auto mt-10 max-w-sm space-y-3 text-left">
+                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
+                            <span className="mt-0.5 cobalt-caption text-accent">
+                                01
+                            </span>
+                            Diagnosa dan estimasi dikonfirmasi dulu.
                         </li>
-                        <li className="apple-body-sm text-slate-2">
-                            <span className="text-fog">02.</span> Progres bisa
-                            dipantau dengan kode tiket.
+                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
+                            <span className="mt-0.5 cobalt-caption text-accent">
+                                02
+                            </span>
+                            Progres bisa dipantau dengan kode tiket.
                         </li>
-                        <li className="apple-body-sm text-slate-2">
-                            <span className="text-fog">03.</span> Unit diuji
-                            ulang sebelum diserahkan.
+                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
+                            <span className="mt-0.5 cobalt-caption text-accent">
+                                03
+                            </span>
+                            Unit diuji ulang sebelum diserahkan.
                         </li>
                     </ol>
                 </div>
             </section>
 
             {/* ─── Laptop showcase ─── */}
-            <section className="bg-cloud py-20 md:py-24">
-                <div className="mx-auto max-w-[980px] px-4">
-                    <div className="mb-12 text-center">
-                        <h2 className="apple-heading-lg text-graphite">
+            <section className="border-t border-rule bg-paper">
+                <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                    <div className="mb-12">
+                        <p className="cobalt-caption text-accent">Katalog</p>
+                        <h2 className="mt-3 cobalt-heading-lg text-ink">
                             Pilihan unit siap kerja
                         </h2>
-                        <p className="mx-auto mt-3 max-w-xl apple-body-lg text-slate-2">
+                        <p className="mt-3 max-w-lg cobalt-body-lg text-ink-2">
                             Unit terbaru dengan spesifikasi inti yang mudah
                             dibandingkan sebelum Anda datang atau chat.
                         </p>
                     </div>
 
                     {laptops.length > 0 ? (
-                        <div className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                             {laptops.slice(0, 6).map((laptop) => (
                                 <LaptopCard key={laptop.id} laptop={laptop} />
                             ))}
                         </div>
                     ) : (
-                        <div className="mx-auto max-w-md rounded-card border border-bone bg-paper p-10 text-center">
+                        <div className="mx-auto max-w-sm rounded-card border border-rule bg-surface p-10 text-center">
                             <LaptopIcon
-                                className="mx-auto h-10 w-10 text-fog"
+                                className="mx-auto h-8 w-8 text-ink-2/60"
                                 weight="duotone"
                             />
-                            <p className="mt-4 apple-body text-slate-2">
+                            <p className="mt-4 cobalt-body text-ink-2">
                                 Katalog sedang diperbarui. Hubungi kami untuk
                                 rekomendasi unit hari ini.
                             </p>
                         </div>
                     )}
 
-                    <div className="mt-12 text-center">
+                    <div className="mt-12">
                         <a
                             href="/shop"
-                            className="inline-flex h-10 items-center justify-center rounded-pill border border-apple-blue bg-transparent px-6 apple-body text-apple-blue transition hover:border-deep-link-blue hover:text-deep-link-blue"
+                            className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
                         >
                             Lihat semua laptop
+                            <ArrowRight className="h-3.5 w-3.5" weight="bold" />
                         </a>
                     </div>
                 </div>
             </section>
 
-            {/* ─── Services ─── */}
+            {/* ─── Services — asymmetric bento ─── */}
             <section
                 id="services"
-                className="scroll-mt-16 bg-paper py-20 md:py-24"
+                className="scroll-mt-16 border-t border-rule bg-surface"
             >
-                <div className="mx-auto max-w-[980px] px-4">
-                    <div className="mb-14 text-center">
-                        <h2 className="apple-heading-lg text-graphite">
+                <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                    <div className="mb-14">
+                        <p className="cobalt-caption text-accent">Layanan</p>
+                        <h2 className="mt-3 cobalt-heading-lg text-ink">
                             Servis yang fokus pada hasil,
-                            <br />
+                            <br className="hidden sm:block" />
                             bukan proses.
                         </h2>
-                        <p className="mx-auto mt-3 max-w-2xl apple-body-lg text-slate-2">
-                            Diagnosa yang masuk akal, rekomendasi yang jelas,
-                            dan pengerjaan yang bisa Anda pantau.
-                        </p>
                     </div>
 
-                    <ul className="grid gap-12 md:grid-cols-3">
-                        {serviceItems.map((service) => {
-                            const Icon = service.icon;
-                            return (
-                                <li
-                                    key={service.title}
-                                    className="text-center"
-                                >
-                                    <Icon
-                                        className="mx-auto h-10 w-10 text-graphite"
+                    <div className="grid gap-5 md:grid-cols-2">
+                        <div className="rounded-card border border-rule bg-paper p-8">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-accent/10">
+                                <Cpu
+                                    className="h-5 w-5 text-accent"
+                                    weight="duotone"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                            <h3 className="mt-5 cobalt-heading text-ink">
+                                {serviceItems[0].title}
+                            </h3>
+                            <p className="mt-3 cobalt-body text-ink-2">
+                                {serviceItems[0].description}
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col gap-5">
+                            <div className="rounded-card border border-rule bg-paper p-6">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-accent/10">
+                                    <Wrench
+                                        className="h-4.5 w-4.5 text-accent"
                                         weight="duotone"
                                         aria-hidden="true"
                                     />
-                                    <h3 className="mt-5 apple-subheading text-graphite">
-                                        {service.title}
-                                    </h3>
-                                    <p className="mt-3 apple-body text-slate-2">
-                                        {service.description}
-                                    </p>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                                </div>
+                                <h3 className="mt-4 cobalt-body font-semibold text-ink">
+                                    {serviceItems[1].title}
+                                </h3>
+                                <p className="mt-2 cobalt-body-sm text-ink-2">
+                                    {serviceItems[1].description}
+                                </p>
+                            </div>
+                            <div className="rounded-card border border-rule bg-paper p-6">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-accent/10">
+                                    <CheckCircle
+                                        className="h-4.5 w-4.5 text-accent"
+                                        weight="duotone"
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                                <h3 className="mt-4 cobalt-body font-semibold text-ink">
+                                    {serviceItems[2].title}
+                                </h3>
+                                <p className="mt-2 cobalt-body-sm text-ink-2">
+                                    {serviceItems[2].description}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* ─── Why us ─── */}
-            <section className="bg-cloud py-20 md:py-24">
-                <div className="mx-auto max-w-[980px] px-4">
-                    <div className="mb-14 text-center">
-                        <h2 className="apple-heading-lg text-graphite">
+            {/* ─── Why us — varied layout ─── */}
+            <section className="border-t border-rule bg-paper">
+                <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                    <div className="mb-14">
+                        <p className="cobalt-caption text-accent">
+                            Mengapa kami
+                        </p>
+                        <h2 className="mt-3 cobalt-heading-lg text-ink">
                             Rapi dari konsultasi
-                            <br />
+                            <br className="hidden sm:block" />
                             sampai serah terima
                         </h2>
                     </div>
-                    <ol className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-                        {whyItems.map((item) => {
-                            const Icon = item.icon;
-                            return (
-                                <li key={item.title} className="text-center">
-                                    <Icon
-                                        className="mx-auto h-7 w-7 text-graphite"
-                                        weight="duotone"
-                                        aria-hidden="true"
-                                    />
-                                    <h3 className="mt-5 apple-body font-semibold text-graphite">
-                                        {item.title}
-                                    </h3>
-                                    <p className="mt-2 apple-body-sm text-slate-2">
-                                        {item.description}
-                                    </p>
-                                </li>
-                            );
-                        })}
-                    </ol>
+
+                    <div className="grid gap-5 md:grid-cols-[1.4fr_1fr]">
+                        <div className="space-y-5">
+                            {whyItems.slice(0, 2).map((item) => {
+                                const Icon = item.icon;
+                                return (
+                                    <div
+                                        key={item.title}
+                                        className="flex gap-4 rounded-card border border-rule bg-surface p-6"
+                                    >
+                                        <Icon
+                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                                            weight="duotone"
+                                            aria-hidden="true"
+                                        />
+                                        <div>
+                                            <h3 className="cobalt-body font-semibold text-ink">
+                                                {item.title}
+                                            </h3>
+                                            <p className="mt-1.5 cobalt-body-sm text-ink-2">
+                                                {item.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="space-y-5">
+                            {whyItems.slice(2).map((item) => {
+                                const Icon = item.icon;
+                                return (
+                                    <div
+                                        key={item.title}
+                                        className="flex gap-4 rounded-card border border-rule bg-surface p-6"
+                                    >
+                                        <Icon
+                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                                            weight="duotone"
+                                            aria-hidden="true"
+                                        />
+                                        <div>
+                                            <h3 className="cobalt-body font-semibold text-ink">
+                                                {item.title}
+                                            </h3>
+                                            <p className="mt-1.5 cobalt-body-sm text-ink-2">
+                                                {item.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* ─── Testimonials ─── */}
+            {/* ─── Testimonials — pull-quote style ─── */}
             {testimonials.length > 0 ? (
-                <section className="bg-paper py-20 md:py-24">
-                    <div className="mx-auto max-w-[980px] px-4">
-                        <div className="mb-12 text-center">
-                            <h2 className="apple-heading-lg text-graphite">
+                <section className="border-t border-rule bg-surface">
+                    <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                        <div className="mb-12">
+                            <p className="cobalt-caption text-accent">
+                                Testimoni
+                            </p>
+                            <h2 className="mt-3 cobalt-heading-lg text-ink">
                                 Dipercaya untuk
-                                <br />
+                                <br className="hidden sm:block" />
                                 kebutuhan harian
                             </h2>
                         </div>
-                        <div className="grid gap-12 md:grid-cols-3">
+
+                        <div className="space-y-0 divide-y divide-rule">
                             {testimonials.slice(0, 3).map((testimonial) => {
                                 const rating = Math.max(
                                     1,
                                     Math.min(5, Number(testimonial.rating) || 5),
                                 );
                                 return (
-                                    <TestimonialCard
+                                    <TestimonialQuote
                                         key={testimonial.id}
                                         testimonial={testimonial}
                                         rating={rating}
@@ -388,71 +461,96 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </section>
             ) : null}
 
-            {/* ─── Contact ─── */}
+            {/* ─── Contact — simple & functional ─── */}
             <section
                 id="contact"
-                className="scroll-mt-16 bg-cloud py-20 md:py-24"
+                className="scroll-mt-16 border-t border-rule bg-paper"
             >
-                <div className="mx-auto max-w-[980px] px-4">
-                    <div className="mb-12 text-center">
-                        <h2 className="apple-heading-lg text-graphite">
+                <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                    <div className="mb-12">
+                        <p className="cobalt-caption text-accent">Kontak</p>
+                        <h2 className="mt-3 cobalt-heading-lg text-ink">
                             Mulai dari chat, telepon,
-                            <br />
+                            <br className="hidden sm:block" />
                             atau datang langsung.
                         </h2>
-                        <p className="mx-auto mt-3 max-w-2xl apple-body-lg text-slate-2">
+                        <p className="mt-3 max-w-lg cobalt-body-lg text-ink-2">
                             Tim kami siap bantu pilih unit, cek estimasi
                             servis, atau arahkan proses drop-off.
                         </p>
                     </div>
 
-                    <div className="grid gap-10 md:grid-cols-3">
+                    <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
                         {website.address ? (
-                            <ContactCard
-                                icon={MapPin}
-                                label="Alamat"
-                                value={website.address}
-                            />
+                            <div className="rounded-card border border-rule bg-surface p-6">
+                                <MapPin
+                                    className="h-5 w-5 text-accent"
+                                    weight="duotone"
+                                    aria-hidden="true"
+                                />
+                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                    Alamat
+                                </p>
+                                <p className="mt-1.5 cobalt-body text-ink">
+                                    {website.address}
+                                </p>
+                            </div>
                         ) : null}
                         {(website.operational_hours_weekday ||
                             website.operational_hours_weekend) && (
-                            <ContactCard
-                                icon={Wrench}
-                                label="Jam operasional"
-                                value={[
-                                    website.operational_hours_weekday,
-                                    website.operational_hours_weekend,
-                                ]
-                                    .filter(Boolean)
-                                    .join(' / ')}
-                            />
+                            <div className="rounded-card border border-rule bg-surface p-6">
+                                <Wrench
+                                    className="h-5 w-5 text-accent"
+                                    weight="duotone"
+                                    aria-hidden="true"
+                                />
+                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                    Jam operasional
+                                </p>
+                                <p className="mt-1.5 cobalt-body text-ink">
+                                    {[
+                                        website.operational_hours_weekday,
+                                        website.operational_hours_weekend,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(' / ')}
+                                </p>
+                            </div>
                         )}
                         {website.phone ? (
-                            <ContactCard
-                                icon={Phone}
-                                label="Telepon"
-                                value={website.phone}
-                            />
+                            <div className="rounded-card border border-rule bg-surface p-6">
+                                <Phone
+                                    className="h-5 w-5 text-accent"
+                                    weight="duotone"
+                                    aria-hidden="true"
+                                />
+                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                    Telepon
+                                </p>
+                                <p className="mt-1.5 cobalt-body text-ink">
+                                    {website.phone}
+                                </p>
+                            </div>
                         ) : null}
                     </div>
 
-                    <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                    <div className="mt-8 flex flex-wrap gap-3">
                         <a
                             href={whatsappHref}
-                            className="inline-flex h-10 items-center justify-center rounded-pill bg-button-blue px-6 apple-body text-paper transition hover:bg-deep-link-blue"
+                            className="inline-flex h-10 items-center gap-2 rounded-btn bg-accent px-5 cobalt-body-sm font-medium text-accent-ink transition hover:opacity-90"
                         >
                             <ChatCircle
-                                className="mr-1.5 h-3.5 w-3.5"
-                                weight="fill"
+                                className="h-4 w-4"
+                                weight="duotone"
                             />
                             WhatsApp
                         </a>
                         <a
                             href={phoneHref}
-                            className="inline-flex h-10 items-center justify-center rounded-pill border border-apple-blue bg-transparent px-6 apple-body text-apple-blue transition hover:border-deep-link-blue hover:text-deep-link-blue"
+                            className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
                         >
                             <Phone
-                                className="mr-1.5 h-3.5 w-3.5"
+                                className="h-4 w-4"
                                 weight="duotone"
                             />
                             Telepon
@@ -460,11 +558,11 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                     </div>
 
                     {website.google_maps_embed ? (
-                        <div className="mt-12 overflow-hidden rounded-card border border-bone">
+                        <div className="mt-10 overflow-hidden rounded-card border border-rule">
                             <iframe
                                 src={website.google_maps_embed}
                                 title="Lokasi workshop"
-                                className="h-[420px] w-full"
+                                className="h-[400px] w-full"
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
                             />
@@ -482,8 +580,8 @@ function LaptopCard({ laptop }: { laptop: Laptop }) {
     const image = laptopPhoto(laptop);
     return (
         <a href={`/laptops/${laptop.id}`} className="group block">
-            <div className="overflow-hidden rounded-card bg-paper">
-                <div className="aspect-[4/3] overflow-hidden bg-bone/40">
+            <div className="overflow-hidden rounded-card border border-rule">
+                <div className="aspect-[4/3] overflow-hidden bg-surface">
                     {image ? (
                         <img
                             src={image}
@@ -494,23 +592,26 @@ function LaptopCard({ laptop }: { laptop: Laptop }) {
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                         />
                     ) : (
-                        <div className="flex h-full w-full items-center justify-center text-fog">
-                            <LaptopIcon className="h-10 w-10" weight="duotone" />
+                        <div className="flex h-full w-full items-center justify-center">
+                            <LaptopIcon
+                                className="h-8 w-8 text-ink-2/60"
+                                weight="duotone"
+                            />
                         </div>
                     )}
                 </div>
             </div>
-            <div className="pt-4">
-                <p className="apple-caption text-fog">
+            <div className="pt-3.5">
+                <p className="cobalt-caption text-ink-2/60">
                     {brandLabel(laptop.brand, '')}
                 </p>
-                <h3 className="mt-1 apple-body font-semibold text-graphite">
+                <h3 className="mt-1 cobalt-body font-semibold text-ink">
                     {laptop.name ?? laptop.model}
                 </h3>
-                <p className="mt-2 apple-body text-apple-blue">
+                <p className="mt-2 cobalt-body-sm text-accent">
                     {formatCurrency(laptop.selling_price)}
                 </p>
-                <p className="mt-3 inline-flex items-center gap-1 apple-caption text-apple-blue transition group-hover:text-deep-link-blue">
+                <p className="mt-2.5 inline-flex items-center gap-1.5 cobalt-caption text-accent transition group-hover:underline">
                     Lihat detail
                     <ArrowRight className="h-3 w-3" weight="bold" />
                 </p>
@@ -519,7 +620,7 @@ function LaptopCard({ laptop }: { laptop: Laptop }) {
     );
 }
 
-function TestimonialCard({
+function TestimonialQuote({
     testimonial,
     rating,
 }: {
@@ -527,9 +628,9 @@ function TestimonialCard({
     rating: number;
 }) {
     return (
-        <figure className="text-center">
+        <figure className="py-8 first:pt-0 last:pb-0">
             <div
-                className="mx-auto flex justify-center gap-0.5 text-graphite"
+                className="flex gap-0.5 text-accent"
                 role="img"
                 aria-label={`${rating} dari 5`}
             >
@@ -543,39 +644,17 @@ function TestimonialCard({
                     ) : null,
                 )}
             </div>
-            <blockquote className="mt-5 apple-body text-slate-2">
-                “{testimonial.content}”
+            <blockquote className="mt-4 max-w-2xl cobalt-body-lg text-ink italic">
+                &ldquo;{testimonial.content}&rdquo;
             </blockquote>
-            <figcaption className="mt-5">
-                <p className="apple-body-sm font-semibold text-graphite">
+            <figcaption className="mt-4 flex items-center gap-3">
+                <span className="cobalt-body-sm font-semibold text-ink">
                     {testimonial.name}
-                </p>
-                <p className="apple-caption text-fog">
+                </span>
+                <span className="cobalt-caption text-ink-2/60">
                     {testimonial.role ?? 'Pelanggan'}
-                </p>
+                </span>
             </figcaption>
         </figure>
-    );
-}
-
-function ContactCard({
-    icon: Icon,
-    label,
-    value,
-}: {
-    icon: typeof MapPin;
-    label: string;
-    value: ReactNode;
-}) {
-    return (
-        <div className="text-center">
-            <Icon
-                className="mx-auto h-7 w-7 text-graphite"
-                weight="duotone"
-                aria-hidden="true"
-            />
-            <p className="mt-4 apple-caption text-fog">{label}</p>
-            <p className="mt-1 apple-body text-graphite">{value}</p>
-        </div>
     );
 }

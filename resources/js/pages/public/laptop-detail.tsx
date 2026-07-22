@@ -1,4 +1,7 @@
+/* Hallmark · genre: modern-minimal · macrostructure: split-studio · theme: cobalt */
+
 import {
+    ArrowRight,
     BatteryFull,
     CaretRight,
     Cpu,
@@ -104,15 +107,15 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             title={`${laptop.name ?? laptop.sku} - ${website.website_name}`}
             currentPath="/shop"
         >
-            <section className="border-b border-bone bg-cloud">
+            <section className="border-b border-rule">
                 <div className="mx-auto max-w-[980px] px-4 py-3">
                     <nav
-                        className="flex flex-wrap items-center gap-1 apple-caption text-fog"
+                        className="flex flex-wrap items-center gap-1 cobalt-caption text-ink-2/60"
                         aria-label="Breadcrumb"
                     >
                         <a
                             href="/"
-                            className="text-apple-blue transition hover:text-deep-link-blue"
+                            className="text-accent transition hover:text-accent/80"
                         >
                             Beranda
                         </a>
@@ -123,7 +126,7 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                         />
                         <a
                             href="/shop"
-                            className="text-apple-blue transition hover:text-deep-link-blue"
+                            className="text-accent transition hover:text-accent/80"
                         >
                             Katalog
                         </a>
@@ -132,7 +135,7 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                             weight="bold"
                             aria-hidden="true"
                         />
-                        <span className="text-graphite">
+                        <span className="text-ink">
                             {brandName(laptop.brand, laptop.model)}
                         </span>
                     </nav>
@@ -143,11 +146,11 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                 <div className="mx-auto max-w-[980px] px-4">
                     <div className="grid gap-10 md:grid-cols-2 md:gap-16">
                         <div>
-                            <div className="overflow-hidden rounded-card bg-cloud">
+                            <div className="aspect-[4/3] overflow-hidden rounded-card shadow-product">
                                 <img
                                     alt={selectedImage.alt}
                                     src={selectedImage.src}
-                                    className="aspect-[4/3] w-full object-cover"
+                                    className="h-full w-full object-cover"
                                 />
                             </div>
                             {images.length > 1 ? (
@@ -159,10 +162,10 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                                             onClick={() => {
                                                 setSelectedPhotoIndex(index);
                                             }}
-                                            className={`h-16 w-16 shrink-0 overflow-hidden rounded-card transition ${
+                                            className={`h-16 w-16 shrink-0 overflow-hidden rounded-card border transition ${
                                                 index === selectedPhotoIndex
-                                                    ? 'ring-2 ring-graphite'
-                                                    : 'opacity-60 hover:opacity-100'
+                                                    ? 'border-accent'
+                                                    : 'border-rule opacity-60 hover:opacity-100'
                                             }`}
                                         >
                                             <img
@@ -177,20 +180,20 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                         </div>
 
                         <div>
-                            <h1 className="apple-heading-lg text-graphite">
+                            <h1 className="cobalt-heading-lg text-ink">
                                 {laptopDisplayName(laptop)}
                             </h1>
                             {laptop.name ? (
-                                <p className="mt-2 apple-body-lg text-slate-2">
+                                <p className="mt-2 cobalt-body-lg text-ink-2">
                                     {laptop.name}
                                 </p>
                             ) : null}
 
-                            <p className="mt-6 apple-display text-graphite">
+                            <p className="mt-6 cobalt-heading-lg text-ink">
                                 {formatCurrency(laptop.selling_price)}
                             </p>
 
-                            <p className="mt-6 apple-body text-slate-2">
+                            <p className="mt-6 cobalt-body text-ink-2">
                                 Unit sudah dicek fungsi utama, dibersihkan, dan
                                 siap dikonsultasikan sebelum pembelian.
                             </p>
@@ -200,15 +203,19 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                                     href={waLink}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex h-9 items-center justify-center rounded-pill bg-button-blue px-5 apple-body text-paper transition hover:bg-deep-link-blue"
+                                    className="inline-flex h-10 items-center justify-center gap-2 rounded-btn bg-accent px-6 cobalt-body font-medium text-accent-ink transition hover:bg-accent/90"
                                 >
                                     Beli sekarang
+                                    <ArrowRight
+                                        className="h-4 w-4"
+                                        weight="duotone"
+                                    />
                                 </a>
                                 <a
                                     href={waLink}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex h-9 items-center justify-center rounded-pill border border-apple-blue bg-transparent px-5 apple-body text-apple-blue transition hover:border-deep-link-blue hover:text-deep-link-blue"
+                                    className="inline-flex h-10 items-center justify-center gap-2 rounded-btn border border-rule bg-transparent px-6 cobalt-body text-ink transition hover:border-accent hover:text-accent"
                                 >
                                     Tanya lewat WhatsApp
                                 </a>
@@ -218,27 +225,29 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                 </div>
             </section>
 
-            <section className="border-t border-bone bg-cloud py-16 md:py-20">
+            <section className="border-t border-rule bg-surface py-16 md:py-20">
                 <div className="mx-auto max-w-[640px] px-4">
-                    <h2 className="apple-heading text-graphite">Spesifikasi</h2>
-                    <dl className="mt-7 space-y-3">
+                    <h2 className="cobalt-subheading text-ink">
+                        Spesifikasi
+                    </h2>
+                    <dl className="mt-8 space-y-0">
                         {specs.map((item) => {
                             const Icon = item.icon;
 
                             return (
                                 <div
                                     key={item.label}
-                                    className="flex items-baseline gap-3 border-b border-bone pb-3"
+                                    className="flex items-center gap-3 border-b border-rule py-4"
                                 >
                                     <Icon
-                                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fog"
+                                        className="h-4 w-4 shrink-0 text-ink-2/60"
                                         weight="duotone"
                                         aria-hidden="true"
                                     />
-                                    <dt className="apple-body-sm text-slate-2">
+                                    <dt className="cobalt-caption text-ink-2/60">
                                         {item.label}
                                     </dt>
-                                    <dd className="ml-auto text-right apple-body text-graphite">
+                                    <dd className="ml-auto text-right cobalt-body text-ink">
                                         {item.value}
                                     </dd>
                                 </div>
@@ -249,12 +258,12 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             </section>
 
             {laptop.description || spec?.other_specifications ? (
-                <section className="bg-paper py-16 md:py-20">
+                <section className="border-t border-rule bg-paper py-16 md:py-20">
                     <div className="mx-auto max-w-[640px] px-4">
-                        <h2 className="apple-heading text-graphite">
+                        <h2 className="cobalt-subheading text-ink">
                             Detail unit
                         </h2>
-                        <div className="mt-6 space-y-4 apple-body text-slate-2">
+                        <div className="mt-6 space-y-4 cobalt-body text-ink-2">
                             {laptop.description ? (
                                 <p className="whitespace-pre-line">
                                     {laptop.description}
@@ -271,17 +280,21 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             ) : null}
 
             {related.length > 0 ? (
-                <section className="border-t border-bone bg-cloud py-16 md:py-20">
+                <section className="border-t border-rule bg-surface py-16 md:py-20">
                     <div className="mx-auto max-w-[980px] px-4">
                         <div className="mb-10 text-center">
-                            <h2 className="apple-heading text-graphite">
+                            <h2 className="cobalt-subheading text-ink">
                                 Pilihan lain yang serupa
                             </h2>
                             <a
                                 href="/shop"
-                                className="mt-3 inline-block apple-body text-apple-blue transition hover:text-deep-link-blue"
+                                className="mt-3 inline-flex items-center gap-1 cobalt-body text-accent transition hover:text-accent/80"
                             >
-                                Lihat semua →
+                                Lihat semua
+                                <ArrowRight
+                                    className="h-4 w-4"
+                                    weight="duotone"
+                                />
                             </a>
                         </div>
                         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
@@ -301,8 +314,8 @@ function RelatedCard({ laptop }: { laptop: LaptopType }) {
 
     return (
         <a href={`/laptops/${laptop.id}`} className="group block">
-            <div className="overflow-hidden rounded-card bg-paper">
-                <div className="aspect-[4/3] overflow-hidden bg-bone/40">
+            <div className="overflow-hidden rounded-card border border-rule">
+                <div className="aspect-[4/3] overflow-hidden bg-surface">
                     {image ? (
                         <img
                             alt={laptop.name ?? laptop.sku}
@@ -310,7 +323,7 @@ function RelatedCard({ laptop }: { laptop: LaptopType }) {
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                         />
                     ) : (
-                        <div className="flex h-full w-full items-center justify-center text-fog">
+                        <div className="flex h-full w-full items-center justify-center text-ink-2/60">
                             <LaptopIcon
                                 className="h-10 w-10"
                                 weight="duotone"
@@ -321,13 +334,13 @@ function RelatedCard({ laptop }: { laptop: LaptopType }) {
                 </div>
             </div>
             <div className="pt-3">
-                <p className="apple-caption text-fog">
+                <p className="cobalt-caption text-ink-2/60">
                     {brandName(laptop.brand, '')}
                 </p>
-                <h3 className="mt-1 apple-body font-semibold text-graphite">
+                <h3 className="mt-1 cobalt-body font-semibold text-ink">
                     {laptop.model}
                 </h3>
-                <p className="mt-2 apple-body-sm text-apple-blue">
+                <p className="mt-2 cobalt-body-sm text-accent">
                     {formatCurrency(laptop.selling_price)}
                 </p>
             </div>

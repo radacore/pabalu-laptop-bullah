@@ -1,3 +1,5 @@
+/* Hallmark · genre: modern-minimal · macrostructure: catalogue · theme: cobalt */
+
 import { router } from '@inertiajs/react';
 import {
     ArrowLeft,
@@ -9,6 +11,7 @@ import {
     X,
 } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
+
 import { PublicPage, formatCurrency } from '@/components/public-layout';
 import type {
     Laptop,
@@ -44,7 +47,6 @@ function formatShortPrice(value: number) {
     if (value >= 1_000_000) {
         return `Rp ${Math.round(value / 1_000_000)}jt`;
     }
-
     return formatCurrency(value);
 }
 
@@ -54,47 +56,22 @@ function brandName(brand: MasterData | null | undefined, fallback: string) {
 
 function photoUrl(laptop: Laptop) {
     const photo = laptop.photos?.[0];
-
-    if (!photo?.file_path) {
-        return null;
-    }
-
+    if (!photo?.file_path) return null;
     return `/storage/${photo.file_path}`;
 }
 
 function buildCatalogUrl(page: number, filters: CatalogFilters) {
     const params = new URLSearchParams();
-
-    if (filters.search) {
-        params.set('search', filters.search);
+    if (filters.search) params.set('search', filters.search);
+    if (filters.brands) {
+        for (const b of filters.brands) params.append('brands[]', b);
     }
-
-    filters.brands?.forEach((b) => {
-        params.append('brands[]', b);
-    });
-
-    if (filters.ram) {
-        params.set('ram', filters.ram);
-    }
-
-    if (filters.storage) {
-        params.set('storage', filters.storage);
-    }
-
-    if (filters.max_price) {
-        params.set('max_price', String(filters.max_price));
-    }
-
-    if (filters.sort && filters.sort !== 'newest') {
-        params.set('sort', filters.sort);
-    }
-
-    if (page > 1) {
-        params.set('page', String(page));
-    }
-
+    if (filters.ram) params.set('ram', filters.ram);
+    if (filters.storage) params.set('storage', filters.storage);
+    if (filters.max_price) params.set('max_price', String(filters.max_price));
+    if (filters.sort && filters.sort !== 'newest') params.set('sort', filters.sort);
+    if (page > 1) params.set('page', String(page));
     const query = params.toString();
-
     return query ? `/shop?${query}` : '/shop';
 }
 
@@ -121,14 +98,7 @@ export default function LaptopCatalog({
             (storage ? 1 : 0) +
             (search ? 1 : 0) +
             (maxPrice < filter_options.max_price ? 1 : 0),
-        [
-            brands.length,
-            filter_options.max_price,
-            maxPrice,
-            ram,
-            search,
-            storage,
-        ],
+        [brands.length, filter_options.max_price, maxPrice, ram, search, storage],
     );
 
     function applyFilters(overrides?: Partial<CatalogFilters>) {
@@ -209,7 +179,6 @@ export default function LaptopCatalog({
                     <div className="space-y-2.5">
                         {filter_options.brands.map((brand) => {
                             const active = brands.includes(brand);
-
                             return (
                                 <label
                                     key={brand}
@@ -218,16 +187,12 @@ export default function LaptopCatalog({
                                     <input
                                         type="checkbox"
                                         checked={active}
-                                        onChange={() => {
-                                            toggleBrand(brand);
-                                        }}
-                                        className="h-4 w-4 rounded border-bone accent-apple-blue"
+                                        onChange={() => toggleBrand(brand)}
+                                        className="h-4 w-4 rounded-sm border border-rule accent-accent"
                                     />
                                     <span
-                                        className={`apple-body-sm transition ${
-                                            active
-                                                ? 'text-graphite'
-                                                : 'text-slate-2'
+                                        className={`cobalt-body-sm transition ${
+                                            active ? 'text-ink' : 'text-ink-2'
                                         }`}
                                     >
                                         {brand}
@@ -246,16 +211,12 @@ export default function LaptopCatalog({
                     max={filter_options.max_price}
                     step="500000"
                     value={maxPrice}
-                    onChange={(e) => {
-                        handleMaxPriceChange(Number(e.target.value));
-                    }}
-                    className="h-1 w-full cursor-pointer accent-apple-blue"
+                    onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
+                    className="h-1 w-full cursor-pointer accent-accent"
                 />
-                <div className="mt-3 flex items-center justify-between apple-caption">
-                    <span className="text-fog">Rp 0</span>
-                    <span className="text-graphite">
-                        {formatShortPrice(maxPrice)}
-                    </span>
+                <div className="mt-3 flex items-center justify-between cobalt-caption">
+                    <span className="text-ink-2/60">Rp 0</span>
+                    <span className="text-ink">{formatShortPrice(maxPrice)}</span>
                 </div>
             </FilterGroup>
 
@@ -266,13 +227,11 @@ export default function LaptopCatalog({
                             <button
                                 key={option}
                                 type="button"
-                                onClick={() => {
-                                    handleRamToggle(option);
-                                }}
-                                className={`rounded-pill border px-3 py-1 apple-caption transition ${
+                                onClick={() => handleRamToggle(option)}
+                                className={`rounded-btn border px-3 py-1 cobalt-caption transition ${
                                     ram === option
-                                        ? 'border-button-blue bg-button-blue text-paper'
-                                        : 'border-bone bg-paper text-slate-2 hover:border-apple-blue hover:text-graphite'
+                                        ? 'border-accent bg-accent text-accent-ink'
+                                        : 'border-rule bg-paper text-ink-2 hover:border-accent'
                                 }`}
                             >
                                 {option}
@@ -289,13 +248,11 @@ export default function LaptopCatalog({
                             <button
                                 key={option}
                                 type="button"
-                                onClick={() => {
-                                    handleStorageToggle(option);
-                                }}
-                                className={`rounded-pill border px-3 py-1 apple-caption transition ${
+                                onClick={() => handleStorageToggle(option)}
+                                className={`rounded-btn border px-3 py-1 cobalt-caption transition ${
                                     storage === option
-                                        ? 'border-button-blue bg-button-blue text-paper'
-                                        : 'border-bone bg-paper text-slate-2 hover:border-apple-blue hover:text-graphite'
+                                        ? 'border-accent bg-accent text-accent-ink'
+                                        : 'border-rule bg-paper text-ink-2 hover:border-accent'
                                 }`}
                             >
                                 {option}
@@ -309,14 +266,14 @@ export default function LaptopCatalog({
                 <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-pill border border-bone bg-paper px-3 apple-caption text-slate-2 transition hover:border-graphite hover:text-graphite"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-btn border border-rule bg-paper px-3 cobalt-caption text-ink-2 transition hover:border-ink hover:text-ink"
                 >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-3.5 w-3.5" weight="duotone" />
                     Reset
                 </button>
                 <button
                     type="submit"
-                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-pill bg-button-blue px-3 apple-caption text-paper transition hover:bg-deep-link-blue"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-btn bg-accent px-3 cobalt-caption text-accent-ink transition opacity-90 hover:opacity-100"
                 >
                     Terapkan
                 </button>
@@ -330,36 +287,34 @@ export default function LaptopCatalog({
             title={`Katalog Laptop - ${website.website_name}`}
             currentPath="/shop"
         >
-            <section className="bg-cloud py-16 md:py-20">
+            <section className="bg-surface py-16 md:py-20">
                 <div className="mx-auto max-w-[980px] px-4 text-center">
-                    <h1 className="apple-heading-lg text-graphite">
+                    <h1 className="cobalt-heading-lg text-ink">
                         Katalog laptop bersih,
                         <br />
                         jelas, dan terkurasi.
                     </h1>
-                    <p className="mx-auto mt-4 max-w-2xl apple-body-lg text-slate-2">
+                    <p className="mx-auto mt-4 max-w-2xl cobalt-body-lg text-ink-2">
                         Pilih stok refurbished dari inventaris kami. Filter
                         merek, RAM, storage, dan harga untuk menemukan unit yang
                         paling cocok.
                     </p>
 
                     <form onSubmit={submit} className="mx-auto mt-8 max-w-xl">
-                        <label className="flex h-11 items-center gap-3 rounded-pill border border-bone bg-paper px-4 transition focus-within:border-apple-blue focus-within:ring-4 focus-within:ring-apple-blue/20">
+                        <label className="flex h-11 items-center gap-3 rounded-pill border border-rule bg-paper px-4 transition focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/20">
                             <MagnifyingGlass
-                                className="h-4 w-4 shrink-0 text-fog"
+                                className="h-4 w-4 shrink-0 text-ink-2/60"
                                 weight="duotone"
                             />
                             <input
                                 value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                }}
+                                onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Cari MacBook, ThinkPad, ROG..."
-                                className="min-w-0 flex-1 border-none bg-transparent apple-body text-graphite outline-none placeholder:text-fog"
+                                className="min-w-0 flex-1 border-none bg-transparent cobalt-body text-ink outline-none placeholder:text-ink-2/60"
                             />
                             <button
                                 type="submit"
-                                className="inline-flex h-8 items-center justify-center rounded-pill bg-button-blue px-4 apple-caption text-paper transition hover:bg-deep-link-blue"
+                                className="inline-flex h-8 items-center justify-center rounded-btn bg-accent px-4 cobalt-caption text-accent-ink transition opacity-90 hover:opacity-100"
                             >
                                 Cari
                             </button>
@@ -371,12 +326,12 @@ export default function LaptopCatalog({
             <section className="mx-auto max-w-[980px] px-4 py-10 sm:px-6 md:py-14 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
                 <aside className="hidden lg:block">
                     <div className="sticky top-16">
-                        <div className="mb-5 flex items-baseline justify-between">
-                            <h2 className="apple-body font-semibold text-graphite">
+                        <div className="mb-5 flex items-baseline justify-between border-b border-rule pb-4">
+                            <h2 className="cobalt-body font-semibold text-ink">
                                 Filter
                             </h2>
                             {activeFilterCount > 0 ? (
-                                <span className="apple-caption text-fog">
+                                <span className="cobalt-caption text-ink-2/60">
                                     {activeFilterCount} aktif
                                 </span>
                             ) : null}
@@ -388,18 +343,16 @@ export default function LaptopCatalog({
                 <div className="mb-6 lg:hidden">
                     <button
                         type="button"
-                        onClick={() => {
-                            setShowMobileFilters(true);
-                        }}
-                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-pill border border-bone bg-paper px-4 apple-body-sm font-semibold text-graphite"
+                        onClick={() => setShowMobileFilters(true)}
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-btn border border-rule bg-paper px-4 cobalt-body-sm font-semibold text-ink"
                     >
                         <Funnel
-                            className="h-4 w-4 text-apple-blue"
+                            className="h-4 w-4 text-accent"
                             weight="duotone"
                         />
                         Filter
                         {activeFilterCount > 0 ? (
-                            <span className="ml-1 rounded-pill bg-button-blue px-2 py-0.5 text-[10px] font-bold text-paper">
+                            <span className="ml-1 rounded-btn bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">
                                 {activeFilterCount}
                             </span>
                         ) : null}
@@ -407,18 +360,16 @@ export default function LaptopCatalog({
 
                     {showMobileFilters ? (
                         <div className="fixed inset-0 z-50 flex flex-col bg-paper lg:hidden">
-                            <div className="flex items-center justify-between border-b border-bone px-4 py-3">
-                                <h2 className="apple-body font-semibold text-graphite">
+                            <div className="flex items-center justify-between border-b border-rule px-4 py-3">
+                                <h2 className="cobalt-body font-semibold text-ink">
                                     Filter
                                 </h2>
                                 <button
                                     type="button"
-                                    onClick={() => {
-                                        setShowMobileFilters(false);
-                                    }}
-                                    className="rounded-pill p-1.5 text-slate-2 hover:bg-cloud"
+                                    onClick={() => setShowMobileFilters(false)}
+                                    className="rounded-btn p-1.5 text-ink-2 hover:bg-surface"
                                 >
-                                    <X className="h-4 w-4" />
+                                    <X className="h-4 w-4" weight="duotone" />
                                 </button>
                             </div>
                             <div className="flex-1 overflow-y-auto px-5 py-5">
@@ -429,34 +380,28 @@ export default function LaptopCatalog({
                 </div>
 
                 <div>
-                    <div className="mb-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <p className="apple-body text-slate-2">
-                            <span className="font-semibold text-graphite">
+                    <div className="mb-8 flex flex-col items-start gap-3 border-b border-rule pb-6 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="cobalt-body text-ink-2">
+                            <span className="font-semibold text-ink">
                                 {laptops.total}
                             </span>{' '}
                             laptop refurbished
                         </p>
-                        <label className="flex items-center gap-2 apple-body-sm text-slate-2">
+                        <label className="flex items-center gap-2 cobalt-body-sm text-ink-2">
                             Urutkan
                             <div className="relative">
                                 <select
                                     value={sort}
-                                    onChange={(e) => {
-                                        handleSortChange(e.target.value);
-                                    }}
-                                    className="appearance-none rounded-pill border border-bone bg-paper py-1.5 pr-8 pl-3 apple-body-sm text-graphite transition outline-none focus:border-apple-blue"
+                                    onChange={(e) => handleSortChange(e.target.value)}
+                                    className="appearance-none rounded-btn border border-rule bg-paper py-1.5 pr-8 pl-3 cobalt-body-sm text-ink transition outline-none focus:border-accent"
                                 >
                                     <option value="newest">Terbaru</option>
-                                    <option value="price_asc">
-                                        Harga: rendah ke tinggi
-                                    </option>
-                                    <option value="price_desc">
-                                        Harga: tinggi ke rendah
-                                    </option>
+                                    <option value="price_asc">Harga: rendah ke tinggi</option>
+                                    <option value="price_desc">Harga: tinggi ke rendah</option>
                                     <option value="name_asc">Nama A-Z</option>
                                 </select>
                                 <CaretDown
-                                    className="pointer-events-none absolute top-1/2 right-2.5 h-3 w-3 -translate-y-1/2 text-fog"
+                                    className="pointer-events-none absolute top-1/2 right-2.5 h-3 w-3 -translate-y-1/2 text-ink-2/60"
                                     weight="bold"
                                 />
                             </div>
@@ -464,12 +409,12 @@ export default function LaptopCatalog({
                     </div>
 
                     {laptops.data.length === 0 ? (
-                        <div className="rounded-card border border-bone bg-paper p-12 text-center">
+                        <div className="rounded-card border border-rule bg-paper p-12 text-center">
                             <LaptopIcon
-                                className="mx-auto h-10 w-10 text-fog"
+                                className="mx-auto h-10 w-10 text-ink-2/60"
                                 weight="duotone"
                             />
-                            <p className="mt-4 apple-body text-slate-2">
+                            <p className="mt-4 cobalt-body text-ink-2">
                                 Laptop tidak ditemukan. Coba ubah kata kunci,
                                 merek, RAM, storage, atau harga maksimal.
                             </p>
@@ -478,26 +423,22 @@ export default function LaptopCatalog({
                         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                             {laptops.data.map((laptop) => {
                                 const image = photoUrl(laptop);
-
                                 return (
                                     <a
                                         key={laptop.id}
                                         href={`/laptops/${laptop.id}`}
                                         className="group block"
                                     >
-                                        <div className="overflow-hidden rounded-card bg-paper">
-                                            <div className="aspect-[4/3] overflow-hidden bg-bone/40">
+                                        <div className="rounded-card border border-rule bg-paper transition shadow-none group-hover:shadow-card">
+                                            <div className="aspect-[4/3] overflow-hidden rounded-t-card">
                                                 {image ? (
                                                     <img
-                                                        alt={
-                                                            laptop.name ??
-                                                            laptop.sku
-                                                        }
+                                                        alt={laptop.name ?? laptop.sku}
                                                         src={image}
                                                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                                                     />
                                                 ) : (
-                                                    <div className="flex h-full w-full items-center justify-center text-fog">
+                                                    <div className="flex h-full w-full items-center justify-center bg-surface text-ink-2/60">
                                                         <LaptopIcon
                                                             className="h-10 w-10"
                                                             weight="duotone"
@@ -507,26 +448,19 @@ export default function LaptopCatalog({
                                             </div>
                                         </div>
                                         <div className="pt-4">
-                                            <p className="apple-caption text-fog">
+                                            <p className="cobalt-caption text-ink-2/60">
                                                 {brandName(laptop.brand, '')}
                                             </p>
-                                            <h3 className="mt-1 apple-body font-semibold text-graphite">
+                                            <h3 className="mt-1 cobalt-body font-semibold text-ink">
                                                 {laptop.model}
-                                                {laptop.name
-                                                    ? ` - ${laptop.name}`
-                                                    : ''}
+                                                {laptop.name ? ` - ${laptop.name}` : ''}
                                             </h3>
-                                            <p className="mt-1.5 apple-body text-apple-blue">
-                                                {formatCurrency(
-                                                    laptop.selling_price,
-                                                )}
+                                            <p className="mt-1.5 cobalt-body text-accent">
+                                                {formatCurrency(laptop.selling_price)}
                                             </p>
-                                            <span className="mt-3 inline-flex h-7 items-center gap-1.5 rounded-pill bg-button-blue px-3.5 apple-caption text-paper transition group-hover:bg-deep-link-blue">
+                                            <span className="mt-3 inline-flex h-7 items-center gap-1.5 rounded-btn bg-accent px-3.5 cobalt-caption text-accent-ink transition opacity-90 group-hover:opacity-100">
                                                 Lihat detail
-                                                <ArrowRight
-                                                    className="h-3 w-3"
-                                                    weight="bold"
-                                                />
+                                                <ArrowRight className="h-3 w-3" weight="bold" />
                                             </span>
                                         </div>
                                     </a>
@@ -538,75 +472,54 @@ export default function LaptopCatalog({
                     {laptops.last_page > 1 ? (
                         <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
                             <a
-                                href={buildCatalogUrl(
-                                    Math.max(laptops.current_page - 1, 1),
-                                    filters,
-                                )}
+                                href={buildCatalogUrl(Math.max(laptops.current_page - 1, 1), filters)}
                                 aria-label="Halaman sebelumnya"
-                                className="flex h-9 w-9 items-center justify-center rounded-pill text-graphite transition hover:bg-bone/40"
+                                className="flex h-9 w-9 items-center justify-center rounded-btn border border-rule text-ink transition hover:border-accent hover:text-accent"
                             >
-                                <ArrowLeft
-                                    className="h-3.5 w-3.5"
-                                    weight="bold"
-                                />
+                                <ArrowLeft className="h-3.5 w-3.5" weight="bold" />
                             </a>
-                            {Array.from({ length: laptops.last_page }).map(
-                                (_, i) => {
-                                    const page = i + 1;
-
-                                    if (
-                                        page > 4 &&
-                                        page < laptops.last_page &&
-                                        Math.abs(page - laptops.current_page) >
-                                            1
-                                    ) {
-                                        if (page === 5) {
-                                            return (
-                                                <span
-                                                    key={`ellipsis-${page}`}
-                                                    className="px-2 apple-caption text-fog"
-                                                >
-                                                    ...
-                                                </span>
-                                            );
-                                        }
-
-                                        return null;
+                            {Array.from({ length: laptops.last_page }).map((_, i) => {
+                                const page = i + 1;
+                                if (
+                                    page > 4 &&
+                                    page < laptops.last_page &&
+                                    Math.abs(page - laptops.current_page) > 1
+                                ) {
+                                    if (page === 5) {
+                                        return (
+                                            <span
+                                                key={`ellipsis-${page}`}
+                                                className="px-2 cobalt-caption text-ink-2/60"
+                                            >
+                                                ...
+                                            </span>
+                                        );
                                     }
-
-                                    return (
-                                        <a
-                                            key={page}
-                                            href={buildCatalogUrl(
-                                                page,
-                                                filters,
-                                            )}
-                                            className={`flex h-9 w-9 items-center justify-center rounded-pill apple-caption transition ${
-                                                page === laptops.current_page
-                                                    ? 'bg-graphite text-paper'
-                                                    : 'text-graphite hover:bg-bone/40'
-                                            }`}
-                                        >
-                                            {page}
-                                        </a>
-                                    );
-                                },
-                            )}
+                                    return null;
+                                }
+                                return (
+                                    <a
+                                        key={page}
+                                        href={buildCatalogUrl(page, filters)}
+                                        className={`flex h-9 w-9 items-center justify-center rounded-btn cobalt-caption transition ${
+                                            page === laptops.current_page
+                                                ? 'bg-ink text-paper border border-ink'
+                                                : 'border border-rule text-ink hover:border-accent hover:text-accent'
+                                        }`}
+                                    >
+                                        {page}
+                                    </a>
+                                );
+                            })}
                             <a
                                 href={buildCatalogUrl(
-                                    Math.min(
-                                        laptops.current_page + 1,
-                                        laptops.last_page,
-                                    ),
+                                    Math.min(laptops.current_page + 1, laptops.last_page),
                                     filters,
                                 )}
                                 aria-label="Halaman berikutnya"
-                                className="flex h-9 w-9 items-center justify-center rounded-pill text-graphite transition hover:bg-bone/40"
+                                className="flex h-9 w-9 items-center justify-center rounded-btn border border-rule text-ink transition hover:border-accent hover:text-accent"
                             >
-                                <ArrowRight
-                                    className="h-3.5 w-3.5"
-                                    weight="bold"
-                                />
+                                <ArrowRight className="h-3.5 w-3.5" weight="bold" />
                             </a>
                         </div>
                     ) : null}
@@ -625,7 +538,7 @@ function FilterGroup({
 }) {
     return (
         <div>
-            <h3 className="apple-caption text-graphite">{title}</h3>
+            <h3 className="cobalt-caption text-ink">{title}</h3>
             <div className="mt-3">{children}</div>
         </div>
     );
