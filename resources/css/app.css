@@ -158,23 +158,31 @@
     --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.1);
     --shadow-high: 0 10px 25px rgba(15, 23, 42, 0.15);
 
-    /* ---- Hallmark Cobalt public page tokens ---- */
-    /* Cobalt colors — cool engineered palette */
-    --color-paper: oklch(98.5% 0.004 250);
-    --color-ink: oklch(24% 0.02 258);
+    /* ---- Hallmark Hum public page tokens ---- */
+    /* Hum colors — warm cream multi-accent palette */
+    --color-paper: oklch(97% 0.012 95);
+    --color-paper-2: oklch(94% 0.016 95);
+    --color-paper-3: oklch(91% 0.020 95);
+    --color-ink: oklch(20% 0.012 250);
     --color-ink-2: oklch(34% 0.018 257);
-    --color-accent: oklch(58% 0.20 256);
-    --color-accent-ink: #ffffff;
-    --color-rule: oklch(88% 0.008 250);
+    --color-accent: oklch(86% 0.18 95);
+    --color-accent-deep: oklch(76% 0.20 95);
+    --color-accent-ink: oklch(20% 0.012 250);
+    --color-accent-2: oklch(66% 0.18 235);
+    --color-accent-2-deep: oklch(56% 0.20 235);
+    --color-accent-3: oklch(68% 0.24 18);
+    --color-mint: oklch(80% 0.16 150);
+    --color-lavender: oklch(74% 0.16 305);
     --color-graphite: oklch(22% 0.016 260);
-    --color-surface: oklch(96% 0.006 250);
+    --color-surface: oklch(94% 0.016 95);
+    --color-rule: oklch(88% 0.012 95);
 
-    /* Cobalt typography — Space Grotesk display + Inter body + JetBrains Mono */
-    --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    /* Hum typography — Plus Jakarta Sans display + Inter body + JetBrains Mono */
+    --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
-    /* Cobalt type scale */
+    /* Hum type scale */
     --text-display: clamp(2.5rem, 5vw + 0.5rem, 3.5rem);
     --text-display--line-height: 1.05;
     --text-display--letter-spacing: -0.025em;
@@ -211,17 +219,27 @@
 
     --text-caption: 0.75rem;
     --text-caption--line-height: 1.33;
-    --text-caption--letter-spacing: 0.06em;
+    --text-caption--letter-spacing: 0.10em;
     --text-caption--font-weight: 500;
 
-    /* Cobalt radius — tight, technical */
-    --radius-card: 10px;
-    --radius-btn: 6px;
-    --radius-pill: 980px;
+    /* Hum radius — generous, rounded */
+    --radius-card: 20px;
+    --radius-btn: 999px;
+    --radius-pill: 999px;
+    --radius-input: 12px;
 
-    /* Cobalt shadows — hairlines do the work, minimal shadow */
-    --shadow-card: 0 1px 2px oklch(24% 0.02 258 / 0.05);
-    --shadow-product: 0 12px 32px -16px oklch(24% 0.02 258 / 0.18);
+    /* Hum shadows — soft lifting, color-edged */
+    --shadow-card: 0 12px 32px -16px oklch(20% 0.012 250 / 0.12);
+    --shadow-card-hover: 0 20px 40px -12px oklch(20% 0.012 250 / 0.18);
+    --shadow-product: 0 16px 40px -12px oklch(20% 0.012 250 / 0.20);
+    --shadow-btn: 0 4px 0 0 var(--color-accent-deep), 0 6px 12px -3px oklch(76% 0.20 95 / 0.45);
+    --shadow-btn-hover: 0 6px 0 0 var(--color-accent-deep), 0 12px 22px -4px oklch(76% 0.20 95 / 0.45);
+    --shadow-btn-active: 0 1px 0 0 var(--color-accent-deep), 0 2px 6px -2px oklch(76% 0.20 95 / 0.45);
+
+    /* Hum motion */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-btn: cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
 :root {
@@ -397,8 +415,8 @@
     font-weight: var(--text-mono-data--font-weight);
 }
 
-/* ---- Hallmark Cobalt typography utilities (public pages) ---- */
-@utility cobalt-display {
+/* ---- Hallmark Hum typography utilities (public pages) ---- */
+@utility hum-display {
     font-family: var(--font-display);
     font-size: var(--text-display);
     line-height: var(--text-display--line-height);
@@ -406,7 +424,7 @@
     font-weight: var(--text-display--font-weight);
 }
 
-@utility cobalt-heading-lg {
+@utility hum-heading-lg {
     font-family: var(--font-display);
     font-size: var(--text-heading-lg);
     line-height: var(--text-heading-lg--line-height);
@@ -414,7 +432,7 @@
     font-weight: var(--text-heading-lg--font-weight);
 }
 
-@utility cobalt-heading {
+@utility hum-heading {
     font-family: var(--font-display);
     font-size: var(--text-heading);
     line-height: var(--text-heading--line-height);
@@ -422,7 +440,7 @@
     font-weight: var(--text-heading--font-weight);
 }
 
-@utility cobalt-subheading {
+@utility hum-subheading {
     font-family: var(--font-body);
     font-size: var(--text-subheading);
     line-height: var(--text-subheading--line-height);
@@ -430,7 +448,7 @@
     font-weight: var(--text-subheading--font-weight);
 }
 
-@utility cobalt-body-lg {
+@utility hum-body-lg {
     font-family: var(--font-body);
     font-size: var(--text-body-lg);
     line-height: var(--text-body-lg--line-height);
@@ -438,7 +456,7 @@
     font-weight: var(--text-body-lg--font-weight);
 }
 
-@utility cobalt-body {
+@utility hum-body {
     font-family: var(--font-body);
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
@@ -446,14 +464,14 @@
     font-weight: var(--text-body--font-weight);
 }
 
-@utility cobalt-body-sm {
+@utility hum-body-sm {
     font-family: var(--font-body);
     font-size: var(--text-body-sm);
     line-height: var(--text-body-sm--line-height);
     font-weight: var(--text-body-sm--font-weight);
 }
 
-@utility cobalt-caption {
+@utility hum-caption {
     font-family: var(--font-mono);
     font-size: var(--text-caption);
     line-height: var(--text-caption--line-height);
@@ -499,4 +517,173 @@
 }
 .material-symbols-outlined.fill {
     font-variation-settings: 'FILL' 1;
+}
+
+/* ---- Hum button system (push + soft + outline) ---- */
+.hum-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.8rem 1.4rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    border: 0;
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    position: relative;
+    isolation: isolate;
+    box-shadow: var(--shadow-btn);
+    transform: translateY(0);
+    transition:
+        transform 140ms var(--ease-btn),
+        box-shadow 140ms var(--ease-btn),
+        background-color 160ms;
+}
+.hum-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-btn-hover);
+}
+.hum-btn:active {
+    transform: translateY(3px);
+    box-shadow: var(--shadow-btn-active);
+    transition-duration: 70ms;
+}
+.hum-btn:focus-visible {
+    outline: 3px solid color-mix(in oklch, var(--color-accent-deep) 70%, var(--color-accent-2));
+    outline-offset: 3px;
+}
+.hum-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: var(--shadow-btn);
+}
+
+/* Hum button color variants */
+.hum-btn--pear {
+    background: var(--color-accent);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-btn);
+}
+.hum-btn--pear:hover {
+    box-shadow: var(--shadow-btn-hover);
+}
+.hum-btn--coral {
+    background: var(--color-accent-3);
+    color: #ffffff;
+    --btn-edge: oklch(58% 0.24 18);
+    --btn-cast: oklch(68% 0.24 18 / 0.45);
+    box-shadow: 0 4px 0 0 var(--btn-edge), 0 6px 12px -3px var(--btn-cast);
+}
+.hum-btn--coral:hover {
+    box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast);
+}
+.hum-btn--cyan {
+    background: var(--color-accent-2);
+    color: #ffffff;
+    --btn-edge: oklch(56% 0.20 235);
+    --btn-cast: oklch(66% 0.18 235 / 0.45);
+    box-shadow: 0 4px 0 0 var(--btn-edge), 0 6px 12px -3px var(--btn-cast);
+}
+.hum-btn--cyan:hover {
+    box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast);
+}
+
+/* Hum soft button (flat lift, no color edge) */
+.hum-btn--soft {
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+    box-shadow: 0 2px 8px -2px oklch(20% 0.012 250 / 0.08);
+}
+.hum-btn--soft:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px -4px oklch(20% 0.012 250 / 0.14);
+    background: var(--color-paper-3);
+}
+
+/* Hum outline button */
+.hum-btn--outline {
+    background: transparent;
+    color: var(--color-ink);
+    border: 2px solid var(--color-rule);
+    box-shadow: none;
+}
+.hum-btn--outline:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent-2);
+    background: oklch(66% 0.18 235 / 0.06);
+    box-shadow: 0 4px 12px -4px oklch(66% 0.18 235 / 0.15);
+}
+
+/* Hum card with color-shift on hover */
+.hum-card {
+    background: var(--color-paper);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    transition: transform 220ms var(--ease-spring), box-shadow 220ms;
+}
+.hum-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+}
+
+/* Hum card tinted variants */
+.hum-card--pear-tint {
+    background: oklch(86% 0.18 95 / 0.06);
+}
+.hum-card--pear-tint:hover {
+    background: oklch(86% 0.18 95 / 0.12);
+}
+.hum-card--cyan-tint {
+    background: oklch(66% 0.18 235 / 0.06);
+}
+.hum-card--cyan-tint:hover {
+    background: oklch(66% 0.18 235 / 0.12);
+}
+.hum-card--coral-tint {
+    background: oklch(68% 0.24 18 / 0.06);
+}
+.hum-card--coral-tint:hover {
+    background: oklch(68% 0.24 18 / 0.12);
+}
+
+/* Hum star-burst animation */
+.hum-star-burst {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background:
+        linear-gradient(90deg, transparent 47%, var(--color-accent-3) 47% 53%, transparent 53%),
+        linear-gradient(0deg, transparent 47%, var(--color-accent-3) 47% 53%, transparent 53%);
+    animation: hum-star-burst 420ms ease-out forwards;
+    pointer-events: none;
+    z-index: 10;
+}
+@keyframes hum-star-burst {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    60% { transform: scale(1.2) rotate(35deg); opacity: 0.9; }
+    100% { transform: scale(1.4) rotate(45deg); opacity: 0; }
+}
+
+/* Hum highlight (text decoration) */
+.hum-hl {
+    color: inherit;
+    background-image: linear-gradient(var(--hl, oklch(86% 0.18 95 / 0.55)) 0 0);
+    background-repeat: no-repeat;
+    background-size: 100% 0.32em;
+    background-position: 0 82%;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding-bottom: 0.02em;
+}
+
+/* Hum character mark pulse */
+.hum-char {
+    animation: hum-pulse 4s ease-in-out infinite;
+}
+@keyframes hum-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
 }

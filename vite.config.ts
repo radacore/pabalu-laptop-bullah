@@ -18,7 +18,7 @@ export default defineConfig({
                 bunny('Outfit', {
                     weights: [400, 500, 600, 700, 800],
                 }),
-                bunny('Space Grotesk', {
+                bunny('Plus Jakarta Sans', {
                     weights: [400, 500, 600, 700],
                 }),
                 bunny('JetBrains Mono', {

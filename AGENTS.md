@@ -86,22 +86,26 @@ The four public routes — `/`, `/shop`, `/laptops/{laptop}`, `/services/track/{
 
 **Tokens (defined in `resources/css/app.css` `@theme`):**
 
-- Colors: `--color-paper` oklch(98.5% 0.004 250), `--color-ink` oklch(24% 0.02 258), `--color-ink-2` oklch(34% 0.018 257), `--color-accent` oklch(58% 0.20 256), `--color-rule` oklch(88% 0.008 250), `--color-graphite` oklch(22% 0.016 260), `--color-surface` oklch(96% 0.006 250)
-- Radius: `--radius-card` 10px, `--radius-btn` 6px, `--radius-pill` 980px (search inputs only)
-- Shadow: `--shadow-card` (minimal, 1px lift), `--shadow-product` (product imagery only)
+- Colors: `--color-paper` oklch(97% 0.012 95) cream, `--color-ink` oklch(20% 0.012 250), `--color-ink-2` oklch(34% 0.018 257), `--color-accent` oklch(86% 0.18 95) pear, `--color-accent-2` oklch(66% 0.18 235) cyan, `--color-accent-3` oklch(68% 0.24 18) coral, `--color-rule` oklch(88% 0.012 95)
+- Radius: `--radius-card` 20px, `--radius-btn` 999px (pill), `--radius-input` 12px
+- Shadow: `--shadow-card` (soft lift), `--shadow-btn` (color edge + cast), `--shadow-product` (product imagery)
 
-**Typography utilities** (`@utility` block in `app.css`): `cobalt-display`, `cobalt-heading-lg`, `cobalt-heading`, `cobalt-subheading`, `cobalt-body-lg`, `cobalt-body`, `cobalt-body-sm`, `cobalt-caption`. Use these instead of raw font sizes.
+**Typography utilities** (`@utility` block in `app.css`): `hum-display`, `hum-heading-lg`, `hum-heading`, `hum-subheading`, `hum-body-lg`, `hum-body`, `hum-body-sm`, `hum-caption`. Use these instead of raw font sizes.
+
+**Button system** (defined in `app.css`): `.hum-btn` (push), `.hum-btn--soft`, `.hum-btn--outline` with color variants `--pear`, `--cyan`, `--coral`. Primary actions use push buttons with color edge shadow.
 
 **Don't reach for in public pages:**
 
 - shadcn/ui primitives (`resources/js/components/ui/*`) — admin-only
 - `Material Symbols` font — admin-only
-- `bg-slate-*`, `bg-white`, `bg-blue-*` — use Cobalt tokens only
-- `rounded-xl` / `rounded-2xl` — use `rounded-card` (10px) or `rounded-btn` (6px)
-- `shadow-sm` / `shadow-md` on UI — hairlines only
-- Apple tokens (`bg-cloud`, `bg-bone`, `text-graphite`, `text-fog`, `text-apple-blue`, `bg-button-blue`, `apple-*` utilities) — removed, use Cobalt equivalents
+- `bg-slate-*`, `bg-white`, `bg-blue-*` — use Hum tokens only
+- `rounded-xl` / `rounded-2xl` — use `rounded-[20px]` (cards) or `rounded-full` (buttons)
+- Square corners anywhere — Hum is the rounded theme
+- `border border-rule` on cards — use `shadow-card` instead
+- Apple tokens (`bg-cloud`, `bg-bone`, `text-graphite`, `text-fog`, `text-apple-blue`, `bg-button-blue`, `apple-*` utilities) — removed, use Hum equivalents
+- Cobalt tokens (`cobalt-*` utilities, `bg-rule`, `text-accent` for single accent) — removed, use Hum equivalents
 
-**Shared shell:** `resources/js/components/public-layout.tsx` exports `PublicPage`, `PublicHeader`, `PublicFooter`. Header is 48px sticky bordered nav with `bg-paper/80 backdrop-blur-md`. Footer is `bg-surface` with `border-t border-rule`. Wrap any new public page in `<PublicPage website={...} title="...">`.
+**Shared shell:** `resources/js/components/public-layout.tsx` exports `PublicPage`, `PublicHeader`, `PublicFooter`. Header is 56px sticky nav with soft shadow + `bg-paper/90 backdrop-blur-md`. Footer is `bg-paper-2`. Wrap any new public page in `<PublicPage website={...} title="...">`.
 
 ## Code conventions worth knowing
 
@@ -110,7 +114,7 @@ The four public routes — `/`, `/shop`, `/laptops/{laptop}`, `/services/track/{
 - ESLint uses flat config. `@stylistic/brace-style` is `1tbs`, `curly` is `all` — `if (x) do();` is rejected.
 - `react/react-in-jsx-scope`, `react/prop-types`, `react/no-unescaped-entities` are off.
 - React Compiler is enabled via `babel-plugin-react-compiler` in `vite.config.ts`. Write code as if the compiler runs (avoid manual `useMemo`/`useCallback` that fight it; rely on memoization at boundaries).
-- Vite ships Bunny Fonts (Inter, Outfit, Space Grotesk, JetBrains Mono) — not Google Fonts. Do not add font links.
+- Vite ships Bunny Fonts (Inter, Outfit, Plus Jakarta Sans, JetBrains Mono) — not Google Fonts. Do not add font links.
 - Tailwind classes sort automatically via `prettier-plugin-tailwindcss`. Class helpers: `clsx`, `cn`, `cva` are recognized by Prettier.
 - Prettier: 4-space indent, single quotes, 80 col, semicolons. YAML uses 2-space (`.editorconfig` override). `resources/js/components/ui/*` and `resources/views/mail/*` are prettierignored.
 - EditorConfig: 4 spaces (2 for yml), LF, UTF-8, final newline.

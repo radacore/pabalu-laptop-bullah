@@ -1,4 +1,4 @@
-/* Hallmark · genre: modern-minimal · macrostructure: catalogue · theme: cobalt */
+/* Hallmark · genre: modern-minimal · macrostructure: catalogue · theme: hum */
 
 import { router } from '@inertiajs/react';
 import {
@@ -191,7 +191,7 @@ export default function LaptopCatalog({
                                         className="h-4 w-4 rounded-sm border border-rule accent-accent"
                                     />
                                     <span
-                                        className={`cobalt-body-sm transition ${
+                                        className={`hum-body-sm transition ${
                                             active ? 'text-ink' : 'text-ink-2'
                                         }`}
                                     >
@@ -214,7 +214,7 @@ export default function LaptopCatalog({
                     onChange={(e) => handleMaxPriceChange(Number(e.target.value))}
                     className="h-1 w-full cursor-pointer accent-accent"
                 />
-                <div className="mt-3 flex items-center justify-between cobalt-caption">
+                <div className="mt-3 flex items-center justify-between hum-caption">
                     <span className="text-ink-2/60">Rp 0</span>
                     <span className="text-ink">{formatShortPrice(maxPrice)}</span>
                 </div>
@@ -228,9 +228,9 @@ export default function LaptopCatalog({
                                 key={option}
                                 type="button"
                                 onClick={() => handleRamToggle(option)}
-                                className={`rounded-btn border px-3 py-1 cobalt-caption transition ${
+                                className={`rounded-full border px-3 py-1 hum-caption transition ${
                                     ram === option
-                                        ? 'border-accent bg-accent text-accent-ink'
+                                        ? 'hum-btn hum-btn--pear'
                                         : 'border-rule bg-paper text-ink-2 hover:border-accent'
                                 }`}
                             >
@@ -249,9 +249,9 @@ export default function LaptopCatalog({
                                 key={option}
                                 type="button"
                                 onClick={() => handleStorageToggle(option)}
-                                className={`rounded-btn border px-3 py-1 cobalt-caption transition ${
+                                className={`rounded-full border px-3 py-1 hum-caption transition ${
                                     storage === option
-                                        ? 'border-accent bg-accent text-accent-ink'
+                                        ? 'hum-btn hum-btn--pear'
                                         : 'border-rule bg-paper text-ink-2 hover:border-accent'
                                 }`}
                             >
@@ -266,14 +266,14 @@ export default function LaptopCatalog({
                 <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-btn border border-rule bg-paper px-3 cobalt-caption text-ink-2 transition hover:border-ink hover:text-ink"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-rule bg-paper px-3 hum-caption text-ink-2 transition hover:border-ink hover:text-ink"
                 >
                     <X className="h-3.5 w-3.5" weight="duotone" />
                     Reset
                 </button>
                 <button
                     type="submit"
-                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-btn bg-accent px-3 cobalt-caption text-accent-ink transition opacity-90 hover:opacity-100"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-3 hum-caption hum-btn hum-btn--pear transition opacity-90 hover:opacity-100"
                 >
                     Terapkan
                 </button>
@@ -287,14 +287,14 @@ export default function LaptopCatalog({
             title={`Katalog Laptop - ${website.website_name}`}
             currentPath="/shop"
         >
-            <section className="bg-surface py-16 md:py-20">
+            <section className="bg-paper-2 py-16 md:py-20">
                 <div className="mx-auto max-w-[980px] px-4 text-center">
-                    <h1 className="cobalt-heading-lg text-ink">
+                    <h1 className="hum-heading-lg text-ink">
                         Katalog laptop bersih,
                         <br />
                         jelas, dan terkurasi.
                     </h1>
-                    <p className="mx-auto mt-4 max-w-2xl cobalt-body-lg text-ink-2">
+                    <p className="mx-auto mt-4 max-w-2xl hum-body-lg text-ink-2">
                         Pilih stok refurbished dari inventaris kami. Filter
                         merek, RAM, storage, dan harga untuk menemukan unit yang
                         paling cocok.
@@ -310,11 +310,11 @@ export default function LaptopCatalog({
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Cari MacBook, ThinkPad, ROG..."
-                                className="min-w-0 flex-1 border-none bg-transparent cobalt-body text-ink outline-none placeholder:text-ink-2/60"
+                                className="min-w-0 flex-1 border-none bg-transparent hum-body text-ink outline-none placeholder:text-ink-2/60"
                             />
                             <button
                                 type="submit"
-                                className="inline-flex h-8 items-center justify-center rounded-btn bg-accent px-4 cobalt-caption text-accent-ink transition opacity-90 hover:opacity-100"
+                                className="inline-flex h-8 items-center justify-center rounded-full px-4 hum-caption hum-btn hum-btn--pear transition opacity-90 hover:opacity-100"
                             >
                                 Cari
                             </button>
@@ -327,11 +327,11 @@ export default function LaptopCatalog({
                 <aside className="hidden lg:block">
                     <div className="sticky top-16">
                         <div className="mb-5 flex items-baseline justify-between border-b border-rule pb-4">
-                            <h2 className="cobalt-body font-semibold text-ink">
+                            <h2 className="hum-body font-semibold text-ink">
                                 Filter
                             </h2>
                             {activeFilterCount > 0 ? (
-                                <span className="cobalt-caption text-ink-2/60">
+                                <span className="hum-caption text-ink-2/60">
                                     {activeFilterCount} aktif
                                 </span>
                             ) : null}
@@ -344,7 +344,7 @@ export default function LaptopCatalog({
                     <button
                         type="button"
                         onClick={() => setShowMobileFilters(true)}
-                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-btn border border-rule bg-paper px-4 cobalt-body-sm font-semibold text-ink"
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full border border-rule bg-paper px-4 hum-body-sm font-semibold text-ink"
                     >
                         <Funnel
                             className="h-4 w-4 text-accent"
@@ -352,7 +352,7 @@ export default function LaptopCatalog({
                         />
                         Filter
                         {activeFilterCount > 0 ? (
-                            <span className="ml-1 rounded-btn bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">
+                            <span className="ml-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">
                                 {activeFilterCount}
                             </span>
                         ) : null}
@@ -361,13 +361,13 @@ export default function LaptopCatalog({
                     {showMobileFilters ? (
                         <div className="fixed inset-0 z-50 flex flex-col bg-paper lg:hidden">
                             <div className="flex items-center justify-between border-b border-rule px-4 py-3">
-                                <h2 className="cobalt-body font-semibold text-ink">
+                                <h2 className="hum-body font-semibold text-ink">
                                     Filter
                                 </h2>
                                 <button
                                     type="button"
                                     onClick={() => setShowMobileFilters(false)}
-                                    className="rounded-btn p-1.5 text-ink-2 hover:bg-surface"
+                                    className="rounded-full p-1.5 text-ink-2 hover:bg-paper-2"
                                 >
                                     <X className="h-4 w-4" weight="duotone" />
                                 </button>
@@ -381,19 +381,19 @@ export default function LaptopCatalog({
 
                 <div>
                     <div className="mb-8 flex flex-col items-start gap-3 border-b border-rule pb-6 sm:flex-row sm:items-center sm:justify-between">
-                        <p className="cobalt-body text-ink-2">
+                        <p className="hum-body text-ink-2">
                             <span className="font-semibold text-ink">
                                 {laptops.total}
                             </span>{' '}
                             laptop refurbished
                         </p>
-                        <label className="flex items-center gap-2 cobalt-body-sm text-ink-2">
+                        <label className="flex items-center gap-2 hum-body-sm text-ink-2">
                             Urutkan
                             <div className="relative">
                                 <select
                                     value={sort}
                                     onChange={(e) => handleSortChange(e.target.value)}
-                                    className="appearance-none rounded-btn border border-rule bg-paper py-1.5 pr-8 pl-3 cobalt-body-sm text-ink transition outline-none focus:border-accent"
+                                    className="appearance-none rounded-full border border-rule bg-paper py-1.5 pr-8 pl-3 hum-body-sm text-ink transition outline-none focus:border-accent"
                                 >
                                     <option value="newest">Terbaru</option>
                                     <option value="price_asc">Harga: rendah ke tinggi</option>
@@ -409,12 +409,12 @@ export default function LaptopCatalog({
                     </div>
 
                     {laptops.data.length === 0 ? (
-                        <div className="rounded-card border border-rule bg-paper p-12 text-center">
+                        <div className="rounded-[20px] bg-paper p-12 text-center shadow-card">
                             <LaptopIcon
                                 className="mx-auto h-10 w-10 text-ink-2/60"
                                 weight="duotone"
                             />
-                            <p className="mt-4 cobalt-body text-ink-2">
+                            <p className="mt-4 hum-body text-ink-2">
                                 Laptop tidak ditemukan. Coba ubah kata kunci,
                                 merek, RAM, storage, atau harga maksimal.
                             </p>
@@ -429,8 +429,8 @@ export default function LaptopCatalog({
                                         href={`/laptops/${laptop.id}`}
                                         className="group block"
                                     >
-                                        <div className="rounded-card border border-rule bg-paper transition shadow-none group-hover:shadow-card">
-                                            <div className="aspect-[4/3] overflow-hidden rounded-t-card">
+                                        <div className="rounded-[20px] bg-paper transition shadow-card group-hover:shadow-card-hover">
+                                            <div className="aspect-[4/3] overflow-hidden rounded-t-[20px]">
                                                 {image ? (
                                                     <img
                                                         alt={laptop.name ?? laptop.sku}
@@ -438,7 +438,7 @@ export default function LaptopCatalog({
                                                         className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                                                     />
                                                 ) : (
-                                                    <div className="flex h-full w-full items-center justify-center bg-surface text-ink-2/60">
+                                                    <div className="flex h-full w-full items-center justify-center bg-paper-2 text-ink-2/60">
                                                         <LaptopIcon
                                                             className="h-10 w-10"
                                                             weight="duotone"
@@ -448,17 +448,17 @@ export default function LaptopCatalog({
                                             </div>
                                         </div>
                                         <div className="pt-4">
-                                            <p className="cobalt-caption text-ink-2/60">
+                                            <p className="hum-caption text-ink-2/60">
                                                 {brandName(laptop.brand, '')}
                                             </p>
-                                            <h3 className="mt-1 cobalt-body font-semibold text-ink">
+                                            <h3 className="mt-1 hum-body font-semibold text-ink">
                                                 {laptop.model}
                                                 {laptop.name ? ` - ${laptop.name}` : ''}
                                             </h3>
-                                            <p className="mt-1.5 cobalt-body text-accent">
+                                            <p className="mt-1.5 hum-body text-accent">
                                                 {formatCurrency(laptop.selling_price)}
                                             </p>
-                                            <span className="mt-3 inline-flex h-7 items-center gap-1.5 rounded-btn bg-accent px-3.5 cobalt-caption text-accent-ink transition opacity-90 group-hover:opacity-100">
+                                            <span className="mt-3 inline-flex h-7 items-center gap-1.5 rounded-full px-3.5 hum-caption hum-btn hum-btn--pear transition opacity-90 group-hover:opacity-100">
                                                 Lihat detail
                                                 <ArrowRight className="h-3 w-3" weight="bold" />
                                             </span>
@@ -474,7 +474,7 @@ export default function LaptopCatalog({
                             <a
                                 href={buildCatalogUrl(Math.max(laptops.current_page - 1, 1), filters)}
                                 aria-label="Halaman sebelumnya"
-                                className="flex h-9 w-9 items-center justify-center rounded-btn border border-rule text-ink transition hover:border-accent hover:text-accent"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-rule text-ink transition hover:text-accent-2"
                             >
                                 <ArrowLeft className="h-3.5 w-3.5" weight="bold" />
                             </a>
@@ -489,7 +489,7 @@ export default function LaptopCatalog({
                                         return (
                                             <span
                                                 key={`ellipsis-${page}`}
-                                                className="px-2 cobalt-caption text-ink-2/60"
+                                                className="px-2 hum-caption text-ink-2/60"
                                             >
                                                 ...
                                             </span>
@@ -501,10 +501,10 @@ export default function LaptopCatalog({
                                     <a
                                         key={page}
                                         href={buildCatalogUrl(page, filters)}
-                                        className={`flex h-9 w-9 items-center justify-center rounded-btn cobalt-caption transition ${
+                                        className={`flex h-9 w-9 items-center justify-center rounded-full hum-caption transition ${
                                             page === laptops.current_page
-                                                ? 'bg-ink text-paper border border-ink'
-                                                : 'border border-rule text-ink hover:border-accent hover:text-accent'
+                                                ? 'bg-ink text-paper'
+                                                : 'border border-rule text-ink hover:text-accent-2'
                                         }`}
                                     >
                                         {page}
@@ -517,7 +517,7 @@ export default function LaptopCatalog({
                                     filters,
                                 )}
                                 aria-label="Halaman berikutnya"
-                                className="flex h-9 w-9 items-center justify-center rounded-btn border border-rule text-ink transition hover:border-accent hover:text-accent"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-rule text-ink transition hover:text-accent-2"
                             >
                                 <ArrowRight className="h-3.5 w-3.5" weight="bold" />
                             </a>
@@ -538,7 +538,7 @@ function FilterGroup({
 }) {
     return (
         <div>
-            <h3 className="cobalt-caption text-ink">{title}</h3>
+            <h3 className="hum-caption text-ink">{title}</h3>
             <div className="mt-3">{children}</div>
         </div>
     );

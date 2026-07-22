@@ -1,4 +1,4 @@
-/* Hallmark · genre: modern-minimal · macrostructure: stat-led · theme: cobalt */
+/* Hallmark · genre: modern-minimal · macrostructure: stat-led · theme: hum */
 
 import { router, useForm } from '@inertiajs/react';
 import {
@@ -110,25 +110,25 @@ export default function ServiceTracking({
             >
                 <section className="bg-paper py-20 md:py-28">
                     <div className="mx-auto max-w-[640px] px-4 text-center">
-                        <h1 className="cobalt-heading-lg text-ink">
+                        <h1 className="hum-heading-lg text-ink">
                             Lacak progres
                             <br />
                             servis laptop Anda.
                         </h1>
-                        <p className="mx-auto mt-4 max-w-lg cobalt-body-lg text-ink-2">
+                        <p className="mx-auto mt-4 max-w-lg hum-body-lg text-ink-2">
                             Masukkan kode tiket untuk melihat status
                             pengerjaan, estimasi selesai, dan ringkasan biaya
                             terbaru.
                         </p>
 
                         {error ? (
-                            <p className="mx-auto mt-6 max-w-md cobalt-body-sm text-ink">
+                            <p className="mx-auto mt-6 max-w-md hum-body-sm text-ink">
                                 {error}
                                 {tracking_code ? (
                                     <>
                                         {' '}
                                         Kode yang dicari:{' '}
-                                        <span className="cobalt-caption">
+                                        <span className="hum-caption">
                                             {tracking_code}
                                         </span>
                                     </>
@@ -152,11 +152,11 @@ export default function ServiceTracking({
                                         form.setData('code', e.target.value);
                                     }}
                                     placeholder="Kode servis (contoh: SRV-20240613-XXXXX)"
-                                    className="min-w-0 flex-1 border-none bg-transparent cobalt-body text-ink outline-none placeholder:text-ink-2/60"
+                                    className="min-w-0 flex-1 border-none bg-transparent hum-body text-ink outline-none placeholder:text-ink-2/60"
                                 />
                                 <button
                                     type="submit"
-                                    className="inline-flex h-8 items-center justify-center rounded-btn bg-accent px-4 cobalt-caption text-accent-ink transition hover:brightness-110"
+                                    className="inline-flex h-8 items-center justify-center rounded-full hum-btn hum-btn--pear px-4 hum-caption text-accent-ink transition hover:brightness-110"
                                 >
                                     Lacak
                                 </button>
@@ -194,15 +194,15 @@ export default function ServiceTracking({
             title={pageTitle}
             currentPath="/#status"
         >
-            <section className="bg-surface border-b border-rule py-14 md:py-20">
+            <section className="bg-paper-2 border-b border-rule/60 py-14 md:py-20">
                 <div className="mx-auto max-w-[640px] px-4 text-center">
-                    <p className="cobalt-caption uppercase tracking-widest text-ink-2/60">
+                    <p className="hum-caption uppercase tracking-widest text-ink-2/60">
                         Tiket servis
                     </p>
-                    <h1 className="mt-3 cobalt-heading-lg text-ink">
+                    <h1 className="mt-3 hum-heading-lg text-ink">
                         #{service.service_code}
                     </h1>
-                    <p className="mx-auto mt-4 max-w-xl cobalt-body text-ink-2">
+                    <p className="mx-auto mt-4 max-w-xl hum-body text-ink-2">
                         Pelanggan{' '}
                         <span className="text-ink">
                             {service.customer?.name ?? '-'}
@@ -213,11 +213,11 @@ export default function ServiceTracking({
                         </span>
                     </p>
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-                        <span className="inline-flex h-7 items-center gap-1.5 rounded-btn border border-rule bg-paper px-3.5 cobalt-caption uppercase text-ink">
+                        <span className="inline-flex h-7 items-center gap-1.5 rounded-full border border-rule bg-paper px-3.5 hum-caption uppercase text-ink">
                             {service.status?.name ?? 'Aktif'}
                         </span>
                         {service.payment_status === 'paid' ? (
-                            <span className="inline-flex h-7 items-center rounded-btn border border-rule bg-paper px-3.5 cobalt-caption uppercase text-ink">
+                            <span className="inline-flex h-7 items-center rounded-full border border-rule bg-paper px-3.5 hum-caption uppercase text-ink">
                                 Lunas
                             </span>
                         ) : null}
@@ -225,13 +225,13 @@ export default function ServiceTracking({
                 </div>
             </section>
 
-            <section className="bg-paper border-b border-rule py-16 md:py-20">
+            <section className="bg-paper border-b border-rule/60 py-16 md:py-20">
                 <div className="mx-auto max-w-[640px] px-4">
                     <div>
-                        <h2 className="cobalt-subheading text-center text-ink">
+                        <h2 className="hum-subheading text-center text-ink">
                             Progres servis
                         </h2>
-                        <p className="mt-2 text-center cobalt-caption uppercase text-ink-2/60">
+                        <p className="mt-2 text-center hum-caption uppercase text-ink-2/60">
                             Tahap {stepIdx + 1} dari {stepLabels.length}
                         </p>
 
@@ -261,12 +261,12 @@ export default function ServiceTracking({
                                                     className={`relative z-10 flex h-3 w-3 items-center justify-center rounded-full ${
                                                         isDone || isCurrent
                                                             ? 'bg-accent'
-                                                            : 'bg-rule'
+                                                            : 'bg-paper-3'
                                                     }`}
                                                     aria-hidden="true"
                                                 />
                                                 <p
-                                                    className={`mt-3 text-center cobalt-caption uppercase ${
+                                                    className={`mt-3 text-center hum-caption uppercase ${
                                                         isCurrent || isDone
                                                             ? 'text-ink'
                                                             : 'text-ink-2/60'
@@ -298,12 +298,12 @@ export default function ServiceTracking({
                                                 className={`flex h-3 w-3 shrink-0 items-center justify-center rounded-full ${
                                                     isDone || isCurrent
                                                         ? 'bg-accent'
-                                                        : 'bg-rule'
+                                                        : 'bg-paper-3'
                                                 }`}
                                                 aria-hidden="true"
                                             />
                                             <span
-                                                className={`cobalt-body-sm ${
+                                                className={`hum-body-sm ${
                                                     isCurrent || isDone
                                                         ? 'text-ink'
                                                         : 'text-ink-2/60'
@@ -320,11 +320,11 @@ export default function ServiceTracking({
                 </div>
             </section>
 
-            <section className="bg-surface py-16 md:py-20">
+            <section className="bg-paper-2 py-16 md:py-20">
                 <div className="mx-auto max-w-[640px] px-4">
                     <div className="space-y-8">
-                        <div className="border border-rule bg-paper p-7">
-                            <h2 className="cobalt-subheading text-ink">
+                        <div className="shadow-card bg-paper p-7 rounded-[20px]">
+                            <h2 className="hum-subheading text-ink">
                                 Informasi perangkat
                             </h2>
                             <dl className="mt-6 space-y-4">
@@ -367,17 +367,17 @@ export default function ServiceTracking({
                         </div>
 
                         {parts.length > 0 ? (
-                            <div className="border border-rule bg-paper p-7">
-                                <h2 className="cobalt-subheading text-ink">
+                            <div className="shadow-card bg-paper p-7 rounded-[20px]">
+                                <h2 className="hum-subheading text-ink">
                                     Sparepart digunakan
                                 </h2>
                                 <ul className="mt-5 space-y-3">
                                     {parts.map((part) => (
                                         <li
                                             key={part.id}
-                                            className="flex items-center justify-between gap-4 border-b border-rule pb-3 last:border-0 last:pb-0"
+                                            className="flex items-center justify-between gap-4 border-b border-rule/60 pb-3 last:border-0 last:pb-0"
                                         >
-                                            <span className="cobalt-body-sm text-ink-2">
+                                            <span className="hum-body-sm text-ink-2">
                                                 {part.part_name ??
                                                     part.name ??
                                                     '-'}{' '}
@@ -385,7 +385,7 @@ export default function ServiceTracking({
                                                     ×{part.quantity}
                                                 </span>
                                             </span>
-                                            <span className="cobalt-body-sm font-semibold text-ink">
+                                            <span className="hum-body-sm font-semibold text-ink">
                                                 {formatCurrency(
                                                     part.selling_price ??
                                                         part.price ??
@@ -399,8 +399,8 @@ export default function ServiceTracking({
                         ) : null}
 
                         {updates.length > 0 ? (
-                            <div className="border border-rule bg-paper p-7">
-                                <h2 className="cobalt-subheading text-ink">
+                            <div className="shadow-card bg-paper p-7 rounded-[20px]">
+                                <h2 className="hum-subheading text-ink">
                                     Update servis
                                 </h2>
                                 <ol className="mt-6 space-y-5">
@@ -414,7 +414,7 @@ export default function ServiceTracking({
                                                 aria-hidden="true"
                                             />
                                             <div>
-                                                <p className="cobalt-body font-semibold text-ink">
+                                                <p className="hum-body font-semibold text-ink">
                                                     {update.note ||
                                                         update.description ||
                                                         update.title ||
@@ -424,7 +424,7 @@ export default function ServiceTracking({
                                                             '-'
                                                         }`}
                                                 </p>
-                                                <p className="mt-1 cobalt-caption text-ink-2/60">
+                                                <p className="mt-1 hum-caption text-ink-2/60">
                                                     {new Date(
                                                         update.created_at,
                                                     ).toLocaleString('id-ID', {
@@ -439,17 +439,17 @@ export default function ServiceTracking({
                             </div>
                         ) : null}
 
-                        <div className="border border-rule bg-paper p-7">
-                            <h3 className="cobalt-subheading text-ink">
+                        <div className="shadow-card bg-paper p-7 rounded-[20px]">
+                            <h3 className="hum-subheading text-ink">
                                 Ringkasan
                             </h3>
 
                             {service.estimated_completion_date ? (
-                                <div className="mt-4 flex items-baseline justify-between border-b border-rule pb-3">
-                                    <span className="cobalt-body-sm text-ink-2">
+                                <div className="mt-4 flex items-baseline justify-between border-b border-rule/60 pb-3">
+                                    <span className="hum-body-sm text-ink-2">
                                         Estimasi selesai
                                     </span>
-                                    <span className="cobalt-body-sm text-ink">
+                                    <span className="hum-body-sm text-ink">
                                         {formatDate(
                                             service.estimated_completion_date,
                                             {
@@ -464,34 +464,34 @@ export default function ServiceTracking({
 
                             <div className="mt-4 space-y-2.5">
                                 <div className="flex items-baseline justify-between">
-                                    <span className="cobalt-body-sm text-ink-2">
+                                    <span className="hum-body-sm text-ink-2">
                                         Biaya diagnosa
                                     </span>
-                                    <span className="cobalt-body-sm text-ink">
+                                    <span className="hum-body-sm text-ink">
                                         {formatCurrency(diagnosisCost)}
                                     </span>
                                 </div>
                                 {parts.length > 0 ? (
                                     <div className="flex items-baseline justify-between">
-                                        <span className="cobalt-body-sm text-ink-2">
+                                        <span className="hum-body-sm text-ink-2">
                                             Sparepart + pasang
                                         </span>
-                                        <span className="cobalt-body-sm text-ink">
+                                        <span className="hum-body-sm text-ink">
                                             {formatCurrency(partTotal)}
                                         </span>
                                     </div>
                                 ) : null}
                             </div>
 
-                            <div className="mt-5 flex items-baseline justify-between border-t border-rule pt-4">
-                                <span className="cobalt-body font-semibold text-ink">
+                            <div className="mt-5 flex items-baseline justify-between pt-4">
+                                <span className="hum-body font-semibold text-ink">
                                     Total estimasi
                                 </span>
-                                <span className="cobalt-body font-semibold text-ink">
+                                <span className="hum-body font-semibold text-ink">
                                     {formatCurrency(estimatedTotal)}
                                 </span>
                             </div>
-                            <p className="mt-2 cobalt-caption text-ink-2/60">
+                            <p className="mt-2 hum-caption text-ink-2/60">
                                 Harga transparan berdasarkan diagnosa terkini.
                                 Anda akan diberi tahu jika ada perubahan.
                             </p>
@@ -500,7 +500,7 @@ export default function ServiceTracking({
                                 href={waLink}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="mt-6 inline-flex h-10 w-full items-center justify-center rounded-btn bg-accent px-5 cobalt-body text-accent-ink transition hover:brightness-110"
+                                className="mt-6 inline-flex h-10 w-full items-center justify-center rounded-full hum-btn hum-btn--pear px-5 hum-body text-accent-ink transition hover:brightness-110"
                             >
                                 <ChatCircle
                                     className="mr-1.5 h-3.5 w-3.5"
@@ -511,7 +511,7 @@ export default function ServiceTracking({
 
                             <button
                                 type="button"
-                                className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-btn border border-rule bg-transparent px-5 cobalt-body text-ink transition hover:border-accent"
+                                className="mt-3 inline-flex h-10 w-full items-center justify-center rounded-full hum-btn hum-btn--outline px-5 hum-body text-ink transition hover:text-accent-2"
                             >
                                 <Download
                                     className="mr-1.5 h-3.5 w-3.5"
@@ -521,21 +521,21 @@ export default function ServiceTracking({
                             </button>
                         </div>
 
-                        <div className="border border-rule bg-paper p-7">
-                            <h4 className="flex items-center gap-2 cobalt-body font-semibold text-ink">
+                        <div className="shadow-card bg-paper p-7 rounded-[20px]">
+                            <h4 className="flex items-center gap-2 hum-body font-semibold text-ink">
                                 <Question
                                     className="h-4 w-4 text-ink"
                                     weight="duotone"
                                 />
                                 Butuh bantuan?
                             </h4>
-                            <p className="mt-2 cobalt-body-sm text-ink-2">
+                            <p className="mt-2 hum-body-sm text-ink-2">
                                 Punya pertanyaan tentang status perbaikan atau
                                 rincian biaya? Tim support kami siap membantu.
                             </p>
                             <a
                                 href="/"
-                                className="mt-3 inline-block cobalt-body-sm text-accent transition hover:underline"
+                                className="mt-3 inline-block hum-body-sm text-accent transition hover:underline"
                             >
                                 Pusat bantuan →
                             </a>
@@ -557,11 +557,11 @@ function InfoRow({
     mono?: boolean;
 }) {
     return (
-        <div className="flex items-baseline justify-between gap-4 border-b border-rule pb-3 last:border-0 last:pb-0">
-            <dt className="cobalt-body-sm text-ink-2">{label}</dt>
+        <div className="flex items-baseline justify-between gap-4 border-b border-rule/60 pb-3 last:border-0 last:pb-0">
+            <dt className="hum-body-sm text-ink-2">{label}</dt>
             <dd
-                className={`text-right cobalt-body-sm text-ink ${
-                    mono ? 'cobalt-caption' : ''
+                className={`text-right hum-body-sm text-ink ${
+                    mono ? 'hum-caption' : ''
                 }`}
             >
                 {value}

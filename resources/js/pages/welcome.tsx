@@ -1,4 +1,4 @@
-/* Hallmark · genre: modern-minimal · macrostructure: bento-grid · theme: cobalt */
+/* Hallmark · genre: playful · macrostructure: bento-grid · theme: hum */
 
 import { router } from '@inertiajs/react';
 import {
@@ -38,18 +38,21 @@ const serviceItems = [
         description:
             'RAM, SSD, baterai, dan thermal service untuk laptop yang butuh terasa cepat lagi.',
         icon: Cpu,
+        tint: 'pear' as const,
     },
     {
         title: 'Perbaikan hardware',
         description:
             'Layar, keyboard, engsel, port, dan sparepart penting dengan diagnosa jelas di awal.',
         icon: Wrench,
+        tint: 'cyan' as const,
     },
     {
         title: 'Unit refurbished siap pakai',
         description:
             'Laptop bekas terkurasi, sudah dicek, dibersihkan, dan siap untuk kerja harian.',
         icon: CheckCircle,
+        tint: 'coral' as const,
     },
 ];
 
@@ -59,26 +62,51 @@ const whyItems = [
         title: 'QC sebelum serah terima',
         description:
             'Setiap unit melewati pengecekan fungsi utama, suhu, baterai, layar, port, dan performa.',
+        tint: 'pear' as const,
     },
     {
         icon: Wrench,
         title: 'Progres transparan',
         description:
             'Kode tiket membuka progres perbaikan tanpa perlu bolak-balik menanyakan update.',
+        tint: 'cyan' as const,
     },
     {
         icon: CheckCircle,
         title: 'Estimasi biaya jelas',
         description:
             'Opsi perbaikan dan biaya dikonfirmasi sebelum pengerjaan agar keputusan tetap nyaman.',
+        tint: 'pear' as const,
     },
     {
         icon: ChatCircle,
         title: 'Konsultasi WhatsApp',
         description:
             'Tanya dulu sebelum datang, lewat chat dengan tim yang paham unit yang akan Anda beli.',
+        tint: 'coral' as const,
     },
 ];
+
+const tintColor = {
+    pear: {
+        bg: 'bg-accent/8',
+        hover: 'hover:bg-accent/15',
+        icon: 'bg-accent/20 text-accent-deep',
+        accent: 'text-accent-deep',
+    },
+    cyan: {
+        bg: 'bg-accent-2/8',
+        hover: 'hover:bg-accent-2/15',
+        icon: 'bg-accent-2/20 text-accent-2',
+        accent: 'text-accent-2',
+    },
+    coral: {
+        bg: 'bg-accent-3/8',
+        hover: 'hover:bg-accent-3/15',
+        icon: 'bg-accent-3/20 text-accent-3',
+        accent: 'text-accent-3',
+    },
+} as const;
 
 function laptopPhoto(laptop: Laptop) {
     const photo = laptop.photos?.[0];
@@ -123,34 +151,31 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
             website={website}
             title={`${website.website_name} | Laptop dan Servis Terpercaya`}
         >
-            {/* ─── Hero — left-aligned text + product image ─── */}
+            {/* ─── Hero — left-aligned text + product image + character mark ─── */}
             <section className="bg-paper">
                 <div className="mx-auto grid max-w-[980px] items-center gap-10 px-5 py-16 md:grid-cols-[1fr_1.1fr] md:py-24">
                     <div>
-                        <p className="cobalt-caption text-ink-2/60">
-                            Pabalu Laptop
-                        </p>
-                        <h1 className="mt-4 cobalt-display text-ink">
+                        <div className="flex items-center gap-2.5">
+                            <span className="hum-char inline-block h-3 w-3 rounded-full bg-accent" />
+                            <p className="hum-caption text-ink-2/60">
+                                Pabalu Laptop
+                            </p>
+                        </div>
+                        <h1 className="mt-4 hum-display text-ink">
                             Laptop bersih,
                             <br />
-                            jelas, siap dipakai.
+                            <span className="hum-hl">jelas</span>, siap dipakai.
                         </h1>
-                        <p className="mt-5 max-w-md cobalt-body-lg text-ink-2">
+                        <p className="mt-5 max-w-md hum-body-lg text-ink-2">
                             {website.tagline ??
                                 'Temukan laptop bekas terkurasi, konsultasikan servis, dan pantau progres pengerjaan dari satu tempat yang mudah dipakai.'}
                         </p>
                         <div className="mt-8 flex flex-wrap gap-3">
-                            <a
-                                href="/shop"
-                                className="inline-flex h-10 items-center gap-2 rounded-btn bg-accent px-5 cobalt-body-sm font-medium text-accent-ink transition hover:opacity-90"
-                            >
+                            <a href="/shop" className="hum-btn hum-btn--pear">
                                 Lihat katalog
                                 <ArrowRight className="h-3.5 w-3.5" weight="bold" />
                             </a>
-                            <a
-                                href="#status"
-                                className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
-                            >
+                            <a href="#status" className="hum-btn hum-btn--outline">
                                 Lacak servis
                             </a>
                         </div>
@@ -160,7 +185,7 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                         {heroImage ? (
                             <a
                                 href={heroLaptop ? `/laptops/${heroLaptop.id}` : '/shop'}
-                                className="block w-full overflow-hidden rounded-card shadow-product"
+                                className="block w-full overflow-hidden rounded-[24px] shadow-product"
                             >
                                 <img
                                     src={heroImage}
@@ -172,12 +197,12 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                                 />
                             </a>
                         ) : (
-                            <div className="flex w-full flex-col items-center gap-3 rounded-card border border-rule bg-surface p-10 text-center">
+                            <div className="flex w-full flex-col items-center gap-3 rounded-[24px] bg-paper-2 p-10 text-center shadow-card">
                                 <LaptopIcon
-                                    className="h-10 w-10 text-ink-2/60"
+                                    className="h-10 w-10 text-ink-2/40"
                                     weight="duotone"
                                 />
-                                <p className="cobalt-body-sm text-ink-2/60">
+                                <p className="hum-body-sm text-ink-2/60">
                                     Foto laptop akan muncul di sini
                                 </p>
                             </div>
@@ -186,17 +211,14 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </div>
             </section>
 
-            {/* ─── Status tracker ─── */}
-            <section
-                id="status"
-                className="scroll-mt-16 border-t border-rule bg-surface"
-            >
+            {/* ─── Status tracker — cyan-tinted band ─── */}
+            <section id="status" className="scroll-mt-16 bg-accent-2/5">
                 <div className="mx-auto max-w-[640px] px-5 py-16 text-center md:py-20">
-                    <p className="cobalt-caption text-accent">Status</p>
-                    <h2 className="mt-3 cobalt-heading-lg text-ink">
+                    <p className="hum-caption text-accent-2">Status</p>
+                    <h2 className="mt-3 hum-heading-lg text-ink">
                         Lacak status servis
                     </h2>
-                    <p className="mx-auto mt-3 max-w-md cobalt-body text-ink-2">
+                    <p className="mx-auto mt-3 max-w-md hum-body text-ink-2">
                         Masukkan kode tiket untuk melihat progres pengerjaan
                         laptop Anda.
                     </p>
@@ -205,17 +227,17 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                         onSubmit={submitStatusSearch}
                         className="mx-auto mt-8 max-w-md"
                     >
-                        <div className="flex h-11 overflow-hidden rounded-btn border border-rule bg-paper transition focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/10">
+                        <div className="flex h-12 overflow-hidden rounded-full bg-paper shadow-card transition focus-within:shadow-card-hover">
                             <input
                                 id="service-code"
                                 name="code"
                                 type="text"
                                 placeholder="Kode servis (contoh: SRV-20240613-XXXXX)"
-                                className="min-w-0 flex-1 border-none bg-transparent px-4 cobalt-body-sm text-ink outline-none placeholder:text-ink-2/60"
+                                className="min-w-0 flex-1 border-none bg-transparent px-5 hum-body-sm text-ink outline-none placeholder:text-ink-2/50"
                             />
                             <button
                                 type="submit"
-                                className="inline-flex h-full items-center justify-center bg-accent px-5 cobalt-caption text-accent-ink transition hover:opacity-90"
+                                className="hum-btn hum-btn--cyan !my-1 !mr-1 !px-5 !py-1.5 !text-xs"
                             >
                                 Lacak
                             </button>
@@ -223,20 +245,20 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                     </form>
 
                     <ol className="mx-auto mt-10 max-w-sm space-y-3 text-left">
-                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
-                            <span className="mt-0.5 cobalt-caption text-accent">
+                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
+                            <span className="mt-0.5 hum-caption text-accent-2">
                                 01
                             </span>
                             Diagnosa dan estimasi dikonfirmasi dulu.
                         </li>
-                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
-                            <span className="mt-0.5 cobalt-caption text-accent">
+                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
+                            <span className="mt-0.5 hum-caption text-accent-2">
                                 02
                             </span>
                             Progres bisa dipantau dengan kode tiket.
                         </li>
-                        <li className="flex items-start gap-3 cobalt-body-sm text-ink-2">
-                            <span className="mt-0.5 cobalt-caption text-accent">
+                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
+                            <span className="mt-0.5 hum-caption text-accent-2">
                                 03
                             </span>
                             Unit diuji ulang sebelum diserahkan.
@@ -245,15 +267,15 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </div>
             </section>
 
-            {/* ─── Laptop showcase ─── */}
-            <section className="border-t border-rule bg-paper">
+            {/* ─── Laptop showcase — pear-tinted band ─── */}
+            <section className="bg-paper">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-12">
-                        <p className="cobalt-caption text-accent">Katalog</p>
-                        <h2 className="mt-3 cobalt-heading-lg text-ink">
+                        <p className="hum-caption text-accent-deep">Katalog</p>
+                        <h2 className="mt-3 hum-heading-lg text-ink">
                             Pilihan unit siap kerja
                         </h2>
-                        <p className="mt-3 max-w-lg cobalt-body-lg text-ink-2">
+                        <p className="mt-3 max-w-lg hum-body-lg text-ink-2">
                             Unit terbaru dengan spesifikasi inti yang mudah
                             dibandingkan sebelum Anda datang atau chat.
                         </p>
@@ -261,17 +283,17 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
 
                     {laptops.length > 0 ? (
                         <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                            {laptops.slice(0, 6).map((laptop) => (
-                                <LaptopCard key={laptop.id} laptop={laptop} />
+                            {laptops.slice(0, 6).map((laptop, index) => (
+                                <LaptopCard key={laptop.id} laptop={laptop} index={index} />
                             ))}
                         </div>
                     ) : (
-                        <div className="mx-auto max-w-sm rounded-card border border-rule bg-surface p-10 text-center">
+                        <div className="mx-auto max-w-sm rounded-[20px] bg-paper-2 p-10 text-center shadow-card">
                             <LaptopIcon
-                                className="mx-auto h-8 w-8 text-ink-2/60"
+                                className="mx-auto h-8 w-8 text-ink-2/40"
                                 weight="duotone"
                             />
-                            <p className="mt-4 cobalt-body text-ink-2">
+                            <p className="mt-4 hum-body text-ink-2">
                                 Katalog sedang diperbarui. Hubungi kami untuk
                                 rekomendasi unit hari ini.
                             </p>
@@ -279,10 +301,7 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                     )}
 
                     <div className="mt-12">
-                        <a
-                            href="/shop"
-                            className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
-                        >
+                        <a href="/shop" className="hum-btn hum-btn--soft">
                             Lihat semua laptop
                             <ArrowRight className="h-3.5 w-3.5" weight="bold" />
                         </a>
@@ -290,15 +309,12 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </div>
             </section>
 
-            {/* ─── Services — asymmetric bento ─── */}
-            <section
-                id="services"
-                className="scroll-mt-16 border-t border-rule bg-surface"
-            >
+            {/* ─── Services — multi-accent bento ─── */}
+            <section id="services" className="scroll-mt-16 bg-paper-2/50">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-14">
-                        <p className="cobalt-caption text-accent">Layanan</p>
-                        <h2 className="mt-3 cobalt-heading-lg text-ink">
+                        <p className="hum-caption text-accent-deep">Layanan</p>
+                        <h2 className="mt-3 hum-heading-lg text-ink">
                             Servis yang fokus pada hasil,
                             <br className="hidden sm:block" />
                             bukan proses.
@@ -306,50 +322,41 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                     </div>
 
                     <div className="grid gap-5 md:grid-cols-2">
-                        <div className="rounded-card border border-rule bg-paper p-8">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-accent/10">
-                                <Cpu
-                                    className="h-5 w-5 text-accent"
-                                    weight="duotone"
-                                    aria-hidden="true"
-                                />
+                        {/* Big card — pear */}
+                        <div className="hum-card hum-card--pear-tint p-8">
+                            <div className={`flex h-12 w-12 items-center justify-center rounded-[14px] ${tintColor.pear.icon}`}>
+                                <Cpu className="h-6 w-6" weight="duotone" aria-hidden="true" />
                             </div>
-                            <h3 className="mt-5 cobalt-heading text-ink">
+                            <h3 className="mt-5 hum-heading text-ink">
                                 {serviceItems[0].title}
                             </h3>
-                            <p className="mt-3 cobalt-body text-ink-2">
+                            <p className="mt-3 hum-body text-ink-2">
                                 {serviceItems[0].description}
                             </p>
                         </div>
 
                         <div className="flex flex-col gap-5">
-                            <div className="rounded-card border border-rule bg-paper p-6">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-accent/10">
-                                    <Wrench
-                                        className="h-4.5 w-4.5 text-accent"
-                                        weight="duotone"
-                                        aria-hidden="true"
-                                    />
+                            {/* Cyan card */}
+                            <div className="hum-card hum-card--cyan-tint p-6">
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-[12px] ${tintColor.cyan.icon}`}>
+                                    <Wrench className="h-5 w-5" weight="duotone" aria-hidden="true" />
                                 </div>
-                                <h3 className="mt-4 cobalt-body font-semibold text-ink">
+                                <h3 className="mt-4 hum-body font-semibold text-ink">
                                     {serviceItems[1].title}
                                 </h3>
-                                <p className="mt-2 cobalt-body-sm text-ink-2">
+                                <p className="mt-2 hum-body-sm text-ink-2">
                                     {serviceItems[1].description}
                                 </p>
                             </div>
-                            <div className="rounded-card border border-rule bg-paper p-6">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-accent/10">
-                                    <CheckCircle
-                                        className="h-4.5 w-4.5 text-accent"
-                                        weight="duotone"
-                                        aria-hidden="true"
-                                    />
+                            {/* Coral card */}
+                            <div className="hum-card hum-card--coral-tint p-6">
+                                <div className={`flex h-10 w-10 items-center justify-center rounded-[12px] ${tintColor.coral.icon}`}>
+                                    <CheckCircle className="h-5 w-5" weight="duotone" aria-hidden="true" />
                                 </div>
-                                <h3 className="mt-4 cobalt-body font-semibold text-ink">
+                                <h3 className="mt-4 hum-body font-semibold text-ink">
                                     {serviceItems[2].title}
                                 </h3>
-                                <p className="mt-2 cobalt-body-sm text-ink-2">
+                                <p className="mt-2 hum-body-sm text-ink-2">
                                     {serviceItems[2].description}
                                 </p>
                             </div>
@@ -358,91 +365,63 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </div>
             </section>
 
-            {/* ─── Why us — varied layout ─── */}
-            <section className="border-t border-rule bg-paper">
+            {/* ─── Why us — mixed tint cards ─── */}
+            <section className="bg-paper">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-14">
-                        <p className="cobalt-caption text-accent">
+                        <p className="hum-caption text-accent-deep">
                             Mengapa kami
                         </p>
-                        <h2 className="mt-3 cobalt-heading-lg text-ink">
+                        <h2 className="mt-3 hum-heading-lg text-ink">
                             Rapi dari konsultasi
                             <br className="hidden sm:block" />
                             sampai serah terima
                         </h2>
                     </div>
 
-                    <div className="grid gap-5 md:grid-cols-[1.4fr_1fr]">
-                        <div className="space-y-5">
-                            {whyItems.slice(0, 2).map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <div
-                                        key={item.title}
-                                        className="flex gap-4 rounded-card border border-rule bg-surface p-6"
-                                    >
-                                        <Icon
-                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent"
-                                            weight="duotone"
-                                            aria-hidden="true"
-                                        />
-                                        <div>
-                                            <h3 className="cobalt-body font-semibold text-ink">
-                                                {item.title}
-                                            </h3>
-                                            <p className="mt-1.5 cobalt-body-sm text-ink-2">
-                                                {item.description}
-                                            </p>
-                                        </div>
+                    <div className="grid gap-5 md:grid-cols-2">
+                        {whyItems.map((item) => {
+                            const Icon = item.icon;
+                            const t = tintColor[item.tint];
+                            return (
+                                <div
+                                    key={item.title}
+                                    className={`flex gap-4 rounded-[18px] p-6 shadow-card transition-shadow hover:shadow-card-hover ${t.bg}`}
+                                >
+                                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] ${t.icon}`}>
+                                        <Icon className="h-5 w-5" weight="duotone" aria-hidden="true" />
                                     </div>
-                                );
-                            })}
-                        </div>
-                        <div className="space-y-5">
-                            {whyItems.slice(2).map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <div
-                                        key={item.title}
-                                        className="flex gap-4 rounded-card border border-rule bg-surface p-6"
-                                    >
-                                        <Icon
-                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent"
-                                            weight="duotone"
-                                            aria-hidden="true"
-                                        />
-                                        <div>
-                                            <h3 className="cobalt-body font-semibold text-ink">
-                                                {item.title}
-                                            </h3>
-                                            <p className="mt-1.5 cobalt-body-sm text-ink-2">
-                                                {item.description}
-                                            </p>
-                                        </div>
+                                    <div>
+                                        <h3 className="hum-body font-semibold text-ink">
+                                            {item.title}
+                                        </h3>
+                                        <p className="mt-1.5 hum-body-sm text-ink-2">
+                                            {item.description}
+                                        </p>
                                     </div>
-                                );
-                            })}
-                        </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
-            {/* ─── Testimonials — pull-quote style ─── */}
+            {/* ─── Testimonials — cyan-tinted band ─── */}
             {testimonials.length > 0 ? (
-                <section className="border-t border-rule bg-surface">
+                <section className="bg-accent-2/5">
                     <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                         <div className="mb-12">
-                            <p className="cobalt-caption text-accent">
+                            <p className="hum-caption text-accent-2">
                                 Testimoni
                             </p>
-                            <h2 className="mt-3 cobalt-heading-lg text-ink">
+                            <h2 className="mt-3 hum-heading-lg text-ink">
                                 Dipercaya untuk
                                 <br className="hidden sm:block" />
                                 kebutuhan harian
                             </h2>
                         </div>
 
-                        <div className="space-y-0 divide-y divide-rule">
+                        <div className="space-y-4">
                             {testimonials.slice(0, 3).map((testimonial) => {
                                 const rating = Math.max(
                                     1,
@@ -461,20 +440,17 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </section>
             ) : null}
 
-            {/* ─── Contact — simple & functional ─── */}
-            <section
-                id="contact"
-                className="scroll-mt-16 border-t border-rule bg-paper"
-            >
+            {/* ─── Contact — coral-tinted accent ─── */}
+            <section id="contact" className="scroll-mt-16 bg-paper">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-12">
-                        <p className="cobalt-caption text-accent">Kontak</p>
-                        <h2 className="mt-3 cobalt-heading-lg text-ink">
+                        <p className="hum-caption text-accent-3">Kontak</p>
+                        <h2 className="mt-3 hum-heading-lg text-ink">
                             Mulai dari chat, telepon,
                             <br className="hidden sm:block" />
                             atau datang langsung.
                         </h2>
-                        <p className="mt-3 max-w-lg cobalt-body-lg text-ink-2">
+                        <p className="mt-3 max-w-lg hum-body-lg text-ink-2">
                             Tim kami siap bantu pilih unit, cek estimasi
                             servis, atau arahkan proses drop-off.
                         </p>
@@ -482,32 +458,32 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
 
                     <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
                         {website.address ? (
-                            <div className="rounded-card border border-rule bg-surface p-6">
+                            <div className="hum-card hum-card--pear-tint p-6">
                                 <MapPin
-                                    className="h-5 w-5 text-accent"
+                                    className="h-5 w-5 text-accent-deep"
                                     weight="duotone"
                                     aria-hidden="true"
                                 />
-                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                <p className="mt-4 hum-caption text-ink-2/60">
                                     Alamat
                                 </p>
-                                <p className="mt-1.5 cobalt-body text-ink">
+                                <p className="mt-1.5 hum-body text-ink">
                                     {website.address}
                                 </p>
                             </div>
                         ) : null}
                         {(website.operational_hours_weekday ||
                             website.operational_hours_weekend) && (
-                            <div className="rounded-card border border-rule bg-surface p-6">
+                            <div className="hum-card hum-card--cyan-tint p-6">
                                 <Wrench
-                                    className="h-5 w-5 text-accent"
+                                    className="h-5 w-5 text-accent-2"
                                     weight="duotone"
                                     aria-hidden="true"
                                 />
-                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                <p className="mt-4 hum-caption text-ink-2/60">
                                     Jam operasional
                                 </p>
-                                <p className="mt-1.5 cobalt-body text-ink">
+                                <p className="mt-1.5 hum-body text-ink">
                                     {[
                                         website.operational_hours_weekday,
                                         website.operational_hours_weekend,
@@ -518,16 +494,16 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                             </div>
                         )}
                         {website.phone ? (
-                            <div className="rounded-card border border-rule bg-surface p-6">
+                            <div className="hum-card hum-card--coral-tint p-6">
                                 <Phone
-                                    className="h-5 w-5 text-accent"
+                                    className="h-5 w-5 text-accent-3"
                                     weight="duotone"
                                     aria-hidden="true"
                                 />
-                                <p className="mt-4 cobalt-caption text-ink-2/60">
+                                <p className="mt-4 hum-caption text-ink-2/60">
                                     Telepon
                                 </p>
-                                <p className="mt-1.5 cobalt-body text-ink">
+                                <p className="mt-1.5 hum-body text-ink">
                                     {website.phone}
                                 </p>
                             </div>
@@ -535,30 +511,18 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                     </div>
 
                     <div className="mt-8 flex flex-wrap gap-3">
-                        <a
-                            href={whatsappHref}
-                            className="inline-flex h-10 items-center gap-2 rounded-btn bg-accent px-5 cobalt-body-sm font-medium text-accent-ink transition hover:opacity-90"
-                        >
-                            <ChatCircle
-                                className="h-4 w-4"
-                                weight="duotone"
-                            />
+                        <a href={whatsappHref} className="hum-btn hum-btn--pear">
+                            <ChatCircle className="h-4 w-4" weight="duotone" />
                             WhatsApp
                         </a>
-                        <a
-                            href={phoneHref}
-                            className="inline-flex h-10 items-center gap-2 rounded-btn border border-rule bg-transparent px-5 cobalt-body-sm font-medium text-ink transition hover:border-accent hover:text-accent"
-                        >
-                            <Phone
-                                className="h-4 w-4"
-                                weight="duotone"
-                            />
+                        <a href={phoneHref} className="hum-btn hum-btn--outline">
+                            <Phone className="h-4 w-4" weight="duotone" />
                             Telepon
                         </a>
                     </div>
 
                     {website.google_maps_embed ? (
-                        <div className="mt-10 overflow-hidden rounded-card border border-rule">
+                        <div className="mt-10 overflow-hidden rounded-[20px] shadow-card">
                             <iframe
                                 src={website.google_maps_embed}
                                 title="Lokasi workshop"
@@ -576,12 +540,17 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
 
 /* ─── Sub-components ─── */
 
-function LaptopCard({ laptop }: { laptop: Laptop }) {
+const cardAccents = ['pear', 'cyan', 'coral'] as const;
+
+function LaptopCard({ laptop, index }: { laptop: Laptop; index: number }) {
     const image = laptopPhoto(laptop);
+    const accent = cardAccents[index % 3];
+    const t = tintColor[accent];
+
     return (
         <a href={`/laptops/${laptop.id}`} className="group block">
-            <div className="overflow-hidden rounded-card border border-rule">
-                <div className="aspect-[4/3] overflow-hidden bg-surface">
+            <div className="overflow-hidden rounded-[20px] shadow-card transition-shadow group-hover:shadow-card-hover">
+                <div className={`aspect-[4/3] overflow-hidden ${accent === 'pear' ? 'bg-accent/6' : accent === 'cyan' ? 'bg-accent-2/6' : 'bg-accent-3/6'}`}>
                     {image ? (
                         <img
                             src={image}
@@ -594,7 +563,7 @@ function LaptopCard({ laptop }: { laptop: Laptop }) {
                     ) : (
                         <div className="flex h-full w-full items-center justify-center">
                             <LaptopIcon
-                                className="h-8 w-8 text-ink-2/60"
+                                className="h-8 w-8 text-ink-2/40"
                                 weight="duotone"
                             />
                         </div>
@@ -602,16 +571,16 @@ function LaptopCard({ laptop }: { laptop: Laptop }) {
                 </div>
             </div>
             <div className="pt-3.5">
-                <p className="cobalt-caption text-ink-2/60">
+                <p className="hum-caption text-ink-2/60">
                     {brandLabel(laptop.brand, '')}
                 </p>
-                <h3 className="mt-1 cobalt-body font-semibold text-ink">
+                <h3 className="mt-1 hum-body font-semibold text-ink">
                     {laptop.name ?? laptop.model}
                 </h3>
-                <p className="mt-2 cobalt-body-sm text-accent">
+                <p className={`mt-2 hum-body-sm font-medium ${t.accent}`}>
                     {formatCurrency(laptop.selling_price)}
                 </p>
-                <p className="mt-2.5 inline-flex items-center gap-1.5 cobalt-caption text-accent transition group-hover:underline">
+                <p className="mt-2.5 inline-flex items-center gap-1.5 hum-caption text-ink-2 transition group-hover:text-accent-2">
                     Lihat detail
                     <ArrowRight className="h-3 w-3" weight="bold" />
                 </p>
@@ -628,7 +597,7 @@ function TestimonialQuote({
     rating: number;
 }) {
     return (
-        <figure className="py-8 first:pt-0 last:pb-0">
+        <figure className="hum-card rounded-[18px] p-6 md:p-8">
             <div
                 className="flex gap-0.5 text-accent"
                 role="img"
@@ -644,14 +613,14 @@ function TestimonialQuote({
                     ) : null,
                 )}
             </div>
-            <blockquote className="mt-4 max-w-2xl cobalt-body-lg text-ink italic">
+            <blockquote className="mt-4 max-w-2xl hum-body-lg text-ink">
                 &ldquo;{testimonial.content}&rdquo;
             </blockquote>
             <figcaption className="mt-4 flex items-center gap-3">
-                <span className="cobalt-body-sm font-semibold text-ink">
+                <span className="hum-body-sm font-semibold text-ink">
                     {testimonial.name}
                 </span>
-                <span className="cobalt-caption text-ink-2/60">
+                <span className="hum-caption text-ink-2/60">
                     {testimonial.role ?? 'Pelanggan'}
                 </span>
             </figcaption>

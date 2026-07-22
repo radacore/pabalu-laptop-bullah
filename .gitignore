@@ -1,4 +1,5 @@
 /.agents
+/start-all.sh
 /.phpunit.cache
 /bootstrap/ssr
 /node_modules
