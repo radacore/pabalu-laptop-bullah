@@ -185,27 +185,35 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                         {heroImage ? (
                             <a
                                 href={heroLaptop ? `/laptops/${heroLaptop.id}` : '/shop'}
-                                className="block w-full overflow-hidden rounded-[24px] shadow-product"
+                                className="group block w-full overflow-hidden rounded-[24px] shadow-product transition-shadow hover:shadow-[0_24px_48px_-16px_oklch(20%_0.012_250/0.28)]"
                             >
-                                <img
-                                    src={heroImage}
-                                    alt={
-                                        heroLaptop?.name ??
-                                        `${brandLabel(heroLaptop?.brand, '')} ${heroLaptop?.model ?? ''}`
-                                    }
-                                    className="h-auto w-full object-contain"
-                                />
+                                <div className="relative aspect-[4/3] overflow-hidden bg-accent/5">
+                                    <img
+                                        src={heroImage}
+                                        alt={
+                                            heroLaptop?.name ??
+                                            `${brandLabel(heroLaptop?.brand, '')} ${heroLaptop?.model ?? ''}`
+                                        }
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent" />
+                                </div>
                             </a>
                         ) : (
-                            <div className="flex w-full flex-col items-center gap-3 rounded-[24px] bg-paper-2 p-10 text-center shadow-card">
-                                <LaptopIcon
-                                    className="h-10 w-10 text-ink-2/40"
-                                    weight="duotone"
-                                />
-                                <p className="hum-body-sm text-ink-2/60">
-                                    Foto laptop akan muncul di sini
-                                </p>
-                            </div>
+                            <a
+                                href="/shop"
+                                className="group block w-full overflow-hidden rounded-[24px] shadow-product transition-shadow hover:shadow-[0_24px_48px_-16px_oklch(20%_0.012_250/0.28)]"
+                            >
+                                <div className="relative aspect-[4/3] overflow-hidden bg-paper-2">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1751257983922-a627088d4c21?fm=jpg&q=80&w=1200&auto=format&fit=crop"
+                                        alt="Modern laptop workspace"
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                        loading="eager"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent" />
+                                </div>
+                            </a>
                         )}
                     </div>
                 </div>
