@@ -79,7 +79,7 @@ export function LogoMark({
 const navItems = [
     { label: 'Laptop', href: '/shop', activeHref: '/shop' },
     { label: 'Servis', href: '/#services', activeHref: '/#services' },
-    { label: 'Lacak servis', href: '/#status', activeHref: '/#status' },
+    { label: 'Lacak servis', href: '/services/track', activeHref: '/services/track' },
     { label: 'Kontak', href: '/#contact', activeHref: '/#contact' },
 ];
 

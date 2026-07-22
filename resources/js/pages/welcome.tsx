@@ -1,6 +1,5 @@
 /* Hallmark · genre: playful · macrostructure: bento-grid · theme: hum */
 
-import { router } from '@inertiajs/react';
 import {
     ArrowRight,
     ChatCircle,
@@ -13,7 +12,6 @@ import {
     Star,
     Wrench,
 } from '@phosphor-icons/react';
-import type { FormEvent, ReactNode } from 'react';
 import { PublicPage, formatCurrency } from '@/components/public-layout';
 import type { Laptop, MasterData, WebsiteSetting } from '@/types';
 
@@ -110,9 +108,11 @@ const tintColor = {
 
 function laptopPhoto(laptop: Laptop) {
     const photo = laptop.photos?.[0];
+
     if (!photo?.file_path) {
         return null;
     }
+
     return `/storage/${photo.file_path}`;
 }
 
@@ -123,10 +123,12 @@ function brandLabel(brand: MasterData | null | undefined, fallback: string) {
 function laptopHeroImage(laptops: Laptop[]): string | null {
     for (const laptop of laptops) {
         const photo = laptop.photos?.[0];
+
         if (photo?.file_path) {
             return `/storage/${photo.file_path}`;
         }
     }
+
     return null;
 }
 
@@ -136,15 +138,6 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
     const phoneHref = `tel:${website.phone ?? website.whatsapp_number ?? ''}`;
     const heroImage = laptopHeroImage(laptops);
     const heroLaptop = laptops[0];
-
-    const submitStatusSearch = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const code = String(formData.get('code') ?? '').trim();
-        if (code) {
-            router.get(`/services/track/${code}`);
-        }
-    };
 
     return (
         <PublicPage
@@ -170,12 +163,12 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                             {website.tagline ??
                                 'Temukan laptop bekas terkurasi, konsultasikan servis, dan pantau progres pengerjaan dari satu tempat yang mudah dipakai.'}
                         </p>
-                        <div className="mt-8 flex flex-wrap gap-3">
-                            <a href="/shop" className="hum-btn hum-btn--pear">
+                        <div className="mt-8 flex flex-wrap gap-2.5">
+                            <a href="/shop" className="hum-btn hum-btn--pear !px-4 !py-2 !text-sm">
                                 Lihat katalog
-                                <ArrowRight className="h-3.5 w-3.5" weight="bold" />
+                                <ArrowRight className="h-3 w-3" weight="bold" />
                             </a>
-                            <a href="#status" className="hum-btn hum-btn--outline">
+                            <a href="/services/track" className="hum-btn hum-btn--outline !px-4 !py-2 !text-sm">
                                 Lacak servis
                             </a>
                         </div>
@@ -216,62 +209,6 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                             </a>
                         )}
                     </div>
-                </div>
-            </section>
-
-            {/* ─── Status tracker — cyan-tinted band ─── */}
-            <section id="status" className="scroll-mt-16 bg-accent-2/5">
-                <div className="mx-auto max-w-[640px] px-5 py-16 text-center md:py-20">
-                    <p className="hum-caption text-accent-2">Status</p>
-                    <h2 className="mt-3 hum-heading-lg text-ink">
-                        Lacak status servis
-                    </h2>
-                    <p className="mx-auto mt-3 max-w-md hum-body text-ink-2">
-                        Masukkan kode tiket untuk melihat progres pengerjaan
-                        laptop Anda.
-                    </p>
-
-                    <form
-                        onSubmit={submitStatusSearch}
-                        className="mx-auto mt-8 max-w-md"
-                    >
-                        <div className="flex h-12 overflow-hidden rounded-full bg-paper shadow-card transition focus-within:shadow-card-hover">
-                            <input
-                                id="service-code"
-                                name="code"
-                                type="text"
-                                placeholder="Kode servis (contoh: SRV-20240613-XXXXX)"
-                                className="min-w-0 flex-1 border-none bg-transparent px-5 hum-body-sm text-ink outline-none placeholder:text-ink-2/50"
-                            />
-                            <button
-                                type="submit"
-                                className="hum-btn hum-btn--cyan !my-1 !mr-1 !px-5 !py-1.5 !text-xs"
-                            >
-                                Lacak
-                            </button>
-                        </div>
-                    </form>
-
-                    <ol className="mx-auto mt-10 max-w-sm space-y-3 text-left">
-                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
-                            <span className="mt-0.5 hum-caption text-accent-2">
-                                01
-                            </span>
-                            Diagnosa dan estimasi dikonfirmasi dulu.
-                        </li>
-                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
-                            <span className="mt-0.5 hum-caption text-accent-2">
-                                02
-                            </span>
-                            Progres bisa dipantau dengan kode tiket.
-                        </li>
-                        <li className="flex items-start gap-3 hum-body-sm text-ink-2">
-                            <span className="mt-0.5 hum-caption text-accent-2">
-                                03
-                            </span>
-                            Unit diuji ulang sebelum diserahkan.
-                        </li>
-                    </ol>
                 </div>
             </section>
 
@@ -391,6 +328,7 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                         {whyItems.map((item) => {
                             const Icon = item.icon;
                             const t = tintColor[item.tint];
+
                             return (
                                 <div
                                     key={item.title}
@@ -435,6 +373,7 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                                     1,
                                     Math.min(5, Number(testimonial.rating) || 5),
                                 );
+
                                 return (
                                     <TestimonialQuote
                                         key={testimonial.id}

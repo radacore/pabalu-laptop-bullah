@@ -113,6 +113,16 @@ class ServiceController extends Controller
     /**
      * Public tracking page by tracking_code (no auth required).
      */
+    /**
+     * Public tracking landing page (no code entered yet).
+     */
+    public function trackLanding(): Response
+    {
+        return Inertia::render('services/tracking', [
+            'website' => WebsiteSetting::current(),
+        ]);
+    }
+
     public function track(string $trackingCode): Response
     {
         $service = Service::query()
