@@ -54,7 +54,9 @@ const CategoriesCreate = () => {
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: Laptop Gaming, Laptop Bisnis"
                             />
                             <InputError message={form.errors.name} />
@@ -64,7 +66,9 @@ const CategoriesCreate = () => {
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -75,7 +79,12 @@ const CategoriesCreate = () => {
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang kategori ini (opsional)"
                             />
                             <InputError message={form.errors.description} />

@@ -14,11 +14,9 @@ export default function PageHeader({
     return (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-1">
-                <h1 className="headline-md text-foreground">
-                    {title}
-                </h1>
+                <h1 className="text-foreground headline-md">{title}</h1>
                 {description && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         {description}
                     </p>
                 )}

@@ -28,7 +28,10 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
     const { url } = usePage();
 
     function isActive(href: string) {
-        if (href === '/dashboard') return url === '/dashboard';
+        if (href === '/dashboard') {
+return url === '/dashboard';
+}
+
         return url.startsWith(href);
     }
 
@@ -52,7 +55,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                         <span className="text-[15px] font-bold tracking-tight text-slate-900">
                             Pabalu
                         </span>
-                        <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-slate-500">
+                        <span className="text-[10px] font-medium tracking-[0.12em] text-slate-500 uppercase">
                             Admin Panel
                         </span>
                     </div>
@@ -65,6 +68,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                     {navItems.map((item) => {
                         const active = isActive(item.href);
                         const Icon = item.icon;
+
                         return (
                             <li key={item.href}>
                                 <Link
@@ -96,7 +100,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                                         </>
                                     )}
                                     {collapsed && (
-                                        <span className="pointer-events-none absolute left-full z-[60] ml-2 hidden whitespace-nowrap rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white shadow-lg group-hover:block">
+                                        <span className="pointer-events-none absolute left-full z-[60] ml-2 hidden rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-white shadow-lg group-hover:block">
                                             {item.title}
                                         </span>
                                     )}

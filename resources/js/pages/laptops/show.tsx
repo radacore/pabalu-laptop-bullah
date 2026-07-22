@@ -52,7 +52,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                             <h1 className="text-2xl font-semibold tracking-tight">
                                 {laptop.brand?.name} {laptop.model}
                             </h1>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                                 SKU: {laptop.sku}
                                 {laptop.name && ` - ${laptop.name}`}
                             </p>
@@ -79,7 +79,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                 </header>
 
                 <section className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-                    <Card className="border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
+                    <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                         <CardHeader>
                             <CardTitle>Spesifikasi</CardTitle>
                         </CardHeader>
@@ -90,7 +90,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                         key={label}
                                         className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4"
                                     >
-                                        <dt className="text-sm font-medium text-muted-foreground">
+                                        <dt className="text-muted-foreground text-sm font-medium">
                                             {label}
                                         </dt>
                                         <dd className="text-sm sm:col-span-2">
@@ -102,13 +102,13 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                         </CardContent>
                     </Card>
 
-                    <Card className="border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
+                    <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                         <CardHeader>
                             <CardTitle>Harga & Status</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="rounded-lg border p-4">
-                                <div className="text-sm text-muted-foreground">
+                                <div className="text-muted-foreground text-sm">
                                     Harga Jual
                                 </div>
                                 <div className="mt-1 text-2xl font-semibold tracking-tight">
@@ -162,7 +162,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                 </section>
 
                 {photos.length > 0 && (
-                    <Card className="border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
+                    <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                         <CardHeader>
                             <CardTitle>Foto</CardTitle>
                         </CardHeader>
@@ -170,15 +170,19 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                             {photos.map((photo) => (
                                 <figure
                                     key={photo.id}
-                                    className="overflow-hidden rounded-xl border bg-muted/30"
+                                    className="bg-muted/30 overflow-hidden rounded-xl border"
                                 >
                                     <img
                                         src={photo.file_path}
-                                        alt={photo.caption ?? laptop.name ?? undefined}
+                                        alt={
+                                            photo.caption ??
+                                            laptop.name ??
+                                            undefined
+                                        }
                                         className="aspect-video w-full object-cover"
                                     />
                                     {photo.caption && (
-                                        <figcaption className="px-3 py-2 text-sm text-muted-foreground">
+                                        <figcaption className="text-muted-foreground px-3 py-2 text-sm">
                                             {photo.caption}
                                         </figcaption>
                                     )}
@@ -189,8 +193,8 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                 )}
 
                 {photos.length === 0 && (
-                    <Card className="border-dashed border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
-                        <CardContent className="flex items-center gap-3 p-6 text-sm text-muted-foreground">
+                    <Card className="border-sidebar-border/70 dark:border-sidebar-border border-dashed shadow-sm">
+                        <CardContent className="text-muted-foreground flex items-center gap-3 p-6 text-sm">
                             <ImageIcon className="size-5" />
                             Tidak photos have been uploaded for this laptop.
                         </CardContent>
@@ -200,24 +204,24 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                 {(laptop.description || laptop.internal_note) && (
                     <section className="grid gap-4 lg:grid-cols-2">
                         {laptop.description && (
-                            <Card className="border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
+                            <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                                 <CardHeader>
                                     <CardTitle>Deskripsi</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
+                                    <p className="text-muted-foreground text-sm leading-6 whitespace-pre-wrap">
                                         {laptop.description}
                                     </p>
                                 </CardContent>
                             </Card>
                         )}
                         {laptop.internal_note && (
-                            <Card className="border-sidebar-border/70 shadow-sm dark:border-sidebar-border">
+                            <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                                 <CardHeader>
                                     <CardTitle>Catatan Internal</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
+                                    <p className="text-muted-foreground text-sm leading-6 whitespace-pre-wrap">
                                         {laptop.internal_note}
                                     </p>
                                 </CardContent>

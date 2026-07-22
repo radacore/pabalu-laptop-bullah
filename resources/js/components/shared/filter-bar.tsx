@@ -30,7 +30,7 @@ export default function FilterBar({ filters }: FilterBarProps) {
     }
 
     return (
-        <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 sm:flex-row sm:flex-wrap sm:items-end">
+        <div className="bg-card flex flex-col gap-3 rounded-xl border p-4 sm:flex-row sm:flex-wrap sm:items-end">
             {filters.map((filter) => (
                 <div key={filter.key} className="grid gap-2 sm:min-w-44">
                     <Label htmlFor={`filter-${filter.key}`}>

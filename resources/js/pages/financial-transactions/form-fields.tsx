@@ -4,7 +4,11 @@ import InputError from '@/components/shared/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { FinancialTransaction, PaymentMethod, TransactionCategory } from '@/types';
+import type {
+    FinancialTransaction,
+    PaymentMethod,
+    TransactionCategory,
+} from '@/types';
 
 type TransactionTipe = 'income' | 'expense';
 
@@ -67,6 +71,7 @@ export default function FinancialTransactionForm({
 
         if (transaction) {
             form.put(`/financial-transactions/${transaction.id}`);
+
             return;
         }
 
@@ -148,13 +153,19 @@ export default function FinancialTransactionForm({
                         required
                         value={form.data.payment_method_id}
                         onChange={(event) =>
-                            form.setData('payment_method_id', event.target.value)
+                            form.setData(
+                                'payment_method_id',
+                                event.target.value,
+                            )
                         }
                         className={selectClassNama}
                     >
                         <option value="">Pilih metode pembayaran</option>
                         {paymentMethods.map((paymentMethod) => (
-                            <option key={paymentMethod.id} value={paymentMethod.id}>
+                            <option
+                                key={paymentMethod.id}
+                                value={paymentMethod.id}
+                            >
                                 {paymentMethod.name}
                             </option>
                         ))}

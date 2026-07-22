@@ -45,8 +45,11 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
 };
 
 function FieldError({ message }: { message?: string }) {
-    if (!message) return null;
-    return <p className="text-sm text-red-600 mt-1">{message}</p>;
+    if (!message) {
+return null;
+}
+
+    return <p className="mt-1 text-sm text-red-600">{message}</p>;
 }
 
 const newPart = (): PartItem => ({
@@ -94,6 +97,7 @@ const ServicesBuat: HalamanComponent = ({
 
     const filteredCustomers = useMemo(() => {
         const query = customerSearch.toLowerCase();
+
         return customers.filter((customer) =>
             `${customer.name} ${customer.phone ?? ''}`
                 .toLowerCase()
@@ -133,46 +137,49 @@ const ServicesBuat: HalamanComponent = ({
     return (
         <>
             <Head title="Buat Servis Baru" />
-            <form onSubmit={submit} className="max-w-5xl mx-auto space-y-6">
+            <form onSubmit={submit} className="mx-auto max-w-5xl space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
                             Buat Servis Baru
                         </h2>
-                        <p className="text-slate-500 mt-1">
+                        <p className="mt-1 text-slate-500">
                             Catat servis laptop baru dari pelanggan.
                         </p>
                     </div>
                     <Link
                         href="/services"
-                        className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-sm inline-block"
+                        className="inline-block rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
                     >
                         Kembali
                     </Link>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h3 className="text-lg font-semibold text-slate-900">
                         Informasi Pelanggan
                     </h3>
-                    <p className="text-sm text-slate-500 mt-1 mb-5">
-                        Pilih pelanggan yang sudah ada atau tambah pelanggan baru.
+                    <p className="mt-1 mb-5 text-sm text-slate-500">
+                        Pilih pelanggan yang sudah ada atau tambah pelanggan
+                        baru.
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div className="col-span-1 md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Cari Pelanggan
                             </label>
                             <input
                                 type="text"
                                 value={customerSearch}
-                                onChange={(e) => setCustomerSearch(e.target.value)}
+                                onChange={(e) =>
+                                    setCustomerSearch(e.target.value)
+                                }
                                 placeholder="Cari berdasarkan nama atau telepon"
                                 className={inputClass}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Pelanggan
                             </label>
                             <select
@@ -191,28 +198,34 @@ const ServicesBuat: HalamanComponent = ({
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Nama Pelanggan
                             </label>
                             <input
                                 type="text"
                                 value={form.data.customer_name}
                                 onChange={(e) =>
-                                    form.setData('customer_name', e.target.value)
+                                    form.setData(
+                                        'customer_name',
+                                        e.target.value,
+                                    )
                                 }
                                 className={inputClass}
                                 placeholder="Otomatis dari pelanggan"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Telepon
                             </label>
                             <input
                                 type="text"
                                 value={form.data.customer_phone}
                                 onChange={(e) =>
-                                    form.setData('customer_phone', e.target.value)
+                                    form.setData(
+                                        'customer_phone',
+                                        e.target.value,
+                                    )
                                 }
                                 className={inputClass}
                                 placeholder="Otomatis dari pelanggan"
@@ -221,16 +234,16 @@ const ServicesBuat: HalamanComponent = ({
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h3 className="text-lg font-semibold text-slate-900">
                         Informasi Perangkat
                     </h3>
-                    <p className="text-sm text-slate-500 mt-1 mb-5">
+                    <p className="mt-1 mb-5 text-sm text-slate-500">
                         Detail unit yang diservis.
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Merek
                             </label>
                             <input
@@ -244,7 +257,7 @@ const ServicesBuat: HalamanComponent = ({
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Model / Tipe
                             </label>
                             <input
@@ -258,7 +271,7 @@ const ServicesBuat: HalamanComponent = ({
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Kelengkapan
                             </label>
                             <textarea
@@ -271,7 +284,7 @@ const ServicesBuat: HalamanComponent = ({
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Keluhan
                             </label>
                             <textarea
@@ -285,7 +298,7 @@ const ServicesBuat: HalamanComponent = ({
                             <FieldError message={form.errors.complaint} />
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Kondisi Awal
                             </label>
                             <textarea
@@ -303,13 +316,13 @@ const ServicesBuat: HalamanComponent = ({
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h3 className="text-lg font-semibold text-slate-900">
                         Biaya &amp; Status
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+                    <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Estimasi Biaya
                             </label>
                             <input
@@ -327,7 +340,7 @@ const ServicesBuat: HalamanComponent = ({
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Estimasi Selesai
                             </label>
                             <input
@@ -343,13 +356,16 @@ const ServicesBuat: HalamanComponent = ({
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Teknisi
                             </label>
                             <select
                                 value={form.data.technician_id || ''}
                                 onChange={(e) =>
-                                    form.setData('technician_id', e.target.value)
+                                    form.setData(
+                                        'technician_id',
+                                        e.target.value,
+                                    )
                                 }
                                 className={selectClass}
                             >
@@ -362,7 +378,7 @@ const ServicesBuat: HalamanComponent = ({
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                            <label className="mb-1 block text-sm font-medium text-slate-700">
                                 Status Servis
                             </label>
                             <select
@@ -386,26 +402,27 @@ const ServicesBuat: HalamanComponent = ({
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-1">
+                <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="mb-1 flex items-center justify-between">
                         <h3 className="text-lg font-semibold text-slate-900">
                             Sparepart
                         </h3>
                         <button
                             type="button"
                             onClick={addPart}
-                            className="px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                         >
                             + Tambah Item
                         </button>
                     </div>
-                    <p className="text-sm text-slate-500 mb-5">
-                        Tambahkan sparepart yang dipakai untuk servis (pengambilan)
-                        atau yang dijual langsung ke pelanggan (penjualan).
+                    <p className="mb-5 text-sm text-slate-500">
+                        Tambahkan sparepart yang dipakai untuk servis
+                        (pengambilan) atau yang dijual langsung ke pelanggan
+                        (penjualan).
                     </p>
 
                     {form.data.parts.length === 0 ? (
-                        <div className="border border-dashed border-slate-300 rounded-lg p-6 text-center text-sm text-slate-500">
+                        <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
                             Belum ada item. Klik <b>Tambah Item</b> untuk mulai.
                         </div>
                     ) : (
@@ -413,10 +430,10 @@ const ServicesBuat: HalamanComponent = ({
                             {form.data.parts.map((part, index) => (
                                 <li
                                     key={part.tempId}
-                                    className="border border-slate-200 rounded-lg p-4 bg-slate-50"
+                                    className="rounded-lg border border-slate-200 bg-slate-50 p-4"
                                 >
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                                    <div className="mb-3 flex items-center justify-between">
+                                        <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
                                             Item #{index + 1}
                                         </span>
                                         <button
@@ -424,13 +441,13 @@ const ServicesBuat: HalamanComponent = ({
                                             onClick={() =>
                                                 removePart(part.tempId)
                                             }
-                                            className="text-red-600 hover:text-red-700 text-sm font-medium"
+                                            className="text-sm font-medium text-red-600 hover:text-red-700"
                                         >
                                             Hapus
                                         </button>
                                     </div>
 
-                                    <div className="inline-flex rounded-lg border border-slate-300 bg-white p-1 mb-4">
+                                    <div className="mb-4 inline-flex rounded-lg border border-slate-300 bg-white p-1">
                                         <button
                                             type="button"
                                             onClick={() =>
@@ -440,7 +457,7 @@ const ServicesBuat: HalamanComponent = ({
                                                     'used',
                                                 )
                                             }
-                                            className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                                            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                                                 part.kind === 'used'
                                                     ? 'bg-blue-600 text-white'
                                                     : 'text-slate-600 hover:text-slate-900'
@@ -457,7 +474,7 @@ const ServicesBuat: HalamanComponent = ({
                                                     'sold',
                                                 )
                                             }
-                                            className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                                            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                                                 part.kind === 'sold'
                                                     ? 'bg-blue-600 text-white'
                                                     : 'text-slate-600 hover:text-slate-900'
@@ -467,9 +484,9 @@ const ServicesBuat: HalamanComponent = ({
                                         </button>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Tipe Sparepart
                                             </label>
                                             <select
@@ -497,7 +514,7 @@ const ServicesBuat: HalamanComponent = ({
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Nama Sparepart
                                             </label>
                                             <input
@@ -522,7 +539,7 @@ const ServicesBuat: HalamanComponent = ({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Qty
                                             </label>
                                             <input
@@ -540,7 +557,7 @@ const ServicesBuat: HalamanComponent = ({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Harga Modal
                                             </label>
                                             <input
@@ -558,7 +575,7 @@ const ServicesBuat: HalamanComponent = ({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Harga Jual
                                             </label>
                                             <input
@@ -576,7 +593,7 @@ const ServicesBuat: HalamanComponent = ({
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Biaya Pasang
                                             </label>
                                             <input
@@ -594,7 +611,7 @@ const ServicesBuat: HalamanComponent = ({
                                             />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Catatan
                                             </label>
                                             <input
@@ -621,14 +638,14 @@ const ServicesBuat: HalamanComponent = ({
                 <div className="flex justify-end gap-3">
                     <Link
                         href="/services"
-                        className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
                     >
                         Batal
                     </Link>
                     <button
                         type="submit"
                         disabled={form.processing}
-                        className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-60"
+                        className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
                     >
                         {form.processing ? 'Menyimpan...' : 'Simpan Servis'}
                     </button>

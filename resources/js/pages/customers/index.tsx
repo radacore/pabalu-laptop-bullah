@@ -43,14 +43,19 @@ function customerInitials(name: string) {
 }
 
 function formatDate(value: string | null) {
-    if (!value) return '-';
+    if (!value) {
+return '-';
+}
+
     return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
         new Date(value),
     );
 }
 
 function relativeTime(value: string | null) {
-    if (!value) return '-';
+    if (!value) {
+return '-';
+}
 
     const seconds = Math.max(
         0,
@@ -62,11 +67,25 @@ function relativeTime(value: string | null) {
     const months = Math.floor(days / 30);
     const years = Math.floor(days / 365);
 
-    if (years > 0) return `${years} tahun lalu`;
-    if (months > 0) return `${months} bulan lalu`;
-    if (days > 0) return `${days} hari lalu`;
-    if (hours > 0) return `${hours} jam lalu`;
-    if (minutes > 0) return `${minutes} menit lalu`;
+    if (years > 0) {
+return `${years} tahun lalu`;
+}
+
+    if (months > 0) {
+return `${months} bulan lalu`;
+}
+
+    if (days > 0) {
+return `${days} hari lalu`;
+}
+
+    if (hours > 0) {
+return `${hours} jam lalu`;
+}
+
+    if (minutes > 0) {
+return `${minutes} menit lalu`;
+}
 
     return 'baru saja';
 }
@@ -98,11 +117,15 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-        if (event.key === 'Enter') applyFilters();
+        if (event.key === 'Enter') {
+applyFilters();
+}
     }
 
     function confirmDelete() {
-        if (!customerToDelete) return;
+        if (!customerToDelete) {
+return;
+}
 
         router.delete(`/customers/${customerToDelete.id}`, {
             preserveState: true,
@@ -143,7 +166,7 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                             onChange={(event) => setSearch(event.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Cari nama atau telepon..."
-                            className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
+                            className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
                         />
                     </div>
                     <button
@@ -178,19 +201,19 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                 <table className="min-w-full divide-y divide-slate-200">
                                     <thead className="bg-slate-50">
                                         <tr>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                 Nama &amp; Kontak
                                             </th>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                 Alamat
                                             </th>
-                                            <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <th className="px-6 py-4 text-center text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                 Total Service
                                             </th>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                 Pelanggan Sejak
                                             </th>
-                                            <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <th className="px-6 py-4 text-right text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                                 Aksi
                                             </th>
                                         </tr>
@@ -218,7 +241,8 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                                             <div className="mt-0.5 text-sm text-slate-500">
                                                                 {customer.phone}
                                                             </div>
-                                                            {customer.user?.email && (
+                                                            {customer.user
+                                                                ?.email && (
                                                                 <div className="mt-0.5 truncate text-sm text-slate-500">
                                                                     {
                                                                         customer
@@ -232,12 +256,15 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                                 </td>
                                                 <td className="px-6 py-4 align-top">
                                                     <p className="line-clamp-2 text-sm text-slate-600">
-                                                        {customer.address ?? '-'}
+                                                        {customer.address ??
+                                                            '-'}
                                                     </p>
                                                 </td>
                                                 <td className="px-6 py-4 text-center align-top">
                                                     <span className="inline-flex min-w-8 items-center justify-center rounded-full bg-slate-100 px-2.5 py-1 text-sm font-semibold text-slate-700">
-                                                        {customer.services_count}
+                                                        {
+                                                            customer.services_count
+                                                        }
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 align-top">
@@ -252,7 +279,7 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                                         )}
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap px-6 py-4 text-right align-top">
+                                                <td className="px-6 py-4 text-right align-top whitespace-nowrap">
                                                     <div className="flex items-center justify-end gap-1">
                                                         <Button
                                                             asChild

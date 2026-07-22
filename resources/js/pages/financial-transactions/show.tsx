@@ -30,7 +30,11 @@ function formatTanggal(value: string) {
     }).format(new Date(value));
 }
 
-function TransactionTipeBadge({ type }: { type: FinancialTransaction['type'] }) {
+function TransactionTipeBadge({
+    type,
+}: {
+    type: FinancialTransaction['type'];
+}) {
     return (
         <Badge
             variant="outline"
@@ -47,11 +51,13 @@ function TransactionTipeBadge({ type }: { type: FinancialTransaction['type'] }) 
 
 function DetailItem({ label, value }: { label: string; value: string }) {
     return (
-        <div className="rounded-lg border border-border bg-muted/30 p-4">
-            <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="border-border bg-muted/30 rounded-lg border p-4">
+            <dt className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                 {label}
             </dt>
-            <dd className="mt-2 text-sm font-medium text-foreground">{value}</dd>
+            <dd className="text-foreground mt-2 text-sm font-medium">
+                {value}
+            </dd>
         </div>
     );
 }
@@ -70,7 +76,7 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                         <h1 className="text-2xl font-semibold tracking-tight">
                             {transaction.transaction_code}
                         </h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                             Transaction detail and related accounting metadata.
                         </p>
                     </div>
@@ -97,15 +103,20 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                             <div>
                                 <CardTitle>Transaction Summary</CardTitle>
                                 <CardDescription>
-                                    Posted on {formatTanggal(transaction.transaction_date)}
+                                    Posted on{' '}
+                                    {formatTanggal(
+                                        transaction.transaction_date,
+                                    )}
                                 </CardDescription>
                             </div>
                             <TransactionTipeBadge type={transaction.type} />
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="rounded-xl border border-border bg-card p-6">
-                            <p className="text-sm text-muted-foreground">Jumlah</p>
+                        <div className="border-border bg-card rounded-xl border p-6">
+                            <p className="text-muted-foreground text-sm">
+                                Jumlah
+                            </p>
                             <p
                                 className={
                                     transaction.type === 'income'
@@ -124,7 +135,9 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                             />
                             <DetailItem
                                 label="Tanggal"
-                                value={formatTanggal(transaction.transaction_date)}
+                                value={formatTanggal(
+                                    transaction.transaction_date,
+                                )}
                             />
                             <DetailItem
                                 label="Kategori"
@@ -140,7 +153,9 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                             />
                             <DetailItem
                                 label="Related ID"
-                                value={transaction.related_id?.toString() ?? '-'}
+                                value={
+                                    transaction.related_id?.toString() ?? '-'
+                                }
                             />
                             <DetailItem
                                 label="Dibuat By"
@@ -148,11 +163,11 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                             />
                         </dl>
 
-                        <div className="rounded-lg border border-border bg-muted/30 p-4">
-                            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        <div className="border-border bg-muted/30 rounded-lg border p-4">
+                            <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                                 Deskripsi
                             </p>
-                            <p className="mt-2 text-sm leading-6 text-foreground">
+                            <p className="text-foreground mt-2 text-sm leading-6">
                                 {transaction.description || '-'}
                             </p>
                         </div>

@@ -1,5 +1,10 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { MagnifyingGlass, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
+import {
+    MagnifyingGlass,
+    PencilSimple,
+    Plus,
+    Trash,
+} from '@phosphor-icons/react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import DeleteDialog from '@/components/shared/delete-dialog';
@@ -16,23 +21,43 @@ interface ServiceStatusesIndexProps {
 
 function buildUrl(page: number, search: string | undefined) {
     const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (page > 1) params.set('page', String(page));
-    const query = params.toString();
-    return query ? `/master-data/service-statuses?${query}` : '/master-data/service-statuses';
+
+    if (search) {
+params.set('search', search);
 }
 
-const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndexProps) => {
+    if (page > 1) {
+params.set('page', String(page));
+}
+
+    const query = params.toString();
+
+    return query
+        ? `/master-data/service-statuses?${query}`
+        : '/master-data/service-statuses';
+}
+
+const ServiceStatusesIndex = ({
+    serviceStatuses,
+    filters,
+}: ServiceStatusesIndexProps) => {
     const [toDelete, setToDelete] = useState<ServiceStatus | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
 
     function applySearch(value: string) {
         setSearch(value);
-        router.get('/master-data/service-statuses', { search: value || undefined }, { preserveState: true, replace: true });
+        router.get(
+            '/master-data/service-statuses',
+            { search: value || undefined },
+            { preserveState: true, replace: true },
+        );
     }
 
     function handleDelete() {
-        if (!toDelete) return;
+        if (!toDelete) {
+return;
+}
+
         router.delete(`/master-data/service-statuses/${toDelete.id}`, {
             preserveState: true,
             replace: true,
@@ -65,13 +90,15 @@ const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndex
                 <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div className="border-b border-slate-200 p-4 sm:px-6">
                         <div className="relative w-full sm:max-w-sm">
-                            <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                            <MagnifyingGlass className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
                             <input
                                 type="search"
                                 value={search}
-                                onChange={(event) => applySearch(event.target.value)}
+                                onChange={(event) =>
+                                    applySearch(event.target.value)
+                                }
                                 placeholder="Cari status servis..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -106,7 +133,10 @@ const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndex
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 bg-white">
                                     {serviceStatuses.data.map((status) => (
-                                        <tr key={status.id} className="transition-colors hover:bg-slate-50">
+                                        <tr
+                                            key={status.id}
+                                            className="transition-colors hover:bg-slate-50"
+                                        >
                                             <td className="px-6 py-4 text-sm font-medium text-slate-900">
                                                 {status.name}
                                             </td>
@@ -115,29 +145,58 @@ const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndex
                                                     <div className="flex items-center gap-2">
                                                         <span
                                                             className="inline-block size-4 rounded-full border border-slate-200"
-                                                            style={{ backgroundColor: status.color }}
+                                                            style={{
+                                                                backgroundColor:
+                                                                    status.color,
+                                                            }}
                                                         />
-                                                        <span className="text-xs font-mono text-slate-500">
+                                                        <span className="font-mono text-xs text-slate-500">
                                                             {status.color}
                                                         </span>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-xs text-slate-400">-</span>
+                                                    <span className="text-xs text-slate-400">
+                                                        -
+                                                    </span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <StatusBadge status={status.is_active ? 'tersedia' : 'error'} />
+                                                <StatusBadge
+                                                    status={
+                                                        status.is_active
+                                                            ? 'tersedia'
+                                                            : 'error'
+                                                    }
+                                                />
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-1">
-                                                    <Button asChild variant="success" size="sm">
-                                                        <Link href={`/master-data/service-statuses/${status.id}/edit`}>
-                                                            <PencilSimple className="mr-1 size-4" weight="bold" />
+                                                    <Button
+                                                        asChild
+                                                        variant="success"
+                                                        size="sm"
+                                                    >
+                                                        <Link
+                                                            href={`/master-data/service-statuses/${status.id}/edit`}
+                                                        >
+                                                            <PencilSimple
+                                                                className="mr-1 size-4"
+                                                                weight="bold"
+                                                            />
                                                             Edit
                                                         </Link>
                                                     </Button>
-                                                    <Button variant="destructive" size="sm" onClick={() => setToDelete(status)}>
-                                                        <Trash className="mr-1 size-4" weight="bold" />
+                                                    <Button
+                                                        variant="destructive"
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            setToDelete(status)
+                                                        }
+                                                    >
+                                                        <Trash
+                                                            className="mr-1 size-4"
+                                                            weight="bold"
+                                                        />
                                                         Hapus
                                                     </Button>
                                                 </div>
@@ -152,7 +211,11 @@ const ServiceStatusesIndex = ({ serviceStatuses, filters }: ServiceStatusesIndex
 
                 <DeleteDialog
                     open={toDelete !== null}
-                    onOpenChange={(open) => { if (!open) setToDelete(null); }}
+                    onOpenChange={(open) => {
+                        if (!open) {
+setToDelete(null);
+}
+                    }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Status Servis?"
                     description={

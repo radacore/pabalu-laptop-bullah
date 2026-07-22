@@ -30,6 +30,7 @@ export function socialLinks(website: WebsiteSetting) {
         YouTube: YoutubeLogo,
         TikTok: TiktokLogo,
     };
+
     return [
         { label: 'Facebook', href: website.facebook_url },
         { label: 'Instagram', href: website.instagram_url },
@@ -51,38 +52,34 @@ export function LogoMark({
     website: WebsiteSetting;
     size?: 'sm' | 'md';
 }) {
-    const dims = size === 'sm' ? 'h-8 w-8' : 'h-10 w-10';
-    const iconDims = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+    const dims = size === 'sm' ? 'h-7 w-7' : 'h-9 w-9';
+    const iconDims = size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4';
 
     if (website.logo_url) {
         return (
             <img
                 src={website.logo_url}
                 alt={`${website.website_name} logo`}
-                className={`${dims} rounded-xl object-cover ring-1 ring-slate-200`}
+                className={`${dims} rounded-md object-cover`}
             />
         );
     }
 
     return (
         <span
-            className={`flex ${dims} items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm`}
+            className={`flex ${dims} items-center justify-center rounded-md bg-graphite text-paper`}
         >
             <Laptop className={iconDims} weight="duotone" aria-hidden="true" />
         </span>
     );
 }
 
-/* ─── Public Header ─── */
+/* ─── Public Header (Apple-style 44px sticky) ─── */
 
 const navItems = [
     { label: 'Laptop', href: '/shop', activeHref: '/shop' },
     { label: 'Servis', href: '/#services', activeHref: '/#services' },
-    {
-        label: 'Cek Status',
-        href: '/#status',
-        activeHref: '/#status',
-    },
+    { label: 'Lacak servis', href: '/#status', activeHref: '/#status' },
     { label: 'Kontak', href: '/#contact', activeHref: '/#contact' },
 ];
 
@@ -94,14 +91,14 @@ export function PublicHeader({
     currentPath?: string;
 }) {
     return (
-        <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg">
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-50 h-11 border-b border-bone/60 bg-paper/80 backdrop-blur-md">
+            <div className="mx-auto flex h-11 max-w-[980px] items-center justify-between px-4">
                 <Link
                     href="/"
-                    className="flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                    className="flex items-center gap-2 text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-apple-blue"
                 >
-                    <LogoMark website={website} />
-                    <span className="text-base font-bold tracking-tight text-slate-950 sm:text-lg">
+                    <LogoMark website={website} size="sm" />
+                    <span className="apple-body-sm font-semibold text-graphite">
                         {website.website_name}
                     </span>
                 </Link>
@@ -115,14 +112,15 @@ export function PublicHeader({
                             currentPath === item.activeHref ||
                             (item.activeHref === '/shop' &&
                                 currentPath?.startsWith('/shop'));
+
                         return (
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                                className={`rounded-full px-3 py-1 apple-caption transition ${
                                     isActive
-                                        ? 'bg-blue-50 text-blue-600'
-                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-950'
+                                        ? 'text-apple-blue'
+                                        : 'text-graphite opacity-80 hover:opacity-100'
                                 }`}
                             >
                                 {item.label}
@@ -134,15 +132,15 @@ export function PublicHeader({
                 <div className="flex items-center gap-2">
                     <Link
                         href="/login"
-                        className="hidden min-h-10 items-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-950 sm:inline-flex"
+                        className="hidden apple-caption text-graphite opacity-80 transition hover:opacity-100 sm:inline"
                     >
                         Login
                     </Link>
                     <Link
                         href="/shop"
-                        className="inline-flex min-h-10 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98]"
+                        className="inline-flex h-7 items-center justify-center rounded-pill bg-button-blue px-3.5 apple-caption text-paper transition hover:bg-deep-link-blue"
                     >
-                        Shop
+                        Beli
                     </Link>
                 </div>
             </div>
@@ -156,80 +154,76 @@ export function PublicFooter({ website }: { website: WebsiteSetting }) {
     const socials = socialLinks(website);
 
     return (
-        <footer
-            id="contact"
-            className="border-t border-slate-200 bg-slate-950 text-white"
-        >
-            <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+        <footer className="border-t border-bone bg-cloud">
+            <div className="mx-auto grid max-w-[980px] gap-10 px-4 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
                 <div>
-                    <Link
-                        href="/"
-                        className="flex items-center gap-3"
-                    >
-                        <LogoMark website={website} />
-                        <span className="text-lg font-bold tracking-tight">
+                    <Link href="/" className="flex items-center gap-2">
+                        <LogoMark website={website} size="sm" />
+                        <span className="apple-body-sm font-semibold text-graphite">
                             {website.website_name}
                         </span>
                     </Link>
-                    <p className="mt-4 max-w-sm text-sm leading-7 text-slate-400">
+                    <p className="mt-3 max-w-sm apple-body-sm text-fog">
                         {website.footer_description ??
-                            'Solusi terpercaya untuk laptop refurbished berkualitas dan perbaikan hardware profesional.'}
+                            'Laptop refurbished terkurasi dan perbaikan hardware profesional dengan progres yang bisa Anda pantau sendiri.'}
                     </p>
                 </div>
 
                 <div>
-                    <h4 className="text-xs font-semibold tracking-[0.16em] text-slate-400 uppercase">
-                        Navigasi
-                    </h4>
-                    <div className="mt-5 grid gap-3 text-sm text-slate-300">
+                    <h4 className="apple-caption text-graphite">Halaman</h4>
+                    <div className="mt-3 grid gap-2 apple-body-sm text-slate-2">
                         <Link
                             href="/shop"
-                            className="transition hover:text-white"
+                            className="text-apple-blue transition hover:text-deep-link-blue"
                         >
-                            Shop
+                            Katalog laptop
                         </Link>
                         <Link
                             href="/#status"
-                            className="transition hover:text-white"
+                            className="text-apple-blue transition hover:text-deep-link-blue"
                         >
-                            Cek status servis
+                            Lacak servis
                         </Link>
                         <Link
                             href="/#services"
-                            className="transition hover:text-white"
+                            className="text-apple-blue transition hover:text-deep-link-blue"
                         >
-                            Servis
+                            Layanan servis
                         </Link>
                     </div>
                 </div>
 
                 <div>
-                    <h4 className="text-xs font-semibold tracking-[0.16em] text-slate-400 uppercase">
-                        Kontak
-                    </h4>
-                    <div className="mt-5 grid gap-3 text-sm text-slate-300">
-                        {website.phone ?? website.whatsapp_number ? (
-                            <span>
+                    <h4 className="apple-caption text-graphite">Hubungi</h4>
+                    <div className="mt-3 grid gap-2 apple-body-sm text-slate-2">
+                        {(website.phone ?? website.whatsapp_number) ? (
+                            <a
+                                href={`tel:${(website.phone ?? website.whatsapp_number ?? '').replace(/[^0-9+]/g, '')}`}
+                                className="text-apple-blue transition hover:text-deep-link-blue"
+                            >
                                 {website.phone ?? website.whatsapp_number}
-                            </span>
+                            </a>
                         ) : null}
-                        {website.address ? <span>{website.address}</span> : null}
+                        {website.address ? (
+                            <span className="text-fog">{website.address}</span>
+                        ) : null}
                         {socials.map((link) => {
                             const IconComp = link.Icon;
+
                             return (
                                 <a
                                     key={link.label}
                                     href={link.href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-2 transition hover:text-white"
+                                    className="inline-flex items-center gap-1.5 text-apple-blue transition hover:text-deep-link-blue"
                                 >
-                                    {IconComp && (
+                                    {IconComp ? (
                                         <IconComp
-                                            className="h-4 w-4"
+                                            className="h-3.5 w-3.5"
                                             aria-hidden="true"
                                         />
-                                    )}
+                                    ) : null}
                                     {link.label}
                                 </a>
                             );
@@ -237,9 +231,12 @@ export function PublicFooter({ website }: { website: WebsiteSetting }) {
                     </div>
                 </div>
             </div>
-            <div className="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-                &copy; {new Date().getFullYear()} {website.website_name}. All
-                rights reserved.
+            <div className="border-t border-bone">
+                <div className="mx-auto flex max-w-[980px] flex-col gap-1 px-4 py-4 text-center apple-caption text-fog md:flex-row md:items-center md:justify-between md:text-left">
+                    <span>
+                        © {new Date().getFullYear()} {website.website_name}.
+                    </span>
+                </div>
             </div>
         </footer>
     );
@@ -259,10 +256,10 @@ export function PublicPage({
     children: ReactNode;
 }) {
     return (
-        <div className="min-h-screen overflow-x-hidden bg-white text-slate-900 antialiased">
+        <div className="min-h-screen overflow-x-hidden bg-cloud text-graphite">
             <Head title={title} />
             <PublicHeader website={website} currentPath={currentPath} />
-            <main>{children}</main>
+            <main className="bg-cloud">{children}</main>
             <PublicFooter website={website} />
         </div>
     );

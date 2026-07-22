@@ -49,10 +49,9 @@ export default function StatusBadge({
 }) {
     const { label, key } = normalizeStatus(status);
     const variant = statusVariants[key] ??
-        Object.values(statusVariants).find((_, i) =>
-            Object.keys(statusVariants)[i] === key,
-        ) ??
-        { bg: 'bg-[#64748b]/10', text: 'text-[#64748b]' };
+        Object.values(statusVariants).find(
+            (_, i) => Object.keys(statusVariants)[i] === key,
+        ) ?? { bg: 'bg-[#64748b]/10', text: 'text-[#64748b]' };
 
     return (
         <span

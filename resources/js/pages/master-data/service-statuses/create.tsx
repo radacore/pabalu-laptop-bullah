@@ -55,7 +55,9 @@ const ServiceStatusesCreate = () => {
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: Diterima, Diagnosis, Perbaikan, Selesai"
                             />
                             <InputError message={form.errors.name} />
@@ -68,18 +70,29 @@ const ServiceStatusesCreate = () => {
                                     type="color"
                                     id="color"
                                     value={form.data.color || '#3b82f6'}
-                                    onChange={(event) => form.setData('color', event.target.value)}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'color',
+                                            event.target.value,
+                                        )
+                                    }
                                     className="size-10 cursor-pointer rounded-lg border border-slate-200 bg-slate-50 p-1"
                                 />
                                 <Input
                                     value={form.data.color}
-                                    onChange={(event) => form.setData('color', event.target.value)}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'color',
+                                            event.target.value,
+                                        )
+                                    }
                                     placeholder="#3b82f6 (opsional)"
                                     className="font-mono"
                                 />
                             </div>
                             <p className="text-xs text-slate-500">
-                                Warna penanda untuk status ini pada timeline dan badge servis.
+                                Warna penanda untuk status ini pada timeline dan
+                                badge servis.
                             </p>
                             <InputError message={form.errors.color} />
                         </div>
@@ -88,7 +101,9 @@ const ServiceStatusesCreate = () => {
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -99,7 +114,12 @@ const ServiceStatusesCreate = () => {
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang status ini (opsional)"
                             />
                             <InputError message={form.errors.description} />
@@ -108,7 +128,9 @@ const ServiceStatusesCreate = () => {
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" asChild>
-                            <Link href="/master-data/service-statuses">Batal</Link>
+                            <Link href="/master-data/service-statuses">
+                                Batal
+                            </Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
                             <FloppyDisk className="mr-2 size-4" weight="bold" />

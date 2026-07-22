@@ -62,7 +62,9 @@ const TransactionCategoriesCreate = () => {
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: Pendapatan Penjualan, Biaya Sewa"
                             />
                             <InputError message={form.errors.name} />
@@ -74,14 +76,26 @@ const TransactionCategoriesCreate = () => {
                             </Label>
                             <Select
                                 value={form.data.type}
-                                onValueChange={(value) => form.setData('type', value as 'income' | 'expense')}
+                                onValueChange={(value) =>
+                                    form.setData(
+                                        'type',
+                                        value as 'income' | 'expense',
+                                    )
+                                }
                             >
-                                <SelectTrigger id="type" className="w-full sm:w-56">
+                                <SelectTrigger
+                                    id="type"
+                                    className="w-full sm:w-56"
+                                >
                                     <SelectValue placeholder="Pilih tipe" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="income">Pemasukan</SelectItem>
-                                    <SelectItem value="expense">Pengeluaran</SelectItem>
+                                    <SelectItem value="income">
+                                        Pemasukan
+                                    </SelectItem>
+                                    <SelectItem value="expense">
+                                        Pengeluaran
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                             <InputError message={form.errors.type} />
@@ -91,7 +105,9 @@ const TransactionCategoriesCreate = () => {
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -102,7 +118,12 @@ const TransactionCategoriesCreate = () => {
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang kategori ini (opsional)"
                             />
                             <InputError message={form.errors.description} />
@@ -111,7 +132,9 @@ const TransactionCategoriesCreate = () => {
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" asChild>
-                            <Link href="/master-data/transaction-categories">Batal</Link>
+                            <Link href="/master-data/transaction-categories">
+                                Batal
+                            </Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
                             <FloppyDisk className="mr-2 size-4" weight="bold" />
@@ -129,8 +152,14 @@ TransactionCategoriesCreate.layout = (page: ReactNode) => (
         breadcrumbs={[
             { title: 'Dashboard', href: dashboard() },
             { title: 'Data Master', href: '/master-data' },
-            { title: 'Kategori Transaksi', href: '/master-data/transaction-categories' },
-            { title: 'Tambah', href: '/master-data/transaction-categories/create' },
+            {
+                title: 'Kategori Transaksi',
+                href: '/master-data/transaction-categories',
+            },
+            {
+                title: 'Tambah',
+                href: '/master-data/transaction-categories/create',
+            },
         ]}
     >
         {page}

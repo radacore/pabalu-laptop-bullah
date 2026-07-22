@@ -24,7 +24,9 @@ interface TransactionCategoriesEditProps {
 const textareaClass =
     'min-h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500';
 
-const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategoriesEditProps) => {
+const TransactionCategoriesEdit = ({
+    transactionCategory,
+}: TransactionCategoriesEditProps) => {
     const form = useForm({
         name: transactionCategory.name || '',
         type: (transactionCategory.type ?? 'income') as 'income' | 'expense',
@@ -34,7 +36,9 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
 
     function submit(event: React.FormEvent) {
         event.preventDefault();
-        form.put(`/master-data/transaction-categories/${transactionCategory.id}`);
+        form.put(
+            `/master-data/transaction-categories/${transactionCategory.id}`,
+        );
     }
 
     return (
@@ -67,7 +71,9 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: Pendapatan Penjualan, Biaya Sewa"
                             />
                             <InputError message={form.errors.name} />
@@ -79,14 +85,26 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
                             </Label>
                             <Select
                                 value={form.data.type}
-                                onValueChange={(value) => form.setData('type', value as 'income' | 'expense')}
+                                onValueChange={(value) =>
+                                    form.setData(
+                                        'type',
+                                        value as 'income' | 'expense',
+                                    )
+                                }
                             >
-                                <SelectTrigger id="type" className="w-full sm:w-56">
+                                <SelectTrigger
+                                    id="type"
+                                    className="w-full sm:w-56"
+                                >
                                     <SelectValue placeholder="Pilih tipe" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="income">Pemasukan</SelectItem>
-                                    <SelectItem value="expense">Pengeluaran</SelectItem>
+                                    <SelectItem value="income">
+                                        Pemasukan
+                                    </SelectItem>
+                                    <SelectItem value="expense">
+                                        Pengeluaran
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                             <InputError message={form.errors.type} />
@@ -96,7 +114,9 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -107,7 +127,12 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang kategori ini (opsional)"
                             />
                             <InputError message={form.errors.description} />
@@ -116,7 +141,9 @@ const TransactionCategoriesEdit = ({ transactionCategory }: TransactionCategorie
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" asChild>
-                            <Link href="/master-data/transaction-categories">Batal</Link>
+                            <Link href="/master-data/transaction-categories">
+                                Batal
+                            </Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
                             <FloppyDisk className="mr-2 size-4" weight="bold" />
@@ -134,7 +161,10 @@ TransactionCategoriesEdit.layout = (page: ReactNode) => (
         breadcrumbs={[
             { title: 'Dashboard', href: dashboard() },
             { title: 'Data Master', href: '/master-data' },
-            { title: 'Kategori Transaksi', href: '/master-data/transaction-categories' },
+            {
+                title: 'Kategori Transaksi',
+                href: '/master-data/transaction-categories',
+            },
             { title: 'Edit', href: '#' },
         ]}
     >

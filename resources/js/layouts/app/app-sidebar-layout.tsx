@@ -16,7 +16,10 @@ export default function AppSidebarLayout({ children }: AppSidebarLayoutProps) {
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Header */}
-            <AppSidebarHeader onToggleCollapse={toggleCollapse} collapsed={collapsed} />
+            <AppSidebarHeader
+                onToggleCollapse={toggleCollapse}
+                collapsed={collapsed}
+            />
 
             {/* Sidebar */}
             <AppSidebar collapsed={collapsed} />
@@ -27,9 +30,7 @@ export default function AppSidebarLayout({ children }: AppSidebarLayoutProps) {
                     collapsed ? 'md:pl-20' : 'md:pl-64'
                 }`}
             >
-                <div className="px-6">
-                    {children}
-                </div>
+                <div className="px-6">{children}</div>
             </main>
         </div>
     );

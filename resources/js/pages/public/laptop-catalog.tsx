@@ -1,4 +1,4 @@
-import { Head, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import {
     ArrowLeft,
     ArrowRight,
@@ -6,15 +6,16 @@ import {
     Funnel,
     Laptop as LaptopIcon,
     MagnifyingGlass,
-    Sliders,
     X,
 } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
-import {
-    PublicPage,
-    formatCurrency,
-} from '@/components/public-layout';
-import type { Laptop, PaginatedResponse, WebsiteSetting } from '@/types';
+import { PublicPage, formatCurrency } from '@/components/public-layout';
+import type {
+    Laptop,
+    MasterData,
+    PaginatedResponse,
+    WebsiteSetting,
+} from '@/types';
 
 type CatalogFilters = {
     search?: string;
@@ -40,54 +41,61 @@ interface Props {
 }
 
 function formatShortPrice(value: number) {
-    if (value >= 1_000_000) return `Rp ${Math.round(value / 1_000_000)}jt`;
+    if (value >= 1_000_000) {
+        return `Rp ${Math.round(value / 1_000_000)}jt`;
+    }
+
     return formatCurrency(value);
+}
+
+function brandName(brand: MasterData | null | undefined, fallback: string) {
+    return brand?.name ?? fallback;
 }
 
 function photoUrl(laptop: Laptop) {
     const photo = laptop.photos?.[0];
-    if (!photo?.file_path) return null;
-    return `/storage/${photo.file_path}`;
-}
 
-function specTags(laptop: Laptop) {
-    return [
-        laptop.specification?.processor,
-        laptop.specification?.ram,
-        laptop.specification?.storage,
-    ]
-        .filter((t): t is string => Boolean(t))
-        .slice(0, 3);
+    if (!photo?.file_path) {
+        return null;
+    }
+
+    return `/storage/${photo.file_path}`;
 }
 
 function buildCatalogUrl(page: number, filters: CatalogFilters) {
     const params = new URLSearchParams();
-    if (filters.search) params.set('search', filters.search);
-    filters.brands?.forEach((b) => params.append('brands[]', b));
-    if (filters.ram) params.set('ram', filters.ram);
-    if (filters.storage) params.set('storage', filters.storage);
-    if (filters.max_price) params.set('max_price', String(filters.max_price));
-    if (filters.sort && filters.sort !== 'newest') params.set('sort', filters.sort);
-    if (page > 1) params.set('page', String(page));
-    const query = params.toString();
-    return query ? `/shop?${query}` : '/shop';
-}
 
-function FilterSection({
-    title,
-    children,
-}: {
-    title: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <div className="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
-            <h3 className="mb-3 text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">
-                {title}
-            </h3>
-            {children}
-        </div>
-    );
+    if (filters.search) {
+        params.set('search', filters.search);
+    }
+
+    filters.brands?.forEach((b) => {
+        params.append('brands[]', b);
+    });
+
+    if (filters.ram) {
+        params.set('ram', filters.ram);
+    }
+
+    if (filters.storage) {
+        params.set('storage', filters.storage);
+    }
+
+    if (filters.max_price) {
+        params.set('max_price', String(filters.max_price));
+    }
+
+    if (filters.sort && filters.sort !== 'newest') {
+        params.set('sort', filters.sort);
+    }
+
+    if (page > 1) {
+        params.set('page', String(page));
+    }
+
+    const query = params.toString();
+
+    return query ? `/shop?${query}` : '/shop';
 }
 
 export default function LaptopCatalog({
@@ -113,32 +121,53 @@ export default function LaptopCatalog({
             (storage ? 1 : 0) +
             (search ? 1 : 0) +
             (maxPrice < filter_options.max_price ? 1 : 0),
-        [brands.length, filter_options.max_price, maxPrice, ram, search, storage],
+        [
+            brands.length,
+            filter_options.max_price,
+            maxPrice,
+            ram,
+            search,
+            storage,
+        ],
     );
 
-    function submit(event: { preventDefault: () => void }) {
-        event.preventDefault();
+    function applyFilters(overrides?: Partial<CatalogFilters>) {
+        const next = {
+            search: overrides?.search ?? search,
+            brands: overrides?.brands ?? brands,
+            ram: overrides?.ram ?? ram,
+            storage: overrides?.storage ?? storage,
+            max_price: overrides?.max_price ?? maxPrice,
+            sort: overrides?.sort ?? sort,
+        };
         router.get(
             '/shop',
             {
-                search: search || undefined,
-                brands: brands.length > 0 ? brands : undefined,
-                ram: ram || undefined,
-                storage: storage || undefined,
+                search: next.search || undefined,
+                brands: next.brands.length > 0 ? next.brands : undefined,
+                ram: next.ram || undefined,
+                storage: next.storage || undefined,
                 max_price:
-                    maxPrice < filter_options.max_price ? maxPrice : undefined,
-                sort: sort === 'newest' ? undefined : sort,
+                    next.max_price < filter_options.max_price
+                        ? next.max_price
+                        : undefined,
+                sort: next.sort === 'newest' ? undefined : next.sort,
             },
             { preserveState: true, replace: true },
         );
     }
 
+    function submit(event: { preventDefault: () => void }) {
+        event.preventDefault();
+        applyFilters();
+    }
+
     function toggleBrand(brand: string) {
-        setBrands((current) =>
-            current.includes(brand)
-                ? current.filter((b) => b !== brand)
-                : [...current, brand],
-        );
+        const next = brands.includes(brand)
+            ? brands.filter((b) => b !== brand)
+            : [...brands, brand];
+        setBrands(next);
+        applyFilters({ brands: next });
     }
 
     function resetFilters() {
@@ -153,129 +182,143 @@ export default function LaptopCatalog({
 
     function handleSortChange(nextSort: string) {
         setSort(nextSort);
-        router.get(
-            '/shop',
-            {
-                search: search || undefined,
-                brands: brands.length > 0 ? brands : undefined,
-                ram: ram || undefined,
-                storage: storage || undefined,
-                max_price:
-                    maxPrice < filter_options.max_price ? maxPrice : undefined,
-                sort: nextSort === 'newest' ? undefined : nextSort,
-            },
-            { preserveState: true, replace: true },
-        );
+        applyFilters({ sort: nextSort });
+    }
+
+    function handleMaxPriceChange(value: number) {
+        setMaxPrice(value);
+        applyFilters({ max_price: value });
+    }
+
+    function handleRamToggle(option: string) {
+        const next = ram === option ? '' : option;
+        setRam(next);
+        applyFilters({ ram: next });
+    }
+
+    function handleStorageToggle(option: string) {
+        const next = storage === option ? '' : option;
+        setStorage(next);
+        applyFilters({ storage: next });
     }
 
     const filterContent = (
-        <form onSubmit={submit} className="space-y-5">
-            {filter_options.brands.length > 0 && (
-                <FilterSection title="Merek">
+        <form onSubmit={submit} className="space-y-7">
+            {filter_options.brands.length > 0 ? (
+                <FilterGroup title="Merek">
                     <div className="space-y-2.5">
-                        {filter_options.brands.map((brand) => (
-                            <label
-                                key={brand}
-                                className="flex cursor-pointer items-center gap-3 group"
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={brands.includes(brand)}
-                                    onChange={() => toggleBrand(brand)}
-                                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
-                                />
-                                <span
-                                    className={`text-sm font-medium transition ${
-                                        brands.includes(brand)
-                                            ? 'text-blue-600'
-                                            : 'text-slate-700 group-hover:text-slate-950'
-                                    }`}
-                                >
-                                    {brand}
-                                </span>
-                            </label>
-                        ))}
-                    </div>
-                </FilterSection>
-            )}
+                        {filter_options.brands.map((brand) => {
+                            const active = brands.includes(brand);
 
-            <FilterSection title="Harga maksimal">
+                            return (
+                                <label
+                                    key={brand}
+                                    className="flex cursor-pointer items-center gap-3"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={active}
+                                        onChange={() => {
+                                            toggleBrand(brand);
+                                        }}
+                                        className="h-4 w-4 rounded border-bone accent-apple-blue"
+                                    />
+                                    <span
+                                        className={`apple-body-sm transition ${
+                                            active
+                                                ? 'text-graphite'
+                                                : 'text-slate-2'
+                                        }`}
+                                    >
+                                        {brand}
+                                    </span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                </FilterGroup>
+            ) : null}
+
+            <FilterGroup title="Harga maksimal">
                 <input
                     type="range"
                     min="0"
                     max={filter_options.max_price}
                     step="500000"
                     value={maxPrice}
-                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                    className="h-1.5 w-full cursor-pointer accent-blue-600"
+                    onChange={(e) => {
+                        handleMaxPriceChange(Number(e.target.value));
+                    }}
+                    className="h-1 w-full cursor-pointer accent-apple-blue"
                 />
-                <div className="mt-2 flex items-center justify-between text-xs font-semibold">
-                    <span className="text-slate-500">Rp 0</span>
-                    <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">
+                <div className="mt-3 flex items-center justify-between apple-caption">
+                    <span className="text-fog">Rp 0</span>
+                    <span className="text-graphite">
                         {formatShortPrice(maxPrice)}
                     </span>
                 </div>
-            </FilterSection>
+            </FilterGroup>
 
-            {filter_options.ram.length > 0 && (
-                <FilterSection title="RAM">
+            {filter_options.ram.length > 0 ? (
+                <FilterGroup title="RAM">
                     <div className="flex flex-wrap gap-2">
                         {filter_options.ram.map((option) => (
                             <button
                                 key={option}
                                 type="button"
-                                onClick={() => setRam(ram === option ? '' : option)}
-                                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                                onClick={() => {
+                                    handleRamToggle(option);
+                                }}
+                                className={`rounded-pill border px-3 py-1 apple-caption transition ${
                                     ram === option
-                                        ? 'bg-blue-600 text-white'
-                                        : 'border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600'
+                                        ? 'border-button-blue bg-button-blue text-paper'
+                                        : 'border-bone bg-paper text-slate-2 hover:border-apple-blue hover:text-graphite'
                                 }`}
                             >
                                 {option}
                             </button>
                         ))}
                     </div>
-                </FilterSection>
-            )}
+                </FilterGroup>
+            ) : null}
 
-            {filter_options.storage.length > 0 && (
-                <FilterSection title="Storage">
+            {filter_options.storage.length > 0 ? (
+                <FilterGroup title="Storage">
                     <div className="flex flex-wrap gap-2">
                         {filter_options.storage.map((option) => (
                             <button
                                 key={option}
                                 type="button"
-                                onClick={() =>
-                                    setStorage(storage === option ? '' : option)
-                                }
-                                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                                onClick={() => {
+                                    handleStorageToggle(option);
+                                }}
+                                className={`rounded-pill border px-3 py-1 apple-caption transition ${
                                     storage === option
-                                        ? 'bg-blue-600 text-white'
-                                        : 'border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600'
+                                        ? 'border-button-blue bg-button-blue text-paper'
+                                        : 'border-bone bg-paper text-slate-2 hover:border-apple-blue hover:text-graphite'
                                 }`}
                             >
                                 {option}
                             </button>
                         ))}
                     </div>
-                </FilterSection>
-            )}
+                </FilterGroup>
+            ) : null}
 
-            <div className="grid grid-cols-2 gap-2">
-                <button
-                    type="submit"
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98]"
-                >
-                    <Funnel className="h-4 w-4" weight="duotone" />
-                    Terapkan
-                </button>
+            <div className="grid grid-cols-2 gap-2 pt-2">
                 <button
                     type="button"
                     onClick={resetFilters}
-                    className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-pill border border-bone bg-paper px-3 apple-caption text-slate-2 transition hover:border-graphite hover:text-graphite"
                 >
-                    <X className="h-4 w-4" />
+                    <X className="h-3.5 w-3.5" />
                     Reset
+                </button>
+                <button
+                    type="submit"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-pill bg-button-blue px-3 apple-caption text-paper transition hover:bg-deep-link-blue"
+                >
+                    Terapkan
                 </button>
             </div>
         </form>
@@ -287,208 +330,204 @@ export default function LaptopCatalog({
             title={`Katalog Laptop - ${website.website_name}`}
             currentPath="/shop"
         >
-            {/* ─── Page Header ─── */}
-            <section className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-                <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-                    <div className="max-w-3xl">
-                        <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
-                            Katalog laptop bersih, jelas, dan terkurasi
-                        </h1>
-                        <p className="mt-4 text-lg leading-8 text-slate-600">
-                            Pilih stok refurbished dari inventaris asli. Filter merek,
-                            RAM, storage, dan harga untuk menemukan unit yang paling
-                            cocok.
-                        </p>
+            <section className="bg-cloud py-16 md:py-20">
+                <div className="mx-auto max-w-[980px] px-4 text-center">
+                    <h1 className="apple-heading-lg text-graphite">
+                        Katalog laptop bersih,
+                        <br />
+                        jelas, dan terkurasi.
+                    </h1>
+                    <p className="mx-auto mt-4 max-w-2xl apple-body-lg text-slate-2">
+                        Pilih stok refurbished dari inventaris kami. Filter
+                        merek, RAM, storage, dan harga untuk menemukan unit yang
+                        paling cocok.
+                    </p>
 
-                        <form onSubmit={submit} className="mt-8">
-                            <div className="flex min-h-14 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 shadow-sm transition focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-100">
-                                <MagnifyingGlass
-                                    className="h-5 w-5 shrink-0 text-slate-400"
-                                    weight="duotone"
-                                />
-                                <input
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Cari MacBook, ThinkPad, ROG..."
-                                    className="min-w-0 flex-1 border-none bg-transparent text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
-                                />
-                                <button
-                                    type="submit"
-                                    className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98]"
-                                >
-                                    Cari
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <form onSubmit={submit} className="mx-auto mt-8 max-w-xl">
+                        <label className="flex h-11 items-center gap-3 rounded-pill border border-bone bg-paper px-4 transition focus-within:border-apple-blue focus-within:ring-4 focus-within:ring-apple-blue/20">
+                            <MagnifyingGlass
+                                className="h-4 w-4 shrink-0 text-fog"
+                                weight="duotone"
+                            />
+                            <input
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                }}
+                                placeholder="Cari MacBook, ThinkPad, ROG..."
+                                className="min-w-0 flex-1 border-none bg-transparent apple-body text-graphite outline-none placeholder:text-fog"
+                            />
+                            <button
+                                type="submit"
+                                className="inline-flex h-8 items-center justify-center rounded-pill bg-button-blue px-4 apple-caption text-paper transition hover:bg-deep-link-blue"
+                            >
+                                Cari
+                            </button>
+                        </label>
+                    </form>
                 </div>
             </section>
 
-            {/* ─── Filter + Grid ─── */}
-            <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:grid lg:grid-cols-[260px_1fr] lg:gap-8 lg:px-8 lg:py-12">
-                {/* Desktop sidebar */}
+            <section className="mx-auto max-w-[980px] px-4 py-10 sm:px-6 md:py-14 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
                 <aside className="hidden lg:block">
-                    <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                        <div className="mb-5 flex items-center justify-between">
-                            <div>
-                                <h2 className="text-base font-bold text-slate-950">
-                                    Filter
-                                </h2>
-                                <p className="mt-0.5 text-xs text-slate-500">
-                                    {activeFilterCount} filter aktif
-                                </p>
-                            </div>
-                            <Sliders
-                                className="h-5 w-5 text-blue-600"
-                                weight="duotone"
-                            />
+                    <div className="sticky top-16">
+                        <div className="mb-5 flex items-baseline justify-between">
+                            <h2 className="apple-body font-semibold text-graphite">
+                                Filter
+                            </h2>
+                            {activeFilterCount > 0 ? (
+                                <span className="apple-caption text-fog">
+                                    {activeFilterCount} aktif
+                                </span>
+                            ) : null}
                         </div>
                         {filterContent}
                     </div>
                 </aside>
 
-                {/* Mobile filter trigger */}
-                <div className="mb-5 lg:hidden">
+                <div className="mb-6 lg:hidden">
                     <button
                         type="button"
-                        onClick={() => setShowMobileFilters(true)}
-                        className="inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm"
+                        onClick={() => {
+                            setShowMobileFilters(true);
+                        }}
+                        className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-pill border border-bone bg-paper px-4 apple-body-sm font-semibold text-graphite"
                     >
-                        <Funnel className="h-4 w-4 text-blue-600" weight="duotone" />
+                        <Funnel
+                            className="h-4 w-4 text-apple-blue"
+                            weight="duotone"
+                        />
                         Filter
-                        {activeFilterCount > 0 && (
-                            <span className="ml-1 rounded-full bg-blue-600 px-2 py-0.5 text-xs font-bold text-white">
+                        {activeFilterCount > 0 ? (
+                            <span className="ml-1 rounded-pill bg-button-blue px-2 py-0.5 text-[10px] font-bold text-paper">
                                 {activeFilterCount}
                             </span>
-                        )}
+                        ) : null}
                     </button>
 
-                    {showMobileFilters && (
-                        <div className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden">
-                            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4">
-                                <h2 className="text-base font-bold text-slate-950">
+                    {showMobileFilters ? (
+                        <div className="fixed inset-0 z-50 flex flex-col bg-paper lg:hidden">
+                            <div className="flex items-center justify-between border-b border-bone px-4 py-3">
+                                <h2 className="apple-body font-semibold text-graphite">
                                     Filter
                                 </h2>
                                 <button
                                     type="button"
-                                    onClick={() => setShowMobileFilters(false)}
-                                    className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100"
+                                    onClick={() => {
+                                        setShowMobileFilters(false);
+                                    }}
+                                    className="rounded-pill p-1.5 text-slate-2 hover:bg-cloud"
                                 >
-                                    <X className="h-5 w-5" />
+                                    <X className="h-4 w-4" />
                                 </button>
                             </div>
                             <div className="flex-1 overflow-y-auto px-5 py-5">
                                 {filterContent}
                             </div>
                         </div>
-                    )}
+                    ) : null}
                 </div>
 
-                {/* Main grid */}
                 <div>
-                    <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                        <p className="text-sm text-slate-600">
-                            <span className="font-bold text-slate-950">
+                    <div className="mb-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="apple-body text-slate-2">
+                            <span className="font-semibold text-graphite">
                                 {laptops.total}
                             </span>{' '}
                             laptop refurbished
                         </p>
-                        <label className="flex items-center gap-3 text-sm font-medium text-slate-600">
+                        <label className="flex items-center gap-2 apple-body-sm text-slate-2">
                             Urutkan
                             <div className="relative">
                                 <select
                                     value={sort}
-                                    onChange={(e) => handleSortChange(e.target.value)}
-                                    className="appearance-none rounded-lg border border-slate-200 bg-slate-50 py-2 pr-9 pl-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-600 focus:bg-white"
+                                    onChange={(e) => {
+                                        handleSortChange(e.target.value);
+                                    }}
+                                    className="appearance-none rounded-pill border border-bone bg-paper py-1.5 pr-8 pl-3 apple-body-sm text-graphite transition outline-none focus:border-apple-blue"
                                 >
-                                    <option value="newest">Newest Arrivals</option>
-                                    <option value="price_asc">Harga: Rendah ke Tinggi</option>
-                                    <option value="price_desc">Harga: Tinggi ke Rendah</option>
+                                    <option value="newest">Terbaru</option>
+                                    <option value="price_asc">
+                                        Harga: rendah ke tinggi
+                                    </option>
+                                    <option value="price_desc">
+                                        Harga: tinggi ke rendah
+                                    </option>
                                     <option value="name_asc">Nama A-Z</option>
                                 </select>
-                                <CaretDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" weight="bold" />
+                                <CaretDown
+                                    className="pointer-events-none absolute top-1/2 right-2.5 h-3 w-3 -translate-y-1/2 text-fog"
+                                    weight="bold"
+                                />
                             </div>
                         </label>
                     </div>
 
                     {laptops.data.length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center shadow-sm">
+                        <div className="rounded-card border border-bone bg-paper p-12 text-center">
                             <LaptopIcon
-                                className="mx-auto h-12 w-12 text-slate-300"
+                                className="mx-auto h-10 w-10 text-fog"
                                 weight="duotone"
                             />
-                            <h3 className="mt-4 text-lg font-bold text-slate-950">
-                                Laptop tidak ditemukan
-                            </h3>
-                            <p className="mt-2 text-sm text-slate-500">
-                                Coba ubah kata kunci, merek, RAM, storage, atau harga maksimal.
+                            <p className="mt-4 apple-body text-slate-2">
+                                Laptop tidak ditemukan. Coba ubah kata kunci,
+                                merek, RAM, storage, atau harga maksimal.
                             </p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                             {laptops.data.map((laptop) => {
                                 const image = photoUrl(laptop);
-                                const tags = specTags(laptop);
+
                                 return (
                                     <a
                                         key={laptop.id}
                                         href={`/laptops/${laptop.id}`}
-                                        className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                                        className="group block"
                                     >
-                                        <div className="relative aspect-[4/3] bg-slate-100">
-                                            {image ? (
-                                                <img
-                                                    alt={laptop.name ?? laptop.sku}
-                                                    src={image}
-                                                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                                />
-                                            ) : (
-                                                <div className="flex h-full w-full items-center justify-center text-slate-400">
-                                                    <LaptopIcon
-                                                        className="h-12 w-12"
-                                                        weight="duotone"
+                                        <div className="overflow-hidden rounded-card bg-paper">
+                                            <div className="aspect-[4/3] overflow-hidden bg-bone/40">
+                                                {image ? (
+                                                    <img
+                                                        alt={
+                                                            laptop.name ??
+                                                            laptop.sku
+                                                        }
+                                                        src={image}
+                                                        className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
                                                     />
-                                                </div>
-                                            )}
-                                            <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-blue-600 shadow-sm ring-1 ring-slate-200 backdrop-blur">
-                                                Ready Stock
-                                            </span>
-                                        </div>
-                                        <div className="flex flex-1 flex-col p-5">
-                                            <p className="text-xs font-semibold tracking-[0.12em] text-blue-600 uppercase">
-                                                {laptop.brand}
-                                            </p>
-                                            <h3 className="mt-1.5 line-clamp-2 text-lg font-bold tracking-tight text-slate-950 transition group-hover:text-blue-600">
-                                                {laptop.model}
-                                                {laptop.name ? ` - ${laptop.name}` : ''}
-                                            </h3>
-                                            {tags.length > 0 && (
-                                                <div className="mt-3 flex flex-wrap gap-1.5">
-                                                    {tags.map((tag) => (
-                                                        <span
-                                                            key={tag}
-                                                            className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600"
-                                                        >
-                                                            {tag}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            <div className="mt-auto pt-5">
-                                                {Number(laptop.cost_price ?? 0) >
-                                                    Number(laptop.selling_price ?? 0) && (
-                                                    <p className="text-xs font-medium text-slate-400 line-through">
-                                                        {formatCurrency(laptop.cost_price)}
-                                                    </p>
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center text-fog">
+                                                        <LaptopIcon
+                                                            className="h-10 w-10"
+                                                            weight="duotone"
+                                                        />
+                                                    </div>
                                                 )}
-                                                <p className="text-xl font-bold text-blue-600">
-                                                    {formatCurrency(laptop.selling_price)}
-                                                </p>
-                                                <div className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition group-hover:bg-blue-600">
-                                                    Lihat detail
-                                                    <ArrowRight className="h-4 w-4" weight="bold" />
-                                                </div>
                                             </div>
+                                        </div>
+                                        <div className="pt-4">
+                                            <p className="apple-caption text-fog">
+                                                {brandName(laptop.brand, '')}
+                                            </p>
+                                            <h3 className="mt-1 apple-body font-semibold text-graphite">
+                                                {laptop.model}
+                                                {laptop.name
+                                                    ? ` - ${laptop.name}`
+                                                    : ''}
+                                            </h3>
+                                            <p className="mt-1.5 apple-body text-apple-blue">
+                                                {formatCurrency(
+                                                    laptop.selling_price,
+                                                )}
+                                            </p>
+                                            <span className="mt-3 inline-flex h-7 items-center gap-1.5 rounded-pill bg-button-blue px-3.5 apple-caption text-paper transition group-hover:bg-deep-link-blue">
+                                                Lihat detail
+                                                <ArrowRight
+                                                    className="h-3 w-3"
+                                                    weight="bold"
+                                                />
+                                            </span>
                                         </div>
                                     </a>
                                 );
@@ -496,50 +535,63 @@ export default function LaptopCatalog({
                         </div>
                     )}
 
-                    {laptops.last_page > 1 && (
-                        <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
+                    {laptops.last_page > 1 ? (
+                        <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
                             <a
                                 href={buildCatalogUrl(
                                     Math.max(laptops.current_page - 1, 1),
                                     filters,
                                 )}
                                 aria-label="Halaman sebelumnya"
-                                className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-blue-600"
+                                className="flex h-9 w-9 items-center justify-center rounded-pill text-graphite transition hover:bg-bone/40"
                             >
-                                <ArrowLeft className="h-4 w-4" weight="bold" />
+                                <ArrowLeft
+                                    className="h-3.5 w-3.5"
+                                    weight="bold"
+                                />
                             </a>
-                            {Array.from({ length: laptops.last_page }).map((_, i) => {
-                                const page = i + 1;
-                                if (
-                                    page > 4 &&
-                                    page < laptops.last_page &&
-                                    Math.abs(page - laptops.current_page) > 1
-                                ) {
-                                    if (page === 5)
-                                        return (
-                                            <span
-                                                key={page}
-                                                className="px-2 text-slate-400"
-                                            >
-                                                ...
-                                            </span>
-                                        );
-                                    return null;
-                                }
-                                return (
-                                    <a
-                                        key={page}
-                                        href={buildCatalogUrl(page, filters)}
-                                        className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-semibold transition ${
-                                            page === laptops.current_page
-                                                ? 'bg-blue-600 text-white shadow-sm'
-                                                : 'border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600'
-                                        }`}
-                                    >
-                                        {page}
-                                    </a>
-                                );
-                            })}
+                            {Array.from({ length: laptops.last_page }).map(
+                                (_, i) => {
+                                    const page = i + 1;
+
+                                    if (
+                                        page > 4 &&
+                                        page < laptops.last_page &&
+                                        Math.abs(page - laptops.current_page) >
+                                            1
+                                    ) {
+                                        if (page === 5) {
+                                            return (
+                                                <span
+                                                    key={`ellipsis-${page}`}
+                                                    className="px-2 apple-caption text-fog"
+                                                >
+                                                    ...
+                                                </span>
+                                            );
+                                        }
+
+                                        return null;
+                                    }
+
+                                    return (
+                                        <a
+                                            key={page}
+                                            href={buildCatalogUrl(
+                                                page,
+                                                filters,
+                                            )}
+                                            className={`flex h-9 w-9 items-center justify-center rounded-pill apple-caption transition ${
+                                                page === laptops.current_page
+                                                    ? 'bg-graphite text-paper'
+                                                    : 'text-graphite hover:bg-bone/40'
+                                            }`}
+                                        >
+                                            {page}
+                                        </a>
+                                    );
+                                },
+                            )}
                             <a
                                 href={buildCatalogUrl(
                                     Math.min(
@@ -549,14 +601,32 @@ export default function LaptopCatalog({
                                     filters,
                                 )}
                                 aria-label="Halaman berikutnya"
-                                className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-blue-600"
+                                className="flex h-9 w-9 items-center justify-center rounded-pill text-graphite transition hover:bg-bone/40"
                             >
-                                <ArrowRight className="h-4 w-4" weight="bold" />
+                                <ArrowRight
+                                    className="h-3.5 w-3.5"
+                                    weight="bold"
+                                />
                             </a>
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </section>
         </PublicPage>
+    );
+}
+
+function FilterGroup({
+    title,
+    children,
+}: {
+    title: string;
+    children: React.ReactNode;
+}) {
+    return (
+        <div>
+            <h3 className="apple-caption text-graphite">{title}</h3>
+            <div className="mt-3">{children}</div>
+        </div>
     );
 }

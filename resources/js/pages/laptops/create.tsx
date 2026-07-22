@@ -25,7 +25,10 @@ const textareaClass =
 
 const emptySelectValue = '__pabalu__empty__';
 
-export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) {
+export default function LaptopBuat({
+    brands,
+    sources,
+}: LaptopBuatHalamanProps) {
     const form = useForm({
         name: '',
         brand_id: '',
@@ -55,7 +58,7 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                         <h1 className="text-2xl font-semibold tracking-tight">
                             Tambah Laptop Baru
                         </h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                             Catat unit laptop yang masuk ke inventaris.
                         </p>
                     </div>
@@ -88,11 +91,15 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                             <div className="grid gap-2">
                                 <Label htmlFor="brand_id">Merek</Label>
                                 <Select
-                                    value={form.data.brand_id || emptySelectValue}
+                                    value={
+                                        form.data.brand_id || emptySelectValue
+                                    }
                                     onValueChange={(value) =>
                                         form.setData(
                                             'brand_id',
-                                            value === emptySelectValue ? '' : value,
+                                            value === emptySelectValue
+                                                ? ''
+                                                : value,
                                         )
                                     }
                                 >
@@ -121,7 +128,10 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                     id="model"
                                     value={form.data.model}
                                     onChange={(event) =>
-                                        form.setData('model', event.target.value)
+                                        form.setData(
+                                            'model',
+                                            event.target.value,
+                                        )
                                     }
                                     placeholder="Contoh: ThinkPad X230"
                                 />
@@ -187,7 +197,9 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                         )
                                     }
                                 />
-                                <InputError message={form.errors.purchase_date} />
+                                <InputError
+                                    message={form.errors.purchase_date}
+                                />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="cost_price">
@@ -209,7 +221,9 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                 <InputError message={form.errors.cost_price} />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="selling_price">Harga Jual</Label>
+                                <Label htmlFor="selling_price">
+                                    Harga Jual
+                                </Label>
                                 <Input
                                     id="selling_price"
                                     type="number"
@@ -223,7 +237,9 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                     }
                                     placeholder="0"
                                 />
-                                <InputError message={form.errors.selling_price} />
+                                <InputError
+                                    message={form.errors.selling_price}
+                                />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="repair_cost">Ongkos Jadi</Label>
@@ -240,7 +256,7 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                     }
                                     placeholder="0"
                                 />
-                                <p className="text-xs text-muted-foreground">
+                                <p className="text-muted-foreground text-xs">
                                     Biaya perbaikan / reparasi unit.
                                 </p>
                                 <InputError message={form.errors.repair_cost} />
@@ -254,7 +270,10 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                                     className={textareaClass}
                                     value={form.data.mines}
                                     onChange={(event) =>
-                                        form.setData('mines', event.target.value)
+                                        form.setData(
+                                            'mines',
+                                            event.target.value,
+                                        )
                                     }
                                     placeholder="Catatan mines / cacat unit (jika ada)"
                                 />
@@ -271,16 +290,23 @@ export default function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) 
                             <textarea
                                 id="other_specifications"
                                 className={textareaClass}
-                                value={form.data.specification.other_specifications}
+                                value={
+                                    form.data.specification.other_specifications
+                                }
                                 onChange={(event) =>
                                     form.setData('specification', {
-                                        other_specifications: event.target.value,
+                                        other_specifications:
+                                            event.target.value,
                                     })
                                 }
                                 placeholder="Tulis spesifikasi unit secara bebas. Contoh: Core i5-3210M / 4GB DDR3 / 320GB HDD / 12.5 inch / Windows 10"
                             />
                             <InputError
-                                message={form.errors['specification.other_specifications']}
+                                message={
+                                    form.errors[
+                                        'specification.other_specifications'
+                                    ]
+                                }
                             />
                         </CardContent>
                     </Card>

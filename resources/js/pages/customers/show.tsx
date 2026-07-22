@@ -1,9 +1,15 @@
 import { Head, Link } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import AppLayout from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
 
 type ServiceStatus = {
     id: number | string;
@@ -42,12 +48,18 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
 };
 
 const statusTone: Record<string, string> = {
-    diterima: 'border-status-pending/30 bg-status-pending/10 text-amber-700 dark:text-amber-300',
-    'dicek-teknisi': 'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
-    'dalam-pengerjaan': 'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
-    selesai: 'border-status-completed/30 bg-status-completed/10 text-violet-700 dark:text-violet-300',
-    diambil: 'border-status-available/30 bg-status-available/10 text-emerald-700 dark:text-emerald-300',
-    dibatalkan: 'border-status-error/30 bg-status-error/10 text-red-700 dark:text-red-300',
+    diterima:
+        'border-status-pending/30 bg-status-pending/10 text-amber-700 dark:text-amber-300',
+    'dicek-teknisi':
+        'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
+    'dalam-pengerjaan':
+        'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
+    selesai:
+        'border-status-completed/30 bg-status-completed/10 text-violet-700 dark:text-violet-300',
+    diambil:
+        'border-status-available/30 bg-status-available/10 text-emerald-700 dark:text-emerald-300',
+    dibatalkan:
+        'border-status-error/30 bg-status-error/10 text-red-700 dark:text-red-300',
 };
 
 function StatusBadge({ status }: { status?: ServiceStatus | null }) {
@@ -57,14 +69,29 @@ function StatusBadge({ status }: { status?: ServiceStatus | null }) {
 
     const key = status.slug ?? status.name.toLowerCase().replaceAll(' ', '-');
 
-    return <Badge variant="outline" className={statusTone[key] ?? 'border-muted bg-muted text-muted-foreground'}>{status.name}</Badge>;
+    return (
+        <Badge
+            variant="outline"
+            className={
+                statusTone[key] ?? 'border-muted bg-muted text-muted-foreground'
+            }
+        >
+            {status.name}
+        </Badge>
+    );
 }
 
-function EmptyState({ title, description }: { title: string; description: string }) {
+function EmptyState({
+    title,
+    description,
+}: {
+    title: string;
+    description: string;
+}) {
     return (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center">
-            <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+            <h3 className="text-foreground text-sm font-semibold">{title}</h3>
+            <p className="text-muted-foreground mt-1 text-sm">{description}</p>
         </div>
     );
 }
@@ -72,8 +99,10 @@ function EmptyState({ title, description }: { title: string; description: string
 function DetailRow({ label, value }: { label: string; value?: ReactNode }) {
     return (
         <div className="grid gap-1">
-            <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</dt>
-            <dd className="text-sm text-foreground">{value || '-'}</dd>
+            <dt className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                {label}
+            </dt>
+            <dd className="text-foreground text-sm">{value || '-'}</dd>
         </div>
     );
 }
@@ -83,16 +112,23 @@ function formatTanggal(value?: string | null) {
         return '-';
     }
 
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(new Date(value));
+    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
+        new Date(value),
+    );
 }
 
 function formatCurrency(value?: number | string | null) {
     const amount = Number(value ?? 0);
+
     if (!amount) {
         return '-';
     }
 
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(amount);
 }
 
 function serviceCode(service: Service) {
@@ -108,25 +144,44 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
             <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-2xl font-semibold tracking-tight text-foreground">{pelanggan.name}</h1>
-                        <p className="text-sm text-muted-foreground">{pelanggan.phone} · Bergabung sejak {formatTanggal(pelanggan.created_at)}</p>
+                        <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+                            {pelanggan.name}
+                        </h1>
+                        <p className="text-muted-foreground text-sm">
+                            {pelanggan.phone} · Bergabung sejak{' '}
+                            {formatTanggal(pelanggan.created_at)}
+                        </p>
                     </div>
                     <div className="flex gap-2">
-                        <Button asChild variant="outline"><Link href="/customers">Kembali</Link></Button>
-                        <Button asChild><Link href={`/customers/${pelanggan.id}/edit`}>Edit Pelanggan</Link></Button>
+                        <Button asChild variant="outline">
+                            <Link href="/customers">Kembali</Link>
+                        </Button>
+                        <Button asChild>
+                            <Link href={`/customers/${pelanggan.id}/edit`}>
+                                Edit Pelanggan
+                            </Link>
+                        </Button>
                     </div>
                 </div>
 
                 <Card>
                     <CardHeader>
                         <CardTitle>Detail</CardTitle>
-                        <CardDescription>Kontak and internal pelanggan notes.</CardDescription>
+                        <CardDescription>
+                            Kontak and internal pelanggan notes.
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                             <DetailRow label="Nama" value={pelanggan.name} />
-                            <DetailRow label="Telepon" value={pelanggan.phone} />
-                            <DetailRow label="Alamat" value={pelanggan.address} />
+                            <DetailRow
+                                label="Telepon"
+                                value={pelanggan.phone}
+                            />
+                            <DetailRow
+                                label="Alamat"
+                                value={pelanggan.address}
+                            />
                             <DetailRow label="Catatan" value={pelanggan.note} />
                         </dl>
                     </CardContent>
@@ -135,34 +190,78 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Services History</CardTitle>
-                        <CardDescription>All services recorded for this pelanggan.</CardDescription>
+                        <CardDescription>
+                            All services recorded for this pelanggan.
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
                         {services.length === 0 ? (
-                            <EmptyState title="Tidak service history" description="Service rows will appear once this pelanggan creates a request." />
+                            <EmptyState
+                                title="Tidak service history"
+                                description="Service rows will appear once this pelanggan creates a request."
+                            />
                         ) : (
                             <div className="overflow-hidden rounded-lg border">
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm">
-                                        <thead className="bg-muted/50 text-left text-muted-foreground">
+                                        <thead className="bg-muted/50 text-muted-foreground text-left">
                                             <tr>
-                                                <th className="px-4 py-3 font-medium">Code</th>
-                                                <th className="px-4 py-3 font-medium">Perangkat</th>
-                                                <th className="px-4 py-3 font-medium">Status</th>
-                                                <th className="px-4 py-3 font-medium">Tanggal</th>
-                                                <th className="px-4 py-3 font-medium">Modal</th>
+                                                <th className="px-4 py-3 font-medium">
+                                                    Code
+                                                </th>
+                                                <th className="px-4 py-3 font-medium">
+                                                    Perangkat
+                                                </th>
+                                                <th className="px-4 py-3 font-medium">
+                                                    Status
+                                                </th>
+                                                <th className="px-4 py-3 font-medium">
+                                                    Tanggal
+                                                </th>
+                                                <th className="px-4 py-3 font-medium">
+                                                    Modal
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y">
                                             {services.map((service) => (
-                                                <tr key={service.id} className="transition-colors hover:bg-muted/30">
+                                                <tr
+                                                    key={service.id}
+                                                    className="hover:bg-muted/30 transition-colors"
+                                                >
                                                     <td className="px-4 py-3 font-medium">
-                                                        <Link href={`/services/${service.id}`} className="text-primary hover:underline">{serviceCode(service)}</Link>
+                                                        <Link
+                                                            href={`/services/${service.id}`}
+                                                            className="text-primary hover:underline"
+                                                        >
+                                                            {serviceCode(
+                                                                service,
+                                                            )}
+                                                        </Link>
                                                     </td>
-                                                    <td className="px-4 py-3">{service.device_name ?? '-'}</td>
-                                                    <td className="px-4 py-3"><StatusBadge status={service.status} /></td>
-                                                    <td className="px-4 py-3">{formatTanggal(service.received_date ?? service.created_at)}</td>
-                                                    <td className="px-4 py-3">{formatCurrency(service.final_cost ?? service.estimated_cost)}</td>
+                                                    <td className="px-4 py-3">
+                                                        {service.device_name ??
+                                                            '-'}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <StatusBadge
+                                                            status={
+                                                                service.status
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        {formatTanggal(
+                                                            service.received_date ??
+                                                                service.created_at,
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        {formatCurrency(
+                                                            service.final_cost ??
+                                                                service.estimated_cost,
+                                                        )}
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -177,6 +276,15 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
     );
 };
 
-PelanggansShow.layout = (page) => <AppLayout breadcrumbs={[{ title: 'Pelanggan', href: '/customers' }, { title: 'Pelanggan Detail', href: '#' }]}>{page}</AppLayout>;
+PelanggansShow.layout = (page) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Pelanggan', href: '/customers' },
+            { title: 'Pelanggan Detail', href: '#' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
 
 export default PelanggansShow;

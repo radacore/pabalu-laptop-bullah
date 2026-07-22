@@ -1,5 +1,11 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, MagnifyingGlass, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
+import {
+    ArrowLeft,
+    MagnifyingGlass,
+    PencilSimple,
+    Plus,
+    Trash,
+} from '@phosphor-icons/react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import DeleteDialog from '@/components/shared/delete-dialog';
@@ -16,9 +22,17 @@ interface BrandsIndexProps {
 
 function buildUrl(page: number, search: string | undefined) {
     const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (page > 1) params.set('page', String(page));
+
+    if (search) {
+params.set('search', search);
+}
+
+    if (page > 1) {
+params.set('page', String(page));
+}
+
     const query = params.toString();
+
     return query ? `/master-data/brands?${query}` : '/master-data/brands';
 }
 
@@ -28,15 +42,26 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
 
     function applySearch(value: string) {
         setSearch(value);
-        router.get('/master-data/brands', { search: value || undefined }, { preserveState: true, replace: true });
+        router.get(
+            '/master-data/brands',
+            { search: value || undefined },
+            { preserveState: true, replace: true },
+        );
     }
 
     function goToPage(page: number) {
-        router.get(buildUrl(page, search), {}, { preserveState: true, replace: true });
+        router.get(
+            buildUrl(page, search),
+            {},
+            { preserveState: true, replace: true },
+        );
     }
 
     function handleDelete() {
-        if (!toDelete) return;
+        if (!toDelete) {
+return;
+}
+
         router.delete(`/master-data/brands/${toDelete.id}`, {
             preserveState: true,
             replace: true,
@@ -69,13 +94,15 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
                 <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div className="border-b border-slate-200 p-4 sm:px-6">
                         <div className="relative w-full sm:max-w-sm">
-                            <MagnifyingGlass className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                            <MagnifyingGlass className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
                             <input
                                 type="search"
                                 value={search}
-                                onChange={(event) => applySearch(event.target.value)}
+                                onChange={(event) =>
+                                    applySearch(event.target.value)
+                                }
                                 placeholder="Cari merek..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -108,23 +135,52 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 bg-white">
                                         {brands.data.map((brand) => (
-                                            <tr key={brand.id} className="transition-colors hover:bg-slate-50">
+                                            <tr
+                                                key={brand.id}
+                                                className="transition-colors hover:bg-slate-50"
+                                            >
                                                 <td className="px-6 py-4 text-sm font-medium text-slate-900">
                                                     {brand.name}
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <StatusBadge status={brand.is_active ? 'tersedia' : 'error'} />
+                                                    <StatusBadge
+                                                        status={
+                                                            brand.is_active
+                                                                ? 'tersedia'
+                                                                : 'error'
+                                                        }
+                                                    />
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex items-center justify-end gap-1">
-                                                        <Button asChild variant="success" size="sm">
-                                                            <Link href={`/master-data/brands/${brand.id}/edit`}>
-                                                                <PencilSimple className="mr-1 size-4" weight="bold" />
+                                                        <Button
+                                                            asChild
+                                                            variant="success"
+                                                            size="sm"
+                                                        >
+                                                            <Link
+                                                                href={`/master-data/brands/${brand.id}/edit`}
+                                                            >
+                                                                <PencilSimple
+                                                                    className="mr-1 size-4"
+                                                                    weight="bold"
+                                                                />
                                                                 Edit
                                                             </Link>
                                                         </Button>
-                                                        <Button variant="destructive" size="sm" onClick={() => setToDelete(brand)}>
-                                                            <Trash className="mr-1 size-4" weight="bold" />
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                setToDelete(
+                                                                    brand,
+                                                                )
+                                                            }
+                                                        >
+                                                            <Trash
+                                                                className="mr-1 size-4"
+                                                                weight="bold"
+                                                            />
                                                             Hapus
                                                         </Button>
                                                     </div>
@@ -138,13 +194,29 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
                             {brands.last_page > 1 && (
                                 <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
                                     <div className="text-sm text-slate-700">
-                                        Menampilkan <span className="font-medium">{brands.from ?? 0}</span>-
-                                        <span className="font-medium">{brands.to ?? 0}</span> dari{' '}
-                                        <span className="font-medium">{brands.total}</span> merek
+                                        Menampilkan{' '}
+                                        <span className="font-medium">
+                                            {brands.from ?? 0}
+                                        </span>
+                                        -
+                                        <span className="font-medium">
+                                            {brands.to ?? 0}
+                                        </span>{' '}
+                                        dari{' '}
+                                        <span className="font-medium">
+                                            {brands.total}
+                                        </span>{' '}
+                                        merek
                                     </div>
                                     <nav className="inline-flex -space-x-px rounded-md shadow-sm">
                                         <Link
-                                            href={buildUrl(Math.max(1, brands.current_page - 1), search)}
+                                            href={buildUrl(
+                                                Math.max(
+                                                    1,
+                                                    brands.current_page - 1,
+                                                ),
+                                                search,
+                                            )}
                                             className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                                 brands.current_page <= 1
                                                     ? 'cursor-not-allowed text-slate-300'
@@ -155,12 +227,20 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
                                             Sebelumnya
                                         </Link>
                                         <span className="relative inline-flex items-center border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700">
-                                            {brands.current_page} / {brands.last_page}
+                                            {brands.current_page} /{' '}
+                                            {brands.last_page}
                                         </span>
                                         <Link
-                                            href={buildUrl(Math.min(brands.last_page, brands.current_page + 1), search)}
+                                            href={buildUrl(
+                                                Math.min(
+                                                    brands.last_page,
+                                                    brands.current_page + 1,
+                                                ),
+                                                search,
+                                            )}
                                             className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
-                                                brands.current_page >= brands.last_page
+                                                brands.current_page >=
+                                                brands.last_page
                                                     ? 'cursor-not-allowed text-slate-300'
                                                     : 'text-slate-500 hover:bg-slate-50'
                                             }`}
@@ -177,7 +257,11 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
 
                 <DeleteDialog
                     open={toDelete !== null}
-                    onOpenChange={(open) => { if (!open) setToDelete(null); }}
+                    onOpenChange={(open) => {
+                        if (!open) {
+setToDelete(null);
+}
+                    }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Merek?"
                     description={

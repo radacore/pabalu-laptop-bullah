@@ -5,9 +5,10 @@ import {
     useContext,
     useEffect,
     useRef,
-    useState,
-    type ReactNode,
+    useState
+    
 } from 'react';
+import type {ReactNode} from 'react';
 import type { FlashToast } from '@/types/ui';
 
 type ToastVariant = 'success' | 'update' | 'delete';
@@ -20,24 +21,41 @@ type Toast = {
 };
 
 type ToastContextType = {
-    addToast: (variant: ToastVariant, title: string, description?: string) => void;
+    addToast: (
+        variant: ToastVariant,
+        title: string,
+        description?: string,
+    ) => void;
 };
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
 export function useToast(): ToastContextType {
     const ctx = useContext(ToastContext);
-    if (!ctx) throw new Error('useToast must be used within a <ToastProvider />');
+
+    if (!ctx) {
+throw new Error('useToast must be used within a <ToastProvider />');
+}
+
     return ctx;
 }
 
 function detectVariant(message: string): ToastVariant {
-    if (message.includes('dihapus')) return 'delete';
-    if (message.includes('diperbarui') || message.includes('diedit')) return 'update';
+    if (message.includes('dihapus')) {
+return 'delete';
+}
+
+    if (message.includes('diperbarui') || message.includes('diedit')) {
+return 'update';
+}
+
     return 'success';
 }
 
-const variantConfig: Record<ToastVariant, { border: string; icon: string; iconColor: string }> = {
+const variantConfig: Record<
+    ToastVariant,
+    { border: string; icon: string; iconColor: string }
+> = {
     success: {
         border: 'border-[#009668]',
         icon: 'check_circle',
@@ -61,22 +79,22 @@ const defaultDescriptions: Record<ToastVariant, string> = {
     delete: 'Data telah dihapus dari sistem.',
 };
 
-
-
 function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
     const config = variantConfig[toast.variant];
 
     return (
         <div
-            className={`pointer-events-auto flex gap-3 rounded-lg border-l-4 ${config.border} bg-white p-4 shadow-xl animate-slide-in`}
+            className={`pointer-events-auto flex gap-3 rounded-lg border-l-4 ${config.border} animate-slide-in bg-white p-4 shadow-xl`}
             role="alert"
         >
             <div className={`${config.iconColor} flex items-start pt-0.5`}>
-                <span className="material-symbols-outlined text-[22px]">{config.icon}</span>
+                <span className="material-symbols-outlined text-[22px]">
+                    {config.icon}
+                </span>
             </div>
 
-            <div className="flex-1 min-w-0">
-                <h4 className="text-[15px] font-semibold leading-5 text-[#1b1c1e]">
+            <div className="min-w-0 flex-1">
+                <h4 className="text-[15px] leading-5 font-semibold text-[#1b1c1e]">
                     {toast.title}
                 </h4>
                 {toast.description && (
@@ -89,16 +107,16 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
             <button
                 type="button"
                 onClick={onClose}
-                className="flex items-start pt-0.5 text-[#76777d] hover:text-[#1b1c1e] transition-colors"
+                className="flex items-start pt-0.5 text-[#76777d] transition-colors hover:text-[#1b1c1e]"
                 aria-label="Tutup"
             >
-                <span className="material-symbols-outlined text-[18px]">close</span>
+                <span className="material-symbols-outlined text-[18px]">
+                    close
+                </span>
             </button>
         </div>
     );
 }
-
-
 
 export function ToastProvider({ children }: { children: ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([]);
@@ -122,7 +140,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         return router.on('flash', (event) => {
             const flash = (event as CustomEvent).detail?.flash;
             const data = flash?.toast as FlashToast | undefined;
-            if (!data) return;
+
+            if (!data) {
+return;
+}
 
             const variant = detectVariant(data.message);
 
@@ -139,9 +160,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             {children}
 
             {/* Toast container - fixed bottom-right */}
-            <div className="fixed bottom-6 right-6 z-[9999] flex w-[360px] flex-col gap-3 pointer-events-none">
+            <div className="pointer-events-none fixed right-6 bottom-6 z-[9999] flex w-[360px] flex-col gap-3">
                 {toasts.map((t) => (
-                    <ToastItem key={t.id} toast={t} onClose={() => removeToast(t.id)} />
+                    <ToastItem
+                        key={t.id}
+                        toast={t}
+                        onClose={() => removeToast(t.id)}
+                    />
                 ))}
             </div>
         </ToastContext.Provider>

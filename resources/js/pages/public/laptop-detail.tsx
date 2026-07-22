@@ -1,24 +1,15 @@
-import { Head } from '@inertiajs/react';
 import {
-    ArrowLeft,
-    ArrowRight,
     BatteryFull,
     CaretRight,
-    ChatCircle,
     Cpu,
     HardDrive,
     Laptop as LaptopIcon,
     Monitor,
-    ShoppingCart,
-    Wrench,
 } from '@phosphor-icons/react';
+import type { ComponentType } from 'react';
 import { useState } from 'react';
-import type { ComponentType, ReactNode } from 'react';
-import {
-    PublicPage,
-    formatCurrency,
-} from '@/components/public-layout';
-import type { Laptop as LaptopType, WebsiteSetting } from '@/types';
+import { PublicPage, formatCurrency } from '@/components/public-layout';
+import type { Laptop as LaptopType, MasterData, WebsiteSetting } from '@/types';
 
 type LaptopPhoto = NonNullable<LaptopType['photos']>[number];
 
@@ -40,29 +31,26 @@ function photoPath(photo: LaptopPhoto) {
 
 function laptopPhoto(laptop: LaptopType) {
     const photo = laptop.photos?.[0];
-    if (!photo?.file_path) return null;
+
+    if (!photo?.file_path) {
+        return null;
+    }
+
     return photoPath(photo);
 }
 
-function SpecRow({
-    icon: Icon,
-    label,
-    value,
-}: {
-    icon: ComponentType<{ className?: string; weight?: any }>;
-    label: string;
-    value: string;
-}) {
-    return (
-        <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3">
-            <span className="flex items-center gap-2.5 text-sm font-medium text-slate-600">
-                <Icon className="h-4 w-4 text-blue-600" weight="duotone" />
-                {label}
-            </span>
-            <span className="text-right text-sm font-semibold text-slate-950">{value}</span>
-        </div>
-    );
+function brandName(brand: MasterData | null | undefined, fallback: string) {
+    return brand?.name ?? fallback;
 }
+
+function laptopDisplayName(laptop: LaptopType) {
+    return `${brandName(laptop.brand, '')} ${laptop.model}`.trim();
+}
+
+type SpecIcon = ComponentType<{
+    className?: string;
+    weight?: 'duotone' | 'fill' | 'bold' | 'regular';
+}>;
 
 export default function LaptopDetail({ laptop, related, website }: Props) {
     const galleryImages: GalleryImage[] = (laptop.photos ?? [])
@@ -73,7 +61,7 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             alt:
                 photo.caption ??
                 laptop.name ??
-                `${laptop.brand} ${laptop.model} photo ${index + 1}`,
+                `${laptopDisplayName(laptop)} foto ${index + 1}`,
         }));
     const images =
         galleryImages.length > 0
@@ -82,7 +70,7 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                   {
                       id: 'fallback',
                       src: 'https://picsum.photos/seed/pabalu-laptop-detail/1200/900',
-                      alt: laptop.name ?? `${laptop.brand} ${laptop.model}`,
+                      alt: laptop.name ?? laptopDisplayName(laptop),
                   },
               ];
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
@@ -92,8 +80,23 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
     const waText = encodeURIComponent(
         `Halo, saya tertarik dengan ${laptop.name ?? laptop.sku}. Apakah masih tersedia?`,
     );
-    const waNumber = (website.whatsapp_number ?? '6281234567890').replace(/[^0-9]/g, '');
+    const waNumber = (website.whatsapp_number ?? '6281234567890').replace(
+        /[^0-9]/g,
+        '',
+    );
     const waLink = `https://wa.me/${waNumber}?text=${waText}`;
+
+    const specs: Array<{ icon: SpecIcon; label: string; value: string }> = [
+        { icon: Cpu, label: 'Processor', value: spec?.processor ?? '—' },
+        { icon: HardDrive, label: 'RAM', value: spec?.ram ?? '—' },
+        { icon: HardDrive, label: 'Storage', value: spec?.storage ?? '—' },
+        { icon: Monitor, label: 'Layar', value: spec?.display ?? '—' },
+        {
+            icon: BatteryFull,
+            label: 'Baterai',
+            value: spec?.battery ?? 'Original',
+        },
+    ];
 
     return (
         <PublicPage
@@ -101,233 +104,232 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             title={`${laptop.name ?? laptop.sku} - ${website.website_name}`}
             currentPath="/shop"
         >
-            {/* ─── Breadcrumb ─── */}
-            <section className="border-b border-slate-200 bg-slate-50">
-                <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+            <section className="border-b border-bone bg-cloud">
+                <div className="mx-auto max-w-[980px] px-4 py-3">
                     <nav
-                        className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500"
+                        className="flex flex-wrap items-center gap-1 apple-caption text-fog"
                         aria-label="Breadcrumb"
                     >
-                        <a href="/" className="transition hover:text-blue-600">
-                            Home
+                        <a
+                            href="/"
+                            className="text-apple-blue transition hover:text-deep-link-blue"
+                        >
+                            Beranda
                         </a>
-                        <CaretRight className="h-3.5 w-3.5" weight="bold" aria-hidden="true" />
-                        <a href="/shop" className="transition hover:text-blue-600">
-                            Shop
+                        <CaretRight
+                            className="h-3 w-3"
+                            weight="bold"
+                            aria-hidden="true"
+                        />
+                        <a
+                            href="/shop"
+                            className="text-apple-blue transition hover:text-deep-link-blue"
+                        >
+                            Katalog
                         </a>
-                        <CaretRight className="h-3.5 w-3.5" weight="bold" aria-hidden="true" />
-                        <span className="font-medium text-slate-900">{laptop.brand}</span>
+                        <CaretRight
+                            className="h-3 w-3"
+                            weight="bold"
+                            aria-hidden="true"
+                        />
+                        <span className="text-graphite">
+                            {brandName(laptop.brand, laptop.model)}
+                        </span>
                     </nav>
                 </div>
             </section>
 
-            {/* ─── Product Section ─── */}
-            <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-10 lg:px-8 lg:py-14">
-                {/* Gallery */}
-                <div className="lg:col-span-7">
-                    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                        <img
-                            alt={selectedImage.alt}
-                            src={selectedImage.src}
-                            className="aspect-[4/3] w-full object-cover"
-                        />
-                    </div>
-                    {images.length > 1 && (
-                        <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
-                            {images.map((photo, index) => (
-                                <button
-                                    key={photo.id}
-                                    type="button"
-                                    onClick={() => setSelectedPhotoIndex(index)}
-                                    className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border bg-white transition ${
-                                        index === selectedPhotoIndex
-                                            ? 'border-blue-600 shadow-sm'
-                                            : 'border-slate-200 opacity-70 hover:opacity-100'
-                                    }`}
-                                >
-                                    <img
-                                        alt={photo.alt}
-                                        src={photo.src}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </button>
-                            ))}
+            <section className="bg-paper py-12 md:py-20">
+                <div className="mx-auto max-w-[980px] px-4">
+                    <div className="grid gap-10 md:grid-cols-2 md:gap-16">
+                        <div>
+                            <div className="overflow-hidden rounded-card bg-cloud">
+                                <img
+                                    alt={selectedImage.alt}
+                                    src={selectedImage.src}
+                                    className="aspect-[4/3] w-full object-cover"
+                                />
+                            </div>
+                            {images.length > 1 ? (
+                                <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                                    {images.map((photo, index) => (
+                                        <button
+                                            key={photo.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setSelectedPhotoIndex(index);
+                                            }}
+                                            className={`h-16 w-16 shrink-0 overflow-hidden rounded-card transition ${
+                                                index === selectedPhotoIndex
+                                                    ? 'ring-2 ring-graphite'
+                                                    : 'opacity-60 hover:opacity-100'
+                                            }`}
+                                        >
+                                            <img
+                                                alt={photo.alt}
+                                                src={photo.src}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            ) : null}
                         </div>
-                    )}
-                </div>
 
-                {/* Product Info */}
-                <div className="mt-8 lg:col-span-5 lg:mt-0">
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold tracking-[0.12em] text-blue-600 uppercase">
-                            Ready Stock
-                        </span>
+                        <div>
+                            <h1 className="apple-heading-lg text-graphite">
+                                {laptopDisplayName(laptop)}
+                            </h1>
+                            {laptop.name ? (
+                                <p className="mt-2 apple-body-lg text-slate-2">
+                                    {laptop.name}
+                                </p>
+                            ) : null}
 
-                        <h1 className="mt-4 text-2xl leading-tight font-bold tracking-tight text-slate-950 sm:text-3xl">
-                            {laptop.brand} {laptop.model}
-                            {laptop.name ? ` (${laptop.name})` : ''}
-                        </h1>
+                            <p className="mt-6 apple-display text-graphite">
+                                {formatCurrency(laptop.selling_price)}
+                            </p>
 
-                        <p className="mt-4 text-3xl font-bold text-blue-600">
-                            {formatCurrency(laptop.selling_price)}
-                        </p>
+                            <p className="mt-6 apple-body text-slate-2">
+                                Unit sudah dicek fungsi utama, dibersihkan, dan
+                                siap dikonsultasikan sebelum pembelian.
+                            </p>
 
-                        <p className="mt-4 text-sm leading-7 text-slate-600">
-                            Unit telah dicek fungsi utama, dibersihkan, dan siap dikonsultasikan sebelum pembelian.
-                        </p>
-
-                        <div className="mt-6 border-t border-slate-200 pt-6">
-                            <h2 className="text-xs font-semibold tracking-[0.14em] text-slate-500 uppercase">
-                                Spesifikasi Detail
-                            </h2>
-                            <div className="mt-4 space-y-2">
-                                <SpecRow icon={Cpu} label="Processor" value={spec?.processor ?? '-'} />
-                                <SpecRow icon={HardDrive} label="RAM" value={spec?.ram ?? '-'} />
-                                <SpecRow icon={HardDrive} label="Storage" value={spec?.storage ?? '-'} />
-                                <SpecRow icon={Monitor} label="Layar" value={spec?.display ?? '-'} />
-                                <SpecRow icon={BatteryFull} label="Baterai" value={spec?.battery ?? 'Original'} />
+                            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                                <a
+                                    href={waLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex h-9 items-center justify-center rounded-pill bg-button-blue px-5 apple-body text-paper transition hover:bg-deep-link-blue"
+                                >
+                                    Beli sekarang
+                                </a>
+                                <a
+                                    href={waLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex h-9 items-center justify-center rounded-pill border border-apple-blue bg-transparent px-5 apple-body text-apple-blue transition hover:border-deep-link-blue hover:text-deep-link-blue"
+                                >
+                                    Tanya lewat WhatsApp
+                                </a>
                             </div>
                         </div>
-
-                        <div className="mt-6 grid gap-3">
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 active:scale-[0.98]"
-                            >
-                                <ShoppingCart className="h-5 w-5" weight="duotone" />
-                                Beli Sekarang
-                            </a>
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
-                            >
-                                <ChatCircle className="h-5 w-5" weight="duotone" />
-                                Tanya Lewat WhatsApp
-                            </a>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* ─── Description ─── */}
-            <section className="border-y border-slate-200 bg-slate-50">
-                <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-950">
-                        Detail unit dan benefit pembelian
-                    </h2>
-                    <div className="mt-6 text-sm leading-8 text-slate-700">
-                        <p>
-                            Dijual <strong>{laptop.brand} {laptop.model}</strong> dengan kondisi siap pakai.
-                            Produk telah melewati inspeksi teknis oleh tim {website.website_name} untuk
-                            memastikan hardware utama berfungsi normal.
-                        </p>
-                        {laptop.description && (
-                            <p className="mt-4 whitespace-pre-line">{laptop.description}</p>
-                        )}
-                        {spec?.other_specifications && (
-                            <p className="mt-4 whitespace-pre-line">{spec.other_specifications}</p>
-                        )}
-                    </div>
+            <section className="border-t border-bone bg-cloud py-16 md:py-20">
+                <div className="mx-auto max-w-[640px] px-4">
+                    <h2 className="apple-heading text-graphite">Spesifikasi</h2>
+                    <dl className="mt-7 space-y-3">
+                        {specs.map((item) => {
+                            const Icon = item.icon;
 
-                    <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                        <BenefitItem>
-                            Garansi toko dan dukungan pengecekan awal.
-                        </BenefitItem>
-                        <BenefitItem>
-                            Sistem siap digunakan sesuai kondisi unit.
-                        </BenefitItem>
-                        <BenefitItem>
-                            Konsultasi pembelian melalui WhatsApp sebelum transaksi.
-                        </BenefitItem>
-                    </div>
+                            return (
+                                <div
+                                    key={item.label}
+                                    className="flex items-baseline gap-3 border-b border-bone pb-3"
+                                >
+                                    <Icon
+                                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-fog"
+                                        weight="duotone"
+                                        aria-hidden="true"
+                                    />
+                                    <dt className="apple-body-sm text-slate-2">
+                                        {item.label}
+                                    </dt>
+                                    <dd className="ml-auto text-right apple-body text-graphite">
+                                        {item.value}
+                                    </dd>
+                                </div>
+                            );
+                        })}
+                    </dl>
                 </div>
             </section>
 
-            {/* ─── Related Products ─── */}
-            {related.length > 0 && (
-                <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <h2 className="text-2xl font-bold tracking-tight text-slate-950">
-                                Pilihan lain yang serupa
-                            </h2>
+            {laptop.description || spec?.other_specifications ? (
+                <section className="bg-paper py-16 md:py-20">
+                    <div className="mx-auto max-w-[640px] px-4">
+                        <h2 className="apple-heading text-graphite">
+                            Detail unit
+                        </h2>
+                        <div className="mt-6 space-y-4 apple-body text-slate-2">
+                            {laptop.description ? (
+                                <p className="whitespace-pre-line">
+                                    {laptop.description}
+                                </p>
+                            ) : null}
+                            {spec?.other_specifications ? (
+                                <p className="whitespace-pre-line">
+                                    {spec.other_specifications}
+                                </p>
+                            ) : null}
                         </div>
-                        <a
-                            href="/shop"
-                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
-                        >
-                            Lihat Semua
-                            <ArrowRight className="h-4 w-4" weight="bold" />
-                        </a>
-                    </div>
-                    <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-                        {related.map((item) => (
-                            <RelatedCard key={item.id} laptop={item} />
-                        ))}
                     </div>
                 </section>
-            )}
-        </PublicPage>
-    );
-}
+            ) : null}
 
-function BenefitItem({ children }: { children: ReactNode }) {
-    return (
-        <div className="flex gap-3 rounded-xl bg-white border border-slate-200 p-4 shadow-sm">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-            <span className="text-sm leading-6 text-slate-700">{children}</span>
-        </div>
+            {related.length > 0 ? (
+                <section className="border-t border-bone bg-cloud py-16 md:py-20">
+                    <div className="mx-auto max-w-[980px] px-4">
+                        <div className="mb-10 text-center">
+                            <h2 className="apple-heading text-graphite">
+                                Pilihan lain yang serupa
+                            </h2>
+                            <a
+                                href="/shop"
+                                className="mt-3 inline-block apple-body text-apple-blue transition hover:text-deep-link-blue"
+                            >
+                                Lihat semua →
+                            </a>
+                        </div>
+                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+                            {related.map((item) => (
+                                <RelatedCard key={item.id} laptop={item} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            ) : null}
+        </PublicPage>
     );
 }
 
 function RelatedCard({ laptop }: { laptop: LaptopType }) {
     const image = laptopPhoto(laptop);
+
     return (
-        <a
-            href={`/laptops/${laptop.id}`}
-            className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-        >
-            <div className="aspect-[4/3] bg-slate-100">
-                {image ? (
-                    <img
-                        alt={laptop.name ?? laptop.sku}
-                        src={image}
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="flex h-full w-full items-center justify-center text-slate-400">
-                        <LaptopIcon className="h-12 w-12" weight="duotone" aria-hidden="true" />
-                    </div>
-                )}
+        <a href={`/laptops/${laptop.id}`} className="group block">
+            <div className="overflow-hidden rounded-card bg-paper">
+                <div className="aspect-[4/3] overflow-hidden bg-bone/40">
+                    {image ? (
+                        <img
+                            alt={laptop.name ?? laptop.sku}
+                            src={image}
+                            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-fog">
+                            <LaptopIcon
+                                className="h-10 w-10"
+                                weight="duotone"
+                                aria-hidden="true"
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
-            <div className="p-5">
-                <p className="text-xs font-semibold tracking-[0.12em] text-blue-600 uppercase">
-                    {laptop.brand}
+            <div className="pt-3">
+                <p className="apple-caption text-fog">
+                    {brandName(laptop.brand, '')}
                 </p>
-                <h3 className="mt-1.5 truncate text-lg font-bold tracking-tight text-slate-950">
+                <h3 className="mt-1 apple-body font-semibold text-graphite">
                     {laptop.model}
                 </h3>
-                <p className="mt-2 text-xs text-slate-500">
-                    {laptop.specification?.ram ?? '-'} | {laptop.specification?.storage ?? '-'}
+                <p className="mt-2 apple-body-sm text-apple-blue">
+                    {formatCurrency(laptop.selling_price)}
                 </p>
-                <div className="mt-4 flex items-center justify-between gap-4">
-                    <span className="text-lg font-bold text-blue-600">
-                        {formatCurrency(laptop.selling_price)}
-                    </span>
-                    <ArrowRight
-                        className="h-5 w-5 text-slate-400 transition group-hover:translate-x-1 group-hover:text-blue-600"
-                        weight="bold"
-                        aria-hidden="true"
-                    />
-                </div>
             </div>
         </a>
     );

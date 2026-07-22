@@ -59,7 +59,9 @@ const SparepartTypesEdit = ({ sparepartType }: SparepartTypesEditProps) => {
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: RAM, SSD, Keyboard"
                             />
                             <InputError message={form.errors.name} />
@@ -69,7 +71,9 @@ const SparepartTypesEdit = ({ sparepartType }: SparepartTypesEditProps) => {
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -80,7 +84,12 @@ const SparepartTypesEdit = ({ sparepartType }: SparepartTypesEditProps) => {
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang tipe sparepart ini (opsional)"
                             />
                             <InputError message={form.errors.description} />
@@ -89,7 +98,9 @@ const SparepartTypesEdit = ({ sparepartType }: SparepartTypesEditProps) => {
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" asChild>
-                            <Link href="/master-data/sparepart-types">Batal</Link>
+                            <Link href="/master-data/sparepart-types">
+                                Batal
+                            </Link>
                         </Button>
                         <Button type="submit" disabled={form.processing}>
                             <FloppyDisk className="mr-2 size-4" weight="bold" />

@@ -59,7 +59,9 @@ const BrandsEdit = ({ brand }: BrandsEditProps) => {
                             <Input
                                 id="name"
                                 value={form.data.name}
-                                onChange={(event) => form.setData('name', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData('name', event.target.value)
+                                }
                                 placeholder="Contoh: Dell, Lenovo, Asus"
                             />
                             <InputError message={form.errors.name} />
@@ -69,7 +71,9 @@ const BrandsEdit = ({ brand }: BrandsEditProps) => {
                             <Switch
                                 id="is_active"
                                 checked={form.data.is_active}
-                                onCheckedChange={(checked: boolean) => form.setData('is_active', checked)}
+                                onCheckedChange={(checked: boolean) =>
+                                    form.setData('is_active', checked)
+                                }
                             />
                             <Label htmlFor="is_active">Aktif</Label>
                         </div>
@@ -80,7 +84,12 @@ const BrandsEdit = ({ brand }: BrandsEditProps) => {
                                 id="description"
                                 className={textareaClass}
                                 value={form.data.description}
-                                onChange={(event) => form.setData('description', event.target.value)}
+                                onChange={(event) =>
+                                    form.setData(
+                                        'description',
+                                        event.target.value,
+                                    )
+                                }
                                 placeholder="Deskripsi singkat tentang merek ini (opsional)"
                             />
                             <InputError message={form.errors.description} />

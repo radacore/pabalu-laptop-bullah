@@ -1,13 +1,13 @@
 import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
-import FinancialTransactionForm from './form-fields';
-import { dashboard } from '@/routes';
 import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
 import type {
     FinancialTransaction,
     PaymentMethod,
     TransactionCategory,
 } from '@/types';
+import FinancialTransactionForm from './form-fields';
 
 interface Props {
     transaction: FinancialTransaction;
@@ -33,15 +33,15 @@ function EditFinancialTransaction({
 
             <div className="flex flex-col gap-6 p-8">
                 <div>
-                    <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                    <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
                         Edit {transaction.transaction_code}
                     </h2>
-                    <p className="text-slate-500 mt-1.5 text-sm">
+                    <p className="mt-1.5 text-sm text-slate-500">
                         Perbarui data transaksi {transaction.transaction_code}.
                     </p>
                 </div>
 
-                <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                     <FinancialTransactionForm
                         categories={categories}
                         paymentMethods={payment_methods}

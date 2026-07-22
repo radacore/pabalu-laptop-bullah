@@ -62,7 +62,7 @@ export default function DataTable<RowData extends object>({
     const canGoNext = pagination.current_page < pagination.last_page;
 
     return (
-        <Card className="overflow-hidden py-0 rounded-xl shadow-low">
+        <Card className="overflow-hidden rounded-xl py-0 shadow-low">
             {onSearch && (
                 <div className="border-b border-[#e2e8f0] px-4 py-4 sm:px-6">
                     <SearchInput
@@ -83,7 +83,7 @@ export default function DataTable<RowData extends object>({
                                         key={column.key}
                                         scope="col"
                                         className={cn(
-                                            'label-md h-11 px-4 text-left align-middle font-medium whitespace-nowrap sm:px-6 text-on-surface-variant border-b border-outline-variant',
+                                            'h-11 border-b border-outline-variant px-4 text-left align-middle label-md font-medium whitespace-nowrap text-on-surface-variant sm:px-6',
                                         )}
                                     >
                                         {column.label}
@@ -103,7 +103,8 @@ export default function DataTable<RowData extends object>({
                                             key={rowId ?? rowIndex}
                                             className={cn(
                                                 'border-b border-[#e2e8f0] transition-colors last:border-0',
-                                                rowIndex % 2 === 1 && 'bg-[#f8fafc]',
+                                                rowIndex % 2 === 1 &&
+                                                    'bg-[#f8fafc]',
                                             )}
                                         >
                                             {columns.map((column) => {
@@ -118,7 +119,9 @@ export default function DataTable<RowData extends object>({
                                                         className="px-4 py-3 align-middle whitespace-nowrap sm:px-6"
                                                     >
                                                         {column.render
-                                                            ? column.render(item)
+                                                            ? column.render(
+                                                                  item,
+                                                              )
                                                             : (cellValue as ReactNode)}
                                                     </td>
                                                 );
@@ -144,7 +147,8 @@ export default function DataTable<RowData extends object>({
             {pagination.last_page > 1 && (
                 <CardFooter className="flex items-center justify-between border-t border-[#e2e8f0] px-4 py-3 sm:px-6">
                     <p className="text-sm text-on-surface-variant">
-                        Menampilkan {pagination.from ?? 0}–{pagination.to ?? 0} dari {pagination.total}
+                        Menampilkan {pagination.from ?? 0}–{pagination.to ?? 0}{' '}
+                        dari {pagination.total}
                     </p>
 
                     <div className="flex items-center gap-1">
@@ -152,17 +156,23 @@ export default function DataTable<RowData extends object>({
                             variant="secondary"
                             size="sm"
                             disabled={!canGoPrev}
-                            onClick={() => onPageChange?.(pagination.current_page - 1)}
+                            onClick={() =>
+                                onPageChange?.(pagination.current_page - 1)
+                            }
                         >
                             Sebelumnya
                         </Button>
 
                         {visiblePages.map((page, index) => {
                             const prevPage = visiblePages[index - 1];
-                            const showGap = prevPage != null && page - prevPage > 1;
+                            const showGap =
+                                prevPage != null && page - prevPage > 1;
 
                             return (
-                                <span key={page} className="flex items-center gap-1">
+                                <span
+                                    key={page}
+                                    className="flex items-center gap-1"
+                                >
                                     {showGap && (
                                         <span className="px-1 text-sm text-on-surface-variant">
                                             ...
@@ -188,7 +198,9 @@ export default function DataTable<RowData extends object>({
                             variant="secondary"
                             size="sm"
                             disabled={!canGoNext}
-                            onClick={() => onPageChange?.(pagination.current_page + 1)}
+                            onClick={() =>
+                                onPageChange?.(pagination.current_page + 1)
+                            }
                         >
                             Selanjutnya
                         </Button>
