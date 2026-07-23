@@ -12,6 +12,7 @@ import {
     Star,
     Wrench,
 } from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
 import { PublicPage, formatCurrency } from '@/components/public-layout';
 import type { Laptop, MasterData, WebsiteSetting } from '@/types';
 
@@ -132,7 +133,54 @@ function laptopHeroImage(laptops: Laptop[]): string | null {
     return null;
 }
 
-export default function Welcome({ laptops, testimonials, website }: Props) {
+export default function Welcome({ laptops, testimonials: incomingTestimonials, website }: Props) {
+    const dummyTestimonials: TestimonialItem[] = [
+        {
+            id: 1001, name: 'Ahmad Fauzi', role: 'Mahasiswa',
+            content: 'Laptop yang saya beli sesuai deskripsi, tidak ada hidden issue. Proses cepat dan ramah.',
+            rating: 5,
+        },
+        {
+            id: 1002, name: 'Sari Dewi', role: 'Freelancer',
+            content: 'Servisnya sigap. LCD laptop saya diganti dalam sehari, harganya juga wajar. Recomended!',
+            rating: 5,
+        },
+        {
+            id: 1003, name: 'Bambang Sutejo', role: 'Karyawan',
+            content: 'Baru pertama beli laptop bekas dan puas. Kondisi fisik sangat baik, baterai masih awet.',
+            rating: 4,
+        },
+        {
+            id: 1004, name: 'Rina Marlina', role: 'Designer',
+            content: 'Upgrade RAM dan SSD di sini. Hasilnya beda banget, laptop saya jadi ngebut lagi.',
+            rating: 5,
+        },
+        {
+            id: 1005, name: 'Doni Prasetyo', role: 'Gamer',
+            content: 'Keyboard laptop saya rusak, mereka ganti dengan part original. Rapi dan cepat.',
+            rating: 4,
+        },
+        {
+            id: 1006, name: 'Fitri Handayani', role: 'Pelajar',
+            content: 'Konsultasi lewat WhatsApp dulu sebelum ke toko. Timnya responsif dan nggak maksa.',
+            rating: 5,
+        },
+        {
+            id: 1007, name: 'Agus Wijaya', role: 'Wirausaha',
+            content: 'Sudah 3 kali servis di sini. Hasilnya konsisten rapi. Recomended buat teman-teman.',
+            rating: 5,
+        },
+        {
+            id: 1008, name: 'Putri Ayu', role: 'Admin',
+            content: 'Tracking servis online-nya membantu banget. Saya bisa pantau tanpa harus datang.',
+            rating: 4,
+        },
+    ];
+
+    const testimonials = incomingTestimonials.length >= 8
+        ? incomingTestimonials.slice(0, 8)
+        : [...incomingTestimonials, ...dummyTestimonials].slice(0, 8);
+
     const whatsappNumber = (website.whatsapp_number ?? '').replace(/[^0-9]/g, '');
     const whatsappHref = `https://wa.me/${whatsappNumber}`;
     const phoneHref = `tel:${website.phone ?? website.whatsapp_number ?? ''}`;
@@ -352,40 +400,21 @@ export default function Welcome({ laptops, testimonials, website }: Props) {
                 </div>
             </section>
 
-            {/* ─── Testimonials — cyan-tinted band ─── */}
-            {testimonials.length > 0 ? (
-                <section className="bg-accent-2/5">
-                    <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
-                        <div className="mb-12">
-                            <p className="hum-caption text-accent-2">
-                                Testimoni
-                            </p>
-                            <h2 className="mt-3 hum-heading-lg text-ink">
-                                Dipercaya untuk
-                                <br className="hidden sm:block" />
-                                kebutuhan harian
-                            </h2>
-                        </div>
+            {/* ─── Testimonials — alternating band ─── */}
+            {testimonials.length > 0 ? (() => {
+                const pageSize = 4;
+                const totalPages = Math.ceil(testimonials.length / pageSize);
+                const pages = Array.from({ length: totalPages }, (_, p) =>
+                    testimonials.slice(p * pageSize, (p + 1) * pageSize),
+                );
 
-                        <div className="space-y-4">
-                            {testimonials.slice(0, 3).map((testimonial) => {
-                                const rating = Math.max(
-                                    1,
-                                    Math.min(5, Number(testimonial.rating) || 5),
-                                );
-
-                                return (
-                                    <TestimonialQuote
-                                        key={testimonial.id}
-                                        testimonial={testimonial}
-                                        rating={rating}
-                                    />
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-            ) : null}
+                return (
+                    <TestimonialsCarousel
+                        pages={pages}
+                        totalPages={totalPages}
+                    />
+                );
+            })() : null}
 
             {/* ─── Contact — coral-tinted accent ─── */}
             <section id="contact" className="scroll-mt-16 bg-paper">
@@ -536,41 +565,150 @@ function LaptopCard({ laptop, index }: { laptop: Laptop; index: number }) {
     );
 }
 
-function TestimonialQuote({
-    testimonial,
-    rating,
+const CARD_TINTS = [
+    'bg-accent/8',
+    'bg-accent-2/8',
+    'bg-accent-3/8',
+    'bg-mint/8',
+] as const;
+
+const STAR_TINTS = [
+    'text-accent',
+    'text-accent-2',
+    'text-accent-3',
+    'text-mint',
+] as const;
+
+function TestimonialsCarousel({
+    pages,
+    totalPages,
 }: {
-    testimonial: TestimonialItem;
-    rating: number;
+    pages: TestimonialItem[][];
+    totalPages: number;
 }) {
+    const [page, setPage] = useState(0);
+    const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    useEffect(() => {
+        if (totalPages > 1) {
+            timer.current = setInterval(() => {
+                setPage((p) => (p + 1) % totalPages);
+            }, 5000);
+        }
+
+        return () => {
+            if (timer.current !== null) {
+                clearInterval(timer.current);
+            }
+        };
+    }, [totalPages]);
+
+    // goTo = useCallback — not used directly; dots use setPage
     return (
-        <figure className="hum-card rounded-[18px] p-6 md:p-8">
-            <div
-                className="flex gap-0.5 text-accent"
-                role="img"
-                aria-label={`${rating} dari 5`}
-            >
-                {[1, 2, 3, 4, 5].map((position) =>
-                    position <= rating ? (
-                        <Star
-                            key={`${testimonial.id}-${position}`}
-                            className="h-3.5 w-3.5"
-                            weight="fill"
-                        />
-                    ) : null,
-                )}
+        <section className="bg-surface">
+            <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
+                <div className="mb-12">
+                    <div className="flex items-center gap-2.5">
+                        <span className="hum-char inline-block h-2.5 w-2.5 rounded-full bg-accent-2" />
+                        <p className="hum-caption text-accent-2">
+                            Testimoni
+                        </p>
+                    </div>
+                    <h2 className="mt-3 hum-heading-lg text-ink">
+                        Dipercaya untuk
+                        <br className="hidden sm:block" />
+                        kebutuhan harian
+                    </h2>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2">
+                    {pages[page].map((testimonial, i) => {
+                        const rating = Math.max(
+                            1,
+                            Math.min(5, Number(testimonial.rating) || 5),
+                        );
+                        const idx = (page * 4 + i) % 4;
+                        const t = CARD_TINTS[idx];
+                        const s = STAR_TINTS[idx];
+
+                        return (
+                            <figure
+                                key={testimonial.id}
+                                className={`${t} relative rounded-[20px] border border-rule/60 bg-paper p-6 shadow-card md:p-8`}
+                            >
+                                <span
+                                    className={`pointer-events-none absolute -top-4 -left-1 font-serif text-[5rem] leading-none select-none ${s}`}
+                                    aria-hidden="true"
+                                >
+                                    &ldquo;
+                                </span>
+                                <div
+                                    className={`flex gap-0.5 ${s}`}
+                                    role="img"
+                                    aria-label={`${rating} dari 5`}
+                                >
+                                    {[1, 2, 3, 4, 5].map((position) =>
+                                        position <= rating ? (
+                                            <Star
+                                                key={`${testimonial.id}-${position}`}
+                                                className="h-3.5 w-3.5"
+                                                weight="fill"
+                                            />
+                                        ) : null,
+                                    )}
+                                </div>
+                                <blockquote className="relative mt-4 hum-body text-ink">
+                                    {testimonial.content}
+                                </blockquote>
+                                <figcaption className="mt-4 flex items-center gap-2.5 border-t border-rule/50 pt-4">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-paper-2 text-sm font-semibold text-ink">
+                                        {testimonial.name.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <span className="hum-body-sm font-semibold text-ink">
+                                            {testimonial.name}
+                                        </span>
+                                        <span className="ml-1.5 hum-caption text-ink-2/60">
+                                            {testimonial.role ?? 'Pelanggan'}
+                                        </span>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        );
+                    })}
+                </div>
+
+                {totalPages > 1 && (() => {
+                    const navigationDots = Array.from(
+                        { length: totalPages },
+                        (_x, dotIndex) => dotIndex,
+                    );
+
+                    return (
+                        <nav
+                            className="mt-10 flex items-center justify-center gap-2"
+                            aria-label="Navigasi testimoni"
+                        >
+                            {navigationDots.map((dotIndex) => (
+                                <button
+                                    key={`dot-${dotIndex}`}
+                                    type="button"
+                                    onClick={() => setPage(dotIndex)}
+                                    className={`h-2 rounded-full transition-all duration-500 ${
+                                        dotIndex === page
+                                            ? 'w-6 bg-accent-2'
+                                            : 'w-2 bg-rule hover:bg-ink-2/30'
+                                    }`}
+                                    aria-label={`Halaman ${dotIndex + 1}`}
+                                    aria-current={
+                                        dotIndex === page ? 'true' : undefined
+                                    }
+                                />
+                            ))}
+                        </nav>
+                    );
+                })()}
             </div>
-            <blockquote className="mt-4 max-w-2xl hum-body-lg text-ink">
-                &ldquo;{testimonial.content}&rdquo;
-            </blockquote>
-            <figcaption className="mt-4 flex items-center gap-3">
-                <span className="hum-body-sm font-semibold text-ink">
-                    {testimonial.name}
-                </span>
-                <span className="hum-caption text-ink-2/60">
-                    {testimonial.role ?? 'Pelanggan'}
-                </span>
-            </figcaption>
-        </figure>
+        </section>
     );
 }
