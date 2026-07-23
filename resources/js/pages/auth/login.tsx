@@ -1,16 +1,14 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import {
     ArrowRight,
     ChartLineUp,
-    House,
     Laptop,
     EnvelopeSimple,
-    ShieldCheck,
     Wrench,
 } from '@phosphor-icons/react';
+
 import InputError from '@/components/shared/input-error';
 import PasswordInput from '@/components/shared/password-input';
-import { Button } from '@/components/ui/button';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
@@ -24,150 +22,115 @@ export default function Login({ status, canResetPassword }: Props) {
         <>
             <Head title="Masuk" />
 
-            <div className="flex min-h-screen bg-slate-50">
+            <div className="flex min-h-screen bg-paper">
                 {/* Left Panel - Brand & Features */}
-                <aside className="relative hidden flex-col justify-between overflow-hidden bg-slate-900 p-10 text-white lg:flex lg:w-1/2 lg:p-14">
-                    {/* Subtle gradient background */}
+                <aside className="relative hidden flex-col overflow-hidden bg-surface lg:flex lg:w-1/2 lg:px-14 lg:py-14">
+                    {/* Subtle accent gradient */}
                     <div
                         aria-hidden
-                        className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-slate-900"
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/8 via-transparent to-paper-2"
                     />
 
-                    {/* Logo */}
+                    {/* Logo — fixed at top-left */}
                     <div className="relative flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-500/30">
-                            <Laptop
-                                className="h-6 w-6 text-white"
-                                weight="fill"
-                            />
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-accent-ink shadow-[0_4px_0_0_var(--color-accent-deep),0_6px_12px_-3px_oklch(76%_0.20_95/0.35)]">
+                            <Laptop className="h-6 w-6" weight="fill" />
                         </div>
                         <div>
-                            <p className="text-lg font-bold tracking-tight">
-                                Pabalu Admin
+                            <p className="hum-body-sm font-bold text-ink">
+                                Pabalu Laptop
                             </p>
-                            <p className="text-xs text-slate-400">
+                            <p className="hum-caption text-ink-2/60">
                                 Portal Manajemen Internal
                             </p>
                         </div>
                     </div>
 
-                    {/* Main Content */}
-                    <div className="relative space-y-10">
-                        <div>
-                            <h1 className="text-3xl leading-tight font-bold tracking-tight text-balance lg:text-4xl">
-                                Kelola bisnis laptop Anda dengan{' '}
-                                <span className="text-blue-400">
-                                    percaya diri
-                                </span>
-                                .
-                            </h1>
-                            <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400 lg:text-base">
-                                Pantau inventaris, lacak servis, dan kelola
-                                transaksi keuangan dalam satu platform terpadu.
-                            </p>
-                        </div>
+                    {/* Content — centered vertically */}
+                    <div className="flex flex-1 flex-col justify-center">
+                        <div className="space-y-10">
+                            <div>
+                                <h1 className="hum-display text-ink">
+                                    Kelola bisnis laptop Anda dengan{' '}
+                                    <span className="text-accent-deep">
+                                        percaya diri
+                                    </span>
+                                    .
+                                </h1>
+                                <p className="mt-4 max-w-md hum-body text-ink-2">
+                                    Pantau inventaris, lacak servis, dan kelola
+                                    transaksi keuangan dalam satu platform terpadu.
+                                </p>
+                            </div>
 
-                        {/* Feature List */}
-                        <ul className="space-y-4">
+                            {/* Feature List */}
+                            <ul className="space-y-4">
                             <li className="flex items-start gap-4">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 ring-1 ring-slate-700">
-                                    <Laptop
-                                        className="h-5 w-5 text-blue-400"
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper-2 ring-1 ring-rule">
+                                                <Laptop
+                                        className="h-5 w-5 text-accent-deep"
                                         weight="duotone"
                                     />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-semibold">
+                                    <p className="hum-body-sm font-semibold text-ink">
                                         Manajemen Inventaris
                                     </p>
-                                    <p className="mt-0.5 text-sm text-slate-400">
+                                    <p className="mt-0.5 hum-body-sm text-ink-2">
                                         Stok laptop baru dan bekas dengan foto,
                                         spesifikasi, dan status real-time.
                                     </p>
                                 </div>
                             </li>
                             <li className="flex items-start gap-4">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 ring-1 ring-slate-700">
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper-2 ring-1 ring-rule">
                                     <Wrench
-                                        className="h-5 w-5 text-blue-400"
+                                        className="h-5 w-5 text-accent-deep"
                                         weight="duotone"
                                     />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-semibold">
+                                    <p className="hum-body-sm font-semibold text-ink">
                                         Layanan Servis
                                     </p>
-                                    <p className="mt-0.5 text-sm text-slate-400">
+                                    <p className="mt-0.5 hum-body-sm text-ink-2">
                                         Tiket servis, sparepart, dan timeline
                                         update untuk setiap pelanggan.
                                     </p>
                                 </div>
                             </li>
                             <li className="flex items-start gap-4">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 ring-1 ring-slate-700">
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper-2 ring-1 ring-rule">
                                     <ChartLineUp
-                                        className="h-5 w-5 text-blue-400"
+                                        className="h-5 w-5 text-accent-deep"
                                         weight="duotone"
                                     />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-semibold">
+                                    <p className="hum-body-sm font-semibold text-ink">
                                         Pencatatan Keuangan
                                     </p>
-                                    <p className="mt-0.5 text-sm text-slate-400">
+                                    <p className="mt-0.5 hum-body-sm text-ink-2">
                                         Pemasukan, pengeluaran, dan laporan
                                         laba-rugi otomatis.
                                     </p>
                                 </div>
                             </li>
                         </ul>
-                    </div>
-
-                    {/* Security Badge */}
-                    <div className="relative flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800/50 p-4 backdrop-blur-sm">
-                        <ShieldCheck
-                            className="h-5 w-5 shrink-0 text-emerald-400"
-                            weight="duotone"
-                        />
-                        <p className="text-xs leading-relaxed text-slate-400">
-                            Akses aman untuk personel yang berwenang. Semua
-                            aktivitas dipantau dan dienkripsi.
-                        </p>
+                        </div>
                     </div>
                 </aside>
 
                 {/* Right Panel - Login Form */}
                 <main className="flex w-full flex-col p-6 lg:w-1/2 lg:p-10 xl:p-12">
-                    {/* Top Bar */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 lg:hidden">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600">
-                                <Laptop
-                                    className="h-5 w-5 text-white"
-                                    weight="fill"
-                                />
-                            </div>
-                            <span className="text-sm font-bold tracking-tight text-slate-900">
-                                Pabalu Admin
-                            </span>
-                        </div>
-                        <a
-                            href="/"
-                            className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 transition-colors hover:text-blue-700"
-                        >
-                            <House className="h-4 w-4" weight="duotone" />
-                            Beranda
-                        </a>
-                    </div>
-
                     {/* Login Form */}
                     <div className="flex flex-1 items-center justify-center py-10">
                         <div className="w-full max-w-sm">
                             <header className="mb-8">
-                                <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+                                <h2 className="hum-heading text-ink">
                                     Selamat datang kembali
                                 </h2>
-                                <p className="mt-2 text-sm text-slate-600">
+                                <p className="mt-2 hum-body text-ink-2">
                                     Masuk untuk mengakses dashboard admin Anda.
                                 </p>
                             </header>
@@ -180,7 +143,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                 {({ processing, errors }) => (
                                     <>
                                         {status && (
-                                            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                                            <div className="rounded-xl border border-mint/50 bg-mint/15 px-4 py-3 hum-body-sm font-medium text-ink">
                                                 {status}
                                             </div>
                                         )}
@@ -189,13 +152,13 @@ export default function Login({ status, canResetPassword }: Props) {
                                         <div className="space-y-1.5">
                                             <label
                                                 htmlFor="email"
-                                                className="text-xs font-semibold tracking-wider text-slate-700 uppercase"
+                                                className="hum-caption text-ink-2"
                                             >
                                                 Alamat Email
                                             </label>
                                             <div className="relative">
                                                 <EnvelopeSimple
-                                                    className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400"
+                                                    className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-ink-2/50"
                                                     weight="duotone"
                                                 />
                                                 <input
@@ -207,7 +170,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                     tabIndex={1}
                                                     autoComplete="email"
                                                     placeholder="admin@pabalu.com"
-                                                    className="h-11 w-full rounded-lg border border-slate-300 bg-white pr-3 pl-10 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none"
+                                                    className="h-11 w-full rounded-[--radius-input] border border-rule bg-paper pl-10 pr-3 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
                                                 />
                                             </div>
                                             <InputError
@@ -220,18 +183,18 @@ export default function Login({ status, canResetPassword }: Props) {
                                             <div className="flex items-center justify-between">
                                                 <label
                                                     htmlFor="password"
-                                                    className="text-xs font-semibold tracking-wider text-slate-700 uppercase"
+                                                    className="hum-caption text-ink-2"
                                                 >
                                                     Kata Sandi
                                                 </label>
                                                 {canResetPassword && (
-                                                    <a
+                                                    <Link
                                                         href={request().url}
                                                         tabIndex={5}
-                                                        className="text-xs font-semibold tracking-wider text-blue-600 hover:text-blue-700 hover:underline"
+                                                        className="hum-caption text-accent-2 hover:text-accent-2-deep hover:underline"
                                                     >
                                                         Lupa?
-                                                    </a>
+                                                    </Link>
                                                 )}
                                             </div>
                                             <PasswordInput
@@ -241,7 +204,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={2}
                                                 autoComplete="current-password"
                                                 placeholder="••••••••"
-                                                className="h-11 rounded-lg border border-slate-300 bg-white pr-10 pl-3 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none"
+                                                className="h-11 rounded-[--radius-input] border border-rule bg-paper pl-3 pr-10 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
                                             />
                                             <InputError
                                                 message={errors.password}
@@ -255,19 +218,19 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 name="remember"
                                                 type="checkbox"
                                                 tabIndex={3}
-                                                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-1"
+                                                className="h-4 w-4 rounded border-rule text-accent-deep transition-colors focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-paper"
                                             />
-                                            <span className="text-sm text-slate-600">
+                                            <span className="hum-body-sm text-ink-2">
                                                 Ingat saya di perangkat ini
                                             </span>
                                         </label>
 
                                         {/* Submit Button */}
-                                        <Button
+                                        <button
                                             type="submit"
                                             disabled={processing}
                                             tabIndex={4}
-                                            className="h-11 w-full rounded-lg bg-blue-600 text-sm font-semibold tracking-wider text-white uppercase shadow-sm transition-all hover:bg-blue-700 hover:shadow-md disabled:opacity-60"
+                                            className="hum-btn hum-btn--yellow !h-11 w-full"
                                         >
                                             {processing ? (
                                                 <span>Memproses...</span>
@@ -280,7 +243,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                     />
                                                 </>
                                             )}
-                                        </Button>
+                                        </button>
                                     </>
                                 )}
                             </Form>
