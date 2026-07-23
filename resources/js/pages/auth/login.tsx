@@ -32,7 +32,7 @@ export default function Login({ status, canResetPassword }: Props) {
                     />
 
                     {/* Logo — fixed at top-left */}
-                    <div className="relative flex items-center gap-3">
+                    <Link href="/" className="relative flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent text-accent-ink shadow-[0_4px_0_0_var(--color-accent-deep),0_6px_12px_-3px_oklch(76%_0.20_95/0.35)]">
                             <Laptop className="h-6 w-6" weight="fill" />
                         </div>
@@ -44,7 +44,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                 Portal Manajemen Internal
                             </p>
                         </div>
-                    </div>
+                    </Link>
 
                     {/* Content — centered vertically */}
                     <div className="flex flex-1 flex-col justify-center">
