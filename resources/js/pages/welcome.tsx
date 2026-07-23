@@ -332,7 +332,7 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
             </div>
 
             {/* ─── Laptop showcase — pear-tinted band ─── */}
-            <section className="bg-surface">
+            <section className="bg-paper-2">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-12">
                         <p className="hum-caption text-accent-deep">Katalog</p>
@@ -689,7 +689,7 @@ function TestimonialsCarousel({
 
     // goTo = useCallback — not used directly; dots use setPage
     return (
-        <section className="bg-surface">
+        <section className="bg-paper-2">
             <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                 <div className="mb-12">
                     <p className="hum-caption text-accent-2">

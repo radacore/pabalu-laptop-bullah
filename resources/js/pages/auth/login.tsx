@@ -24,7 +24,7 @@ export default function Login({ status, canResetPassword }: Props) {
 
             <div className="flex min-h-screen bg-paper">
                 {/* Left Panel - Brand & Features */}
-                <aside className="relative hidden flex-col overflow-hidden bg-surface lg:flex lg:w-1/2 lg:px-14 lg:py-14">
+                <aside className="relative hidden flex-col overflow-hidden bg-paper-2 lg:flex lg:w-1/2 lg:px-14 lg:py-14">
                     {/* Subtle accent gradient */}
                     <div
                         aria-hidden
