@@ -346,7 +346,7 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                     </div>
 
                     {laptops.length > 0 ? (
-                        <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3">
                             {laptops.slice(0, 6).map((laptop, index) => (
                                 <LaptopCard key={laptop.id} laptop={laptop} index={index} />
                             ))}
