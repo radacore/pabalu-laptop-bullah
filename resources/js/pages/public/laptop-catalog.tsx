@@ -481,10 +481,12 @@ export default function LaptopCatalog({
                                             <p className="hum-caption text-ink-2/60">
                                                 {brandName(laptop.brand, '')}
                                             </p>
-                                            <h3 className="mt-1 hum-body font-semibold text-ink">
-                                                {laptop.model}
-                                                {laptop.name ? ` - ${laptop.name}` : ''}
-                                            </h3>
+                                            <div className="mt-1 min-h-[3rem]">
+                                                <h3 className="line-clamp-2 hum-body font-semibold text-ink">
+                                                    {laptop.model}
+                                                    {laptop.name ? ` - ${laptop.name}` : ''}
+                                                </h3>
+                                            </div>
                                             <p className="mt-1.5 hum-body text-accent">
                                                 {formatCurrency(laptop.selling_price)}
                                             </p>
