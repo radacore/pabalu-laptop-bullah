@@ -200,7 +200,6 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
 
     const whatsappNumber = (website.whatsapp_number ?? '').replace(/[^0-9]/g, '');
     const whatsappHref = `https://wa.me/${whatsappNumber}`;
-    const phoneHref = `tel:${website.phone ?? website.whatsapp_number ?? ''}`;
     const heroImage = laptopHeroImage(laptops);
     const heroLaptop = laptops[0];
 
@@ -508,82 +507,88 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                         </p>
                     </div>
 
-                    <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
-                        {website.address ? (
-                            <div className="hum-card hum-card--pear-tint p-6">
-                                <MapPin
-                                    className="h-5 w-5 text-accent-deep"
-                                    weight="duotone"
-                                    aria-hidden="true"
-                                />
-                                <p className="mt-4 hum-caption text-ink-2/60">
-                                    Alamat
-                                </p>
-                                <p className="mt-1.5 hum-body text-ink">
-                                    {website.address}
-                                </p>
+                    <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr]">
+                        <div>
+                            <div className="grid gap-4">
+                                {website.address ? (
+                                    <div className="hum-card hum-card--pear-tint p-6 flex items-start gap-4">
+                                        <MapPin
+                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent-deep"
+                                            weight="duotone"
+                                            aria-hidden="true"
+                                        />
+                                        <div>
+                                            <p className="hum-caption text-ink-2/60">
+                                                Alamat
+                                            </p>
+                                            <p className="mt-1 hum-body text-ink">
+                                                {website.address}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ) : null}
+                                {(website.operational_hours_weekday ||
+                                    website.operational_hours_weekend) && (
+                                    <div className="hum-card hum-card--cyan-tint p-6 flex items-start gap-4">
+                                        <Wrench
+                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent-2"
+                                            weight="duotone"
+                                            aria-hidden="true"
+                                        />
+                                        <div>
+                                            <p className="hum-caption text-ink-2/60">
+                                                Jam operasional
+                                            </p>
+                                            <p className="mt-1 hum-body text-ink">
+                                                {[
+                                                    website.operational_hours_weekday,
+                                                    website.operational_hours_weekend,
+                                                ]
+                                                    .filter(Boolean)
+                                                    .join(' / ')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                {website.phone ? (
+                                    <div className="hum-card hum-card--coral-tint p-6 flex items-start gap-4">
+                                        <Phone
+                                            className="mt-0.5 h-5 w-5 shrink-0 text-accent-3"
+                                            weight="duotone"
+                                            aria-hidden="true"
+                                        />
+                                        <div>
+                                            <p className="hum-caption text-ink-2/60">
+                                                Telepon
+                                            </p>
+                                            <p className="mt-1 hum-body text-ink">
+                                                {website.phone}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ) : null}
                             </div>
-                        ) : null}
-                        {(website.operational_hours_weekday ||
-                            website.operational_hours_weekend) && (
-                            <div className="hum-card hum-card--cyan-tint p-6">
-                                <Wrench
-                                    className="h-5 w-5 text-accent-2"
-                                    weight="duotone"
-                                    aria-hidden="true"
-                                />
-                                <p className="mt-4 hum-caption text-ink-2/60">
-                                    Jam operasional
-                                </p>
-                                <p className="mt-1.5 hum-body text-ink">
-                                    {[
-                                        website.operational_hours_weekday,
-                                        website.operational_hours_weekend,
-                                    ]
-                                        .filter(Boolean)
-                                        .join(' / ')}
-                                </p>
-                            </div>
-                        )}
-                        {website.phone ? (
-                            <div className="hum-card hum-card--coral-tint p-6">
-                                <Phone
-                                    className="h-5 w-5 text-accent-3"
-                                    weight="duotone"
-                                    aria-hidden="true"
-                                />
-                                <p className="mt-4 hum-caption text-ink-2/60">
-                                    Telepon
-                                </p>
-                                <p className="mt-1.5 hum-body text-ink">
-                                    {website.phone}
-                                </p>
-                            </div>
-                        ) : null}
-                    </div>
 
-                    <div className="mt-8 flex flex-wrap gap-3">
-                        <a href={whatsappHref} className="hum-btn hum-btn--pear">
-                            <ChatCircle className="h-4 w-4" weight="duotone" />
-                            WhatsApp
-                        </a>
-                        <a href={phoneHref} className="hum-btn hum-btn--outline">
-                            <Phone className="h-4 w-4" weight="duotone" />
-                            Telepon
-                        </a>
-                    </div>
-
-                    {website.google_maps_embed ? (
-                        <div className="mt-10 overflow-hidden rounded-[20px] shadow-card">
-                            <iframe
-                                src={website.google_maps_embed}
-                                title="Lokasi workshop"
-                                className="h-[400px] w-full"
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
-                            />
+                            <div className="mt-8">
+                                <a href={whatsappHref} className="hum-btn hum-btn--pear">
+                                    <ChatCircle className="h-4 w-4" weight="duotone" />
+                                    WhatsApp
+                                </a>
+                            </div>
                         </div>
-                    ) : null}
+
+                        {website.google_maps_embed ? (
+                            <div className="overflow-hidden rounded-[20px] shadow-card md:self-start">
+                                <iframe
+                                    src={website.google_maps_embed}
+                                    title="Lokasi workshop"
+                                    className="h-[400px] w-full"
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                />
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
             </section>
         </PublicPage>
