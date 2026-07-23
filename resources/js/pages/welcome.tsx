@@ -565,6 +565,13 @@ function LaptopCard({ laptop, index }: { laptop: Laptop; index: number }) {
     );
 }
 
+const ENTRANCE_DELAYS = [
+    'delay-0',
+    'delay-75',
+    'delay-150',
+    'delay-200',
+] as const;
+
 const CARD_TINTS = [
     'bg-accent/8',
     'bg-accent-2/8',
@@ -621,7 +628,7 @@ function TestimonialsCarousel({
                     </h2>
                 </div>
 
-                <div className="grid gap-5 md:grid-cols-2">
+                <div key={page} className="grid gap-5 md:grid-cols-2">
                     {pages[page].map((testimonial, i) => {
                         const rating = Math.max(
                             1,
@@ -630,11 +637,12 @@ function TestimonialsCarousel({
                         const idx = (page * 4 + i) % 4;
                         const t = CARD_TINTS[idx];
                         const s = STAR_TINTS[idx];
+                        const d = ENTRANCE_DELAYS[i];
 
                         return (
                             <figure
                                 key={testimonial.id}
-                                className={`${t} relative rounded-[20px] border border-rule/60 bg-paper p-6 shadow-card md:p-8`}
+                                className={`animate-in fade-in slide-in-from-bottom-4 animation-duration-300 fill-mode-backwards ${d} ${t} relative rounded-[20px] border border-rule/60 bg-paper p-6 shadow-card md:p-8`}
                             >
                                 <span
                                     className={`pointer-events-none absolute -top-4 -left-1 font-serif text-[5rem] leading-none select-none ${s}`}
