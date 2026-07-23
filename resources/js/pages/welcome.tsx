@@ -1,24 +1,35 @@
 /* Hallmark · genre: playful · macrostructure: bento-grid · theme: hum */
 
 import {
+    AppleLogo,
     ArrowRight,
     ChatCircle,
     CheckCircle,
     Cpu,
-    DeviceMobile,
-    Headphones,
-    Keyboard,
     Laptop as LaptopIcon,
     MapPin,
-    Monitor,
-    Mouse,
     Phone,
     ShieldCheck,
     Star,
-    Usb,
     Wrench,
 } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
+import {
+    DellIcon,
+    HpIcon,
+    LenovoIcon,
+    IntelIcon,
+    NvidiaIcon,
+    AmdIcon,
+    RazerIcon,
+    CorsairIcon,
+    KingstonIcon,
+    SeagateIcon,
+    AsusIcon,
+    AcerIcon,
+    SamsungIcon,
+    MsiIcon,
+} from '@/components/brand-icons';
 import { PublicPage, formatCurrency } from '@/components/public-layout';
 import type { Laptop, MasterData, WebsiteSetting } from '@/types';
 
@@ -266,19 +277,20 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                 </div>
             </section>
 
-            {/* ─── Separator — SVG wave + floating tech icons ─── */}
+            {/* ─── Separator — SVG wave + floating tech & brand icons ─── */}
             <div className="bg-paper">
-                <div className="relative mx-auto max-w-[980px] px-5 py-8 md:py-10">
+                <div className="relative py-8 md:py-10">
                     <svg
                         className="h-12 w-full text-rule/40 sm:h-16"
-                        viewBox="0 0 980 64"
+                        viewBox="0 0 1400 64"
+                        preserveAspectRatio="none"
                         xmlns="http://www.w3.org/2000/svg"
                         role="img"
                         aria-label="Teknologi"
                     >
                         <title>Teknologi</title>
                         <path
-                            d="M 0,32 C 50,16 100,16 150,32 C 200,48 250,48 300,32 C 350,16 400,16 450,32 C 500,48 550,48 600,32 C 650,16 700,16 750,32 C 800,48 850,48 900,32 C 950,16 980,16 980,32"
+                            d="M 0,32 C 70,16 140,16 210,32 C 280,48 350,48 420,32 C 490,16 560,16 630,32 C 700,48 770,48 840,32 C 910,16 980,16 1050,32 C 1120,48 1190,48 1260,32 C 1330,16 1400,16 1400,32"
                             stroke="currentColor"
                             strokeWidth="1.5"
                             fill="none"
@@ -287,21 +299,30 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                     </svg>
 
                     {[
-                        { icon: LaptopIcon, left: '4%', top: '36%', color: 'text-accent', delay: 0 },
-                        { icon: Keyboard,  left: '17%', top: '24%', color: 'text-accent-2', delay: 400 },
-                        { icon: Mouse,     left: '31%', top: '62%', color: 'text-accent-3', delay: 800 },
-                        { icon: Monitor,   left: '44%', top: '66%', color: 'text-mint', delay: 1200 },
-                        { icon: Cpu,       left: '56%', top: '34%', color: 'text-accent', delay: 1600 },
-                        { icon: Headphones,left: '68%', top: '22%', color: 'text-accent-2', delay: 2000 },
-                        { icon: Usb,       left: '81%', top: '64%', color: 'text-accent-3', delay: 2400 },
-                        { icon: DeviceMobile,left: '94%', top:'46%', color: 'text-mint', delay: 2800 },
-                    ].map(({ icon: Icon, left, top, color, delay }) => (
+                        { icon: DellIcon,     left: '3%',   top: '56%', color: '#007DB8', delay: 0,     size: 24 },
+                        { icon: AppleLogo,    left: '9%',   top: '30%', color: '#555555', delay: 300,   size: 24 },
+                        { icon: HpIcon,       left: '15%',  top: '60%', color: '#0096D6', delay: 600,   size: 24 },
+                        { icon: LenovoIcon,   left: '21%',  top: '32%', color: '#E2231A', delay: 900,   size: 40 },
+                        { icon: IntelIcon,    left: '27%',  top: '56%', color: '#0071C5', delay: 200,   size: 36 },
+                        { icon: NvidiaIcon,   left: '33%',  top: '28%', color: '#76B900', delay: 500,   size: 24 },
+                        { icon: AmdIcon,      left: '39%',  top: '62%', color: '#ED1C24', delay: 800,   size: 48 },
+                        { icon: RazerIcon,    left: '45%',  top: '30%', color: '#44D62C', delay: 1100,  size: 24 },
+                        { icon: CorsairIcon,  left: '51%',  top: '58%', color: '#231F20', delay: 400,   size: 24 },
+                        { icon: KingstonIcon, left: '57%',  top: '32%', color: '#000000', delay: 700,   size: 24 },
+                        { icon: SeagateIcon,  left: '63%',  top: '60%', color: '#6EBE49', delay: 1000,  size: 24 },
+                        { icon: AsusIcon,     left: '69%',  top: '26%', color: '#000000', delay: 200,   size: 50 },
+                        { icon: AcerIcon,     left: '75%',  top: '60%', color: '#83B81A', delay: 500,   size: 46 },
+                        { icon: SamsungIcon,  left: '81%',  top: '34%', color: '#1428A0', delay: 800,   size: 62 },
+                        { icon: MsiIcon,      left: '88%',  top: '60%', color: '#FF0000', delay: 1100,  size: 24 },
+                    ].map(({ icon: Icon, left, top, color, delay, size }) => (
                         <span
                             key={left}
-                            className={`absolute ${color} text-[18px] sm:text-[22px]`}
+                            className="absolute"
                             style={{
                                 left,
                                 top,
+                                fontSize: `${size}px`,
+                                color,
                                 animationName: 'hum-float',
                                 animationDuration: '3s',
                                 animationTimingFunction: 'ease-in-out',
