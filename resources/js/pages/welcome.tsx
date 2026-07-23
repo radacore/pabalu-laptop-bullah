@@ -5,11 +5,17 @@ import {
     ChatCircle,
     CheckCircle,
     Cpu,
+    DeviceMobile,
+    Headphones,
+    Keyboard,
     Laptop as LaptopIcon,
     MapPin,
+    Monitor,
+    Mouse,
     Phone,
     ShieldCheck,
     Star,
+    Usb,
     Wrench,
 } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
@@ -260,8 +266,57 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                 </div>
             </section>
 
+            {/* ─── Separator — SVG wave + floating tech icons ─── */}
+            <div className="bg-paper">
+                <div className="relative mx-auto max-w-[980px] px-5 py-8 md:py-10">
+                    <svg
+                        className="h-12 w-full text-rule/40 sm:h-16"
+                        viewBox="0 0 980 64"
+                        xmlns="http://www.w3.org/2000/svg"
+                        role="img"
+                        aria-label="Teknologi"
+                    >
+                        <title>Teknologi</title>
+                        <path
+                            d="M 0,32 C 50,16 100,16 150,32 C 200,48 250,48 300,32 C 350,16 400,16 450,32 C 500,48 550,48 600,32 C 650,16 700,16 750,32 C 800,48 850,48 900,32 C 950,16 980,16 980,32"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            fill="none"
+                            strokeLinecap="round"
+                        />
+                    </svg>
+
+                    {[
+                        { icon: LaptopIcon, left: '4%', top: '36%', color: 'text-accent', delay: 0 },
+                        { icon: Keyboard,  left: '17%', top: '24%', color: 'text-accent-2', delay: 400 },
+                        { icon: Mouse,     left: '31%', top: '62%', color: 'text-accent-3', delay: 800 },
+                        { icon: Monitor,   left: '44%', top: '66%', color: 'text-mint', delay: 1200 },
+                        { icon: Cpu,       left: '56%', top: '34%', color: 'text-accent', delay: 1600 },
+                        { icon: Headphones,left: '68%', top: '22%', color: 'text-accent-2', delay: 2000 },
+                        { icon: Usb,       left: '81%', top: '64%', color: 'text-accent-3', delay: 2400 },
+                        { icon: DeviceMobile,left: '94%', top:'46%', color: 'text-mint', delay: 2800 },
+                    ].map(({ icon: Icon, left, top, color, delay }) => (
+                        <span
+                            key={left}
+                            className={`absolute ${color} text-[18px] sm:text-[22px]`}
+                            style={{
+                                left,
+                                top,
+                                animationName: 'hum-float',
+                                animationDuration: '3s',
+                                animationTimingFunction: 'ease-in-out',
+                                animationIterationCount: 'infinite',
+                                animationDelay: `${delay}ms`,
+                            }}
+                        >
+                            <Icon weight="fill" />
+                        </span>
+                    ))}
+                </div>
+            </div>
+
             {/* ─── Laptop showcase — pear-tinted band ─── */}
-            <section className="bg-paper">
+            <section className="bg-surface">
                 <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                     <div className="mb-12">
                         <p className="hum-caption text-accent-deep">Katalog</p>

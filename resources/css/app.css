@@ -699,6 +699,17 @@
     50% { transform: scale(1.04); }
 }
 
+/* Hum icon float animation for separator */
+@keyframes hum-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes hum-wave-draw {
+    from { stroke-dashoffset: 1000; }
+    to   { stroke-dashoffset: 0; }
+}
+
 /* ─── Floating navbar ─── */
 .public-header {
     position: sticky;
