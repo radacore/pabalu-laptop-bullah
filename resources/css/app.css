@@ -580,6 +580,16 @@
 .hum-btn--coral:hover {
     box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast);
 }
+.hum-btn--yellow {
+    background: oklch(82% 0.16 85);
+    color: oklch(25% 0.06 85);
+    --btn-edge: oklch(68% 0.16 85);
+    --btn-cast: oklch(82% 0.16 85 / 0.45);
+    box-shadow: 0 4px 0 0 var(--btn-edge), 0 6px 12px -3px var(--btn-cast);
+}
+.hum-btn--yellow:hover {
+    box-shadow: 0 6px 0 0 var(--btn-edge), 0 12px 22px -4px var(--btn-cast);
+}
 .hum-btn--cyan {
     background: var(--color-accent-2);
     color: #ffffff;
@@ -686,4 +696,41 @@
 @keyframes hum-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.04); }
+}
+
+/* ─── Floating navbar ─── */
+.public-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 0;
+    background: var(--color-paper);
+    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.public-header[data-scrolled] {
+    padding: 10px 12px;
+    background: transparent;
+}
+.public-header__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 980px;
+    height: 52px;
+    margin: 0 auto;
+    padding: 0 20px;
+    background: var(--color-paper);
+    border-radius: 0;
+    border: 1px solid oklch(88% 0.012 95 / 0);
+    box-shadow: 0 4px 20px oklch(20% 0.012 250 / 0);
+    transition: border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.public-header[data-scrolled] .public-header__bar {
+    border-radius: 16px;
+    border-color: oklch(88% 0.012 95 / 0.5);
+    box-shadow: 0 4px 20px oklch(20% 0.012 250 / 0.12);
 }

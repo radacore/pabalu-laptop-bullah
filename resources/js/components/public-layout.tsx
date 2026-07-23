@@ -7,6 +7,7 @@ import {
     YoutubeLogo,
 } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import type { WebsiteSetting } from '@/types';
 
 /* ─── Currency ─── */
@@ -90,9 +91,21 @@ export function PublicHeader({
     website: WebsiteSetting;
     currentPath?: string;
 }) {
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
     return (
-        <header className="sticky top-0 z-50 bg-paper/90 shadow-[0_1px_3px_oklch(20%_0.012_250/0.06)] backdrop-blur-md">
-            <div className="mx-auto flex h-14 max-w-[980px] items-center justify-between px-4">
+        <header
+            data-scrolled={scrolled || undefined}
+            className="public-header"
+        >
+            <div className="public-header__bar">
                 <Link
                     href="/"
                     className="flex items-center gap-2.5 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
@@ -132,15 +145,9 @@ export function PublicHeader({
                 <div className="flex items-center gap-2">
                     <Link
                         href="/login"
-                        className="hidden hum-body-sm text-ink-2 transition hover:text-ink sm:inline"
+                        className="hum-btn hum-btn--yellow !px-4 !py-1.5 !text-xs"
                     >
                         Login
-                    </Link>
-                    <Link
-                        href="/shop"
-                        className="hum-btn hum-btn--pear !px-4 !py-1.5 !text-xs"
-                    >
-                        Beli
                     </Link>
                 </div>
             </div>
@@ -258,11 +265,13 @@ export function PublicPage({
     children: ReactNode;
 }) {
     return (
-        <div className="min-h-screen overflow-x-hidden bg-paper text-ink">
-            <Head title={title} />
+        <>
             <PublicHeader website={website} currentPath={currentPath} />
-            <main className="bg-paper">{children}</main>
-            <PublicFooter website={website} />
-        </div>
+            <div className="min-h-screen overflow-x-hidden bg-paper text-ink">
+                <Head title={title} />
+                <main className="bg-paper">{children}</main>
+                <PublicFooter website={website} />
+            </div>
+        </>
     );
 }
