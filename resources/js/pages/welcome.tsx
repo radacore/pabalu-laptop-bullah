@@ -213,13 +213,13 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
                 <div className="mx-auto grid max-w-[980px] items-center gap-10 px-5 py-16 md:grid-cols-[1fr_1.1fr] md:py-24">
                     <div>
                         <h1 className="hum-display text-ink">
-                            Laptop bersih,
+                            Pusat laptop bekas &
                             <br />
-                            <span className="hum-hl">jelas</span>, siap dipakai.
+                            servis <span className="hum-hl">terpercaya</span>.
                         </h1>
                         <p className="mt-5 max-w-md hum-body-lg text-ink-2">
                             {website.tagline ??
-                                'Temukan laptop bekas terkurasi, konsultasikan servis, dan pantau progres pengerjaan dari satu tempat yang mudah dipakai.'}
+                                'Mulai dari pilih unit, servis, sampai selesai — semuanya bisa dipantau dari sini.'}
                         </p>
                         <div className="mt-8 flex flex-wrap gap-2.5">
                             <a href="/shop" className="hum-btn hum-btn--pear !px-4 !py-2 !text-sm">

@@ -13,7 +13,7 @@ class WebsiteSettingSeeder extends Seeder
             ['id' => 1],
             [
                 'website_name' => 'Pabalu Laptop',
-                'tagline' => 'Solusi Terpercaya untuk Laptop Anda',
+                'tagline' => 'Mulai dari pilih unit, servis, sampai selesai — semuanya bisa dipantau dari sini.',
                 'address' => 'Jl. Sudirman No. 45, Jakarta Pusat',
                 'whatsapp_number' => '6281234567890',
                 'phone' => '(021) 555-0123',
