@@ -47,6 +47,7 @@ function formatShortPrice(value: number) {
     if (value >= 1_000_000) {
         return `Rp ${Math.round(value / 1_000_000)}jt`;
     }
+
     return formatCurrency(value);
 }
 
@@ -56,22 +57,49 @@ function brandName(brand: MasterData | null | undefined, fallback: string) {
 
 function photoUrl(laptop: Laptop) {
     const photo = laptop.photos?.[0];
-    if (!photo?.file_path) return null;
+
+    if (!photo?.file_path) {
+return null;
+}
+
     return `/storage/${photo.file_path}`;
 }
 
 function buildCatalogUrl(page: number, filters: CatalogFilters) {
     const params = new URLSearchParams();
-    if (filters.search) params.set('search', filters.search);
+
+    if (filters.search) {
+params.set('search', filters.search);
+}
+
     if (filters.brands) {
-        for (const b of filters.brands) params.append('brands[]', b);
+        for (const b of filters.brands) {
+params.append('brands[]', b);
+}
     }
-    if (filters.ram) params.set('ram', filters.ram);
-    if (filters.storage) params.set('storage', filters.storage);
-    if (filters.max_price) params.set('max_price', String(filters.max_price));
-    if (filters.sort && filters.sort !== 'newest') params.set('sort', filters.sort);
-    if (page > 1) params.set('page', String(page));
+
+    if (filters.ram) {
+params.set('ram', filters.ram);
+}
+
+    if (filters.storage) {
+params.set('storage', filters.storage);
+}
+
+    if (filters.max_price) {
+params.set('max_price', String(filters.max_price));
+}
+
+    if (filters.sort && filters.sort !== 'newest') {
+params.set('sort', filters.sort);
+}
+
+    if (page > 1) {
+params.set('page', String(page));
+}
+
     const query = params.toString();
+
     return query ? `/shop?${query}` : '/shop';
 }
 
@@ -179,6 +207,7 @@ export default function LaptopCatalog({
                     <div className="space-y-2.5">
                         {filter_options.brands.map((brand) => {
                             const active = brands.includes(brand);
+
                             return (
                                 <label
                                     key={brand}
@@ -423,6 +452,7 @@ export default function LaptopCatalog({
                         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                             {laptops.data.map((laptop) => {
                                 const image = photoUrl(laptop);
+
                                 return (
                                     <a
                                         key={laptop.id}
@@ -480,6 +510,7 @@ export default function LaptopCatalog({
                             </a>
                             {Array.from({ length: laptops.last_page }).map((_, i) => {
                                 const page = i + 1;
+
                                 if (
                                     page > 4 &&
                                     page < laptops.last_page &&
@@ -495,8 +526,10 @@ export default function LaptopCatalog({
                                             </span>
                                         );
                                     }
+
                                     return null;
                                 }
+
                                 return (
                                     <a
                                         key={page}

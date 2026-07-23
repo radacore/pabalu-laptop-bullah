@@ -31,6 +31,7 @@ const stepLabels: { key: StepKey; label: string }[] = [
 function getStepIndex(service: Service): number {
     const slug = service.status?.slug?.toLowerCase() ?? '';
     const name = service.status?.name?.toLowerCase() ?? '';
+
     if (
         slug.includes('selesai') ||
         slug.includes('diambil') ||
@@ -41,6 +42,7 @@ function getStepIndex(service: Service): number {
     ) {
         return 4;
     }
+
     if (
         slug.includes('pergantian') ||
         slug.includes('menunggu') ||
@@ -49,9 +51,11 @@ function getStepIndex(service: Service): number {
     ) {
         return 2;
     }
+
     if (slug.includes('pengerjaan') || name.includes('pengerjaan')) {
         return 2;
     }
+
     if (
         slug.includes('diagnos') ||
         slug.includes('dicek') ||
@@ -60,6 +64,7 @@ function getStepIndex(service: Service): number {
     ) {
         return 1;
     }
+
     return 0;
 }
 
@@ -74,6 +79,7 @@ function formatDate(
     if (!value) {
         return '-';
     }
+
     return new Date(value).toLocaleDateString('id-ID', options);
 }
 
@@ -96,6 +102,7 @@ export default function ServiceTracking({
     function submitSearch(event: { preventDefault: () => void }) {
         event.preventDefault();
         const code = form.data.code.trim();
+
         if (code) {
             router.get(`/services/track/${code}`);
         }
@@ -252,6 +259,7 @@ export default function ServiceTracking({
                                     {stepLabels.map((step, index) => {
                                         const isDone = index < stepIdx;
                                         const isCurrent = index === stepIdx;
+
                                         return (
                                             <div
                                                 key={step.key}
@@ -289,6 +297,7 @@ export default function ServiceTracking({
                                 {stepLabels.map((step, index) => {
                                     const isDone = index < stepIdx;
                                     const isCurrent = index === stepIdx;
+
                                     return (
                                         <li
                                             key={step.key}
