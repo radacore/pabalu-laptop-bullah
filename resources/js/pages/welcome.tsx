@@ -212,13 +212,7 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
             <section className="bg-paper">
                 <div className="mx-auto grid max-w-[980px] items-center gap-10 px-5 py-16 md:grid-cols-[1fr_1.1fr] md:py-24">
                     <div>
-                        <div className="flex items-center gap-2.5">
-                            <span className="hum-char inline-block h-3 w-3 rounded-full bg-accent" />
-                            <p className="hum-caption text-ink-2/60">
-                                Pabalu Laptop
-                            </p>
-                        </div>
-                        <h1 className="mt-4 hum-display text-ink">
+                        <h1 className="hum-display text-ink">
                             Laptop bersih,
                             <br />
                             <span className="hum-hl">jelas</span>, siap dipakai.
@@ -696,12 +690,9 @@ function TestimonialsCarousel({
         <section className="bg-surface">
             <div className="mx-auto max-w-[980px] px-5 py-16 md:py-24">
                 <div className="mb-12">
-                    <div className="flex items-center gap-2.5">
-                        <span className="hum-char inline-block h-2.5 w-2.5 rounded-full bg-accent-2" />
-                        <p className="hum-caption text-accent-2">
-                            Testimoni
-                        </p>
-                    </div>
+                    <p className="hum-caption text-accent-2">
+                        Testimoni
+                    </p>
                     <h2 className="mt-3 hum-heading-lg text-ink">
                         Dipercaya untuk
                         <br className="hidden sm:block" />
