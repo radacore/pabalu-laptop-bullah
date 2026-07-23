@@ -212,8 +212,10 @@ export default function Welcome({ laptops, testimonials: incomingTestimonials, w
             <section className="bg-paper">
                 <div className="mx-auto grid max-w-[980px] items-center gap-10 px-5 py-16 md:grid-cols-[1fr_1.1fr] md:py-24">
                     <div>
-                        <h1 className="hum-display text-ink">
-                            Pusat laptop bekas &
+                        <h1 className="hum-display !text-[clamp(2.5rem,4.5vw,3.125rem)] text-ink">
+                            Jual laptop bekas
+                            <br />
+                            <span className="ml-[3.5em]">&</span>
                             <br />
                             servis <span className="hum-hl">terpercaya</span>.
                         </h1>
