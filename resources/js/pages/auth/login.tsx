@@ -170,7 +170,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                     tabIndex={1}
                                                     autoComplete="email"
                                                     placeholder="admin@pabalu.com"
-                                                    className="h-11 w-full rounded-[--radius-input] border border-rule bg-paper pl-10 pr-3 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
+                                                    className="h-11 w-full rounded-full border border-rule bg-paper pl-10 pr-3 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
                                                 />
                                             </div>
                                             <InputError
@@ -204,7 +204,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                                 tabIndex={2}
                                                 autoComplete="current-password"
                                                 placeholder="••••••••"
-                                                className="h-11 rounded-[--radius-input] border border-rule bg-paper pl-3 pr-10 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
+                                                className="h-11 rounded-full border border-rule bg-paper pl-3 pr-10 hum-body-sm text-ink outline-none transition-shadow placeholder:text-ink-2/30 focus:border-accent focus:shadow-[0_0_0_3px_oklch(86%_0.18_95/0.2)]"
                                             />
                                             <InputError
                                                 message={errors.password}
