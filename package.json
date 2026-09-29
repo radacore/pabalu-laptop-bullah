@@ -31,8 +31,8 @@
         "typescript-eslint": "^8.23.0"
     },
     "dependencies": {
-        "@inertiajs/react": "^3.0.0",
-        "@inertiajs/vite": "^3.0.0",
+        "@inertiajs/react": "^3.7.1",
+        "@inertiajs/vite": "^3.7.1",
         "@phosphor-icons/react": "^2.1.10",
         "@radix-ui/react-select": "^2.1.6",
         "@tailwindcss/vite": "^4.1.11",
