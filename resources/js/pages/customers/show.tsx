@@ -168,7 +168,7 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
                     <CardHeader>
                         <CardTitle>Detail</CardTitle>
                         <CardDescription>
-                            Kontak and internal pelanggan notes.
+                            Kontak dan catatan internal pelanggan.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -189,16 +189,16 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Services History</CardTitle>
+                        <CardTitle>Riwayat Servis</CardTitle>
                         <CardDescription>
-                            All services recorded for this pelanggan.
+                            Seluruh servis yang tercatat untuk pelanggan ini.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         {services.length === 0 ? (
                             <EmptyState
-                                title="Tidak service history"
-                                description="Service rows will appear once this pelanggan creates a request."
+                                title="Belum ada riwayat servis"
+                                description="Baris servis akan muncul setelah pelanggan ini membuat permintaan."
                             />
                         ) : (
                             <div className="overflow-hidden rounded-lg border">

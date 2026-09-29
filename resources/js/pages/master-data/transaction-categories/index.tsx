@@ -19,24 +19,6 @@ interface TransactionCategoriesIndexProps {
     filters: { search?: string };
 }
 
-function buildUrl(page: number, search: string | undefined) {
-    const params = new URLSearchParams();
-
-    if (search) {
-params.set('search', search);
-}
-
-    if (page > 1) {
-params.set('page', String(page));
-}
-
-    const query = params.toString();
-
-    return query
-        ? `/master-data/transaction-categories?${query}`
-        : '/master-data/transaction-categories';
-}
-
 const TransactionCategoriesIndex = ({
     transactionCategories,
     filters,
@@ -55,8 +37,8 @@ const TransactionCategoriesIndex = ({
 
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/transaction-categories/${toDelete.id}`, {
             preserveState: true,
@@ -206,8 +188,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Kategori Transaksi?"

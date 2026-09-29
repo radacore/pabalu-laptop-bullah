@@ -65,12 +65,29 @@ interface ServiceData {
     created_at?: string | null;
     updates?: ServiceUpdate[];
     parts?: ServicePart[];
+    financialTransactions?: FinancialTransaction[];
 }
+
+type FinancialTransaction = {
+    id: number | string;
+    type: 'income' | 'expense';
+    amount: number;
+    transaction_code: string;
+    description?: string | null;
+    transaction_date: string;
+    category?: { name: string } | null;
+};
 
 interface Props {
     service: ServiceData;
     statuses: ServiceStatus[];
     sparepart_types: SparepartType[];
+    spareparts: Array<{
+        id: number;
+        name: string;
+        stock: number;
+        selling_price: number | string;
+    }>;
 }
 
 type HalamanComponent = ((props: Props) => ReactNode) & {
@@ -88,8 +105,8 @@ const statusColors: Record<string, string> = {
 
 function StatusBadge({ status }: { status?: ServiceStatus | null }) {
     if (!status) {
-return null;
-}
+        return null;
+    }
 
     const key = (status.slug ?? status.name.toLowerCase())
         .replace(/[^a-z0-9]+/g, '-')
@@ -108,8 +125,8 @@ return null;
 
 function StatusPill({ status }: { status?: ServiceStatus | null }) {
     if (!status) {
-return null;
-}
+        return null;
+    }
 
     const key = (status.slug ?? status.name.toLowerCase())
         .replace(/[^a-z0-9]+/g, '-')
@@ -135,8 +152,8 @@ return null;
 
 function formatTanggal(value?: string | null) {
     if (!value) {
-return '-';
-}
+        return '-';
+    }
 
     return new Intl.DateTimeFormat('id-ID', {
         dateStyle: 'medium',
@@ -148,8 +165,8 @@ function formatCurrency(value?: number | string | null) {
     const amount = Number(value ?? 0);
 
     if (!amount) {
-return '-';
-}
+        return '-';
+    }
 
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -166,19 +183,33 @@ const ServicesShow: HalamanComponent = ({
     service,
     statuses,
     sparepart_types,
+    spareparts,
 }) => {
     const updates = service.updates ?? [];
     const parts = service.parts ?? [];
     const updateForm = useForm({
-        service_status_id: service.status ? String(service.status.id) : '',
+        status_to: service.status ? String(service.status.id) : '',
         description: '',
     });
     const partForm = useForm({
         part_name: '',
         quantity: '1',
-        selling_price: '',
+        unit_price: '',
         sparepart_type_id: '',
+        sparepart_id: '',
     });
+
+    // Pilih dari inventori → nama + harga terisi otomatis.
+    function pickInventory(id: string) {
+        partForm.setData('sparepart_id', id);
+
+        const item = spareparts.find((s) => String(s.id) === id);
+
+        if (item) {
+            partForm.setData('part_name', item.name);
+            partForm.setData('unit_price', String(item.selling_price));
+        }
+    }
 
     const submitUpdate = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -459,12 +490,12 @@ const ServicesShow: HalamanComponent = ({
                                     <div className="relative">
                                         <select
                                             value={
-                                                updateForm.data
-                                                    .service_status_id || 'none'
+                                                updateForm.data.status_to ||
+                                                'none'
                                             }
                                             onChange={(e) =>
                                                 updateForm.setData(
-                                                    'service_status_id',
+                                                    'status_to',
                                                     e.target.value === 'none'
                                                         ? ''
                                                         : e.target.value,
@@ -500,12 +531,9 @@ const ServicesShow: HalamanComponent = ({
                                             </svg>
                                         </div>
                                     </div>
-                                    {updateForm.errors.service_status_id && (
+                                    {updateForm.errors.status_to && (
                                         <p className="mt-1 text-sm text-red-600">
-                                            {
-                                                updateForm.errors
-                                                    .service_status_id
-                                            }
+                                            {updateForm.errors.status_to}
                                         </p>
                                     )}
                                 </div>
@@ -660,6 +688,47 @@ const ServicesShow: HalamanComponent = ({
                             <form onSubmit={submitPart} className="space-y-4">
                                 <div>
                                     <label className="mb-1 block text-sm font-medium text-slate-900">
+                                        Ambil dari Stok (opsional)
+                                    </label>
+                                    <select
+                                        value={
+                                            partForm.data.sparepart_id || 'none'
+                                        }
+                                        onChange={(e) =>
+                                            pickInventory(
+                                                e.target.value === 'none'
+                                                    ? ''
+                                                    : e.target.value,
+                                            )
+                                        }
+                                        className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    >
+                                        <option value="none">
+                                            Part manual (tidak dari stok)
+                                        </option>
+                                        {spareparts.map((s) => (
+                                            <option
+                                                key={s.id}
+                                                value={String(s.id)}
+                                            >
+                                                {s.name} (stok: {s.stock})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {partForm.errors.sparepart_id && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {partForm.errors.sparepart_id}
+                                        </p>
+                                    )}
+                                    {partForm.errors.quantity &&
+                                        partForm.data.sparepart_id && (
+                                            <p className="mt-1 text-sm text-red-600">
+                                                {partForm.errors.quantity}
+                                            </p>
+                                        )}
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-sm font-medium text-slate-900">
                                         Nama Part
                                     </label>
                                     <input
@@ -762,19 +831,19 @@ const ServicesShow: HalamanComponent = ({
                                         </label>
                                         <input
                                             type="text"
-                                            value={partForm.data.selling_price}
+                                            value={partForm.data.unit_price}
                                             onChange={(e) =>
                                                 partForm.setData(
-                                                    'selling_price',
+                                                    'unit_price',
                                                     e.target.value,
                                                 )
                                             }
                                             placeholder="Rp 0"
                                             className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                         />
-                                        {partForm.errors.selling_price && (
+                                        {partForm.errors.unit_price && (
                                             <p className="mt-1 text-sm text-red-600">
-                                                {partForm.errors.selling_price}
+                                                {partForm.errors.unit_price}
                                             </p>
                                         )}
                                     </div>
@@ -791,6 +860,113 @@ const ServicesShow: HalamanComponent = ({
                             </form>
                         </div>
                     </div>
+                </div>
+
+                {/* Row 4: Financial Transactions */}
+                <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <div className="mb-4">
+                        <h3 className="text-lg font-semibold text-slate-900">
+                            Transaksi Keuangan
+                        </h3>
+                        <p className="text-sm text-slate-500">
+                            Transaksi otomatis yang terkait dengan servis ini.
+                        </p>
+                    </div>
+                    {!service.financialTransactions ||
+                    service.financialTransactions.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center">
+                            <h3 className="text-sm font-semibold text-slate-900">
+                                Belum ada transaksi
+                            </h3>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Transaksi akan muncul otomatis saat servis
+                                selesai.
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-left text-sm whitespace-nowrap">
+                                <thead>
+                                    <tr className="border-b border-slate-200">
+                                        <th className="px-4 py-3 font-semibold text-slate-900">
+                                            Kode
+                                        </th>
+                                        <th className="px-4 py-3 font-semibold text-slate-900">
+                                            Tipe
+                                        </th>
+                                        <th className="px-4 py-3 font-semibold text-slate-900">
+                                            Kategori
+                                        </th>
+                                        <th className="px-4 py-3 font-semibold text-slate-900">
+                                            Jumlah
+                                        </th>
+                                        <th className="px-4 py-3 font-semibold text-slate-900">
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200">
+                                    {service.financialTransactions.map((ft) => {
+                                        const isIncome = ft.type === 'income';
+
+                                        return (
+                                            <tr
+                                                key={ft.id}
+                                                className="transition-colors hover:bg-slate-50"
+                                            >
+                                                <td className="px-4 py-3 font-mono text-sm font-medium text-slate-900">
+                                                    {ft.transaction_code}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <span
+                                                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                                            isIncome
+                                                                ? 'bg-emerald-50 text-emerald-700'
+                                                                : 'bg-rose-50 text-rose-700'
+                                                        }`}
+                                                    >
+                                                        {isIncome
+                                                            ? 'Pemasukan'
+                                                            : 'Pengeluaran'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-3 text-slate-500">
+                                                    {ft.category?.name ?? '-'}
+                                                </td>
+                                                <td
+                                                    className={`px-4 py-3 font-bold tabular-nums ${
+                                                        isIncome
+                                                            ? 'text-emerald-700'
+                                                            : 'text-rose-700'
+                                                    }`}
+                                                >
+                                                    {isIncome ? '+' : '−'}{' '}
+                                                    {new Intl.NumberFormat(
+                                                        'id-ID',
+                                                        {
+                                                            style: 'currency',
+                                                            currency: 'IDR',
+                                                            maximumFractionDigits: 0,
+                                                        },
+                                                    ).format(
+                                                        Number(ft.amount ?? 0),
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    <Link
+                                                        href={`/financial-transactions/${ft.id}`}
+                                                        className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                    >
+                                                        Lihat
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

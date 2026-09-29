@@ -1,23 +1,61 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
+    CalendarCheck,
     ChartLineUp,
+    Cpu,
     CurrencyDollar,
     Database,
     Globe,
+    IdentificationBadge,
     Laptop,
     Plus,
     Wrench,
     UsersThree,
 } from '@phosphor-icons/react';
 
-const navItems = [
+interface NavItem {
+    title: string;
+    href: string;
+    icon: typeof Laptop;
+    adminOnly?: boolean;
+}
+
+const navItems: NavItem[] = [
     { title: 'Dashboard', href: '/dashboard', icon: ChartLineUp },
-    { title: 'Inventory', href: '/laptops', icon: Laptop },
+    { title: 'Inventory', href: '/laptops', icon: Laptop, adminOnly: true },
     { title: 'Services', href: '/services', icon: Wrench },
-    { title: 'Customers', href: '/customers', icon: UsersThree },
-    { title: 'Finance', href: '/financial-transactions', icon: CurrencyDollar },
-    { title: 'Master Data', href: '/master-data', icon: Database },
-    { title: 'Website', href: '/website-settings', icon: Globe },
+    { title: 'Rentals', href: '/rentals', icon: CalendarCheck },
+    { title: 'Spareparts', href: '/spareparts', icon: Cpu },
+    {
+        title: 'Customers',
+        href: '/customers',
+        icon: UsersThree,
+        adminOnly: true,
+    },
+    {
+        title: 'Finance',
+        href: '/financial-transactions',
+        icon: CurrencyDollar,
+        adminOnly: true,
+    },
+    {
+        title: 'Staff',
+        href: '/staff',
+        icon: IdentificationBadge,
+        adminOnly: true,
+    },
+    {
+        title: 'Master Data',
+        href: '/master-data',
+        icon: Database,
+        adminOnly: true,
+    },
+    {
+        title: 'Website',
+        href: '/website-settings',
+        icon: Globe,
+        adminOnly: true,
+    },
 ];
 
 interface AppSidebarProps {
@@ -25,12 +63,17 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ collapsed = false }: AppSidebarProps) {
-    const { url } = usePage();
+    const { url, props } = usePage();
+    const role = (props.auth as { user?: { role?: string } } | undefined)?.user
+        ?.role;
+    const visibleItems = navItems.filter(
+        (item) => !item.adminOnly || role === 'admin',
+    );
 
     function isActive(href: string) {
         if (href === '/dashboard') {
-return url === '/dashboard';
-}
+            return url === '/dashboard';
+        }
 
         return url.startsWith(href);
     }
@@ -65,7 +108,7 @@ return url === '/dashboard';
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto px-3 py-4">
                 <ul className="space-y-0.5">
-                    {navItems.map((item) => {
+                    {visibleItems.map((item) => {
                         const active = isActive(item.href);
                         const Icon = item.icon;
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'slug', 'is_active', 'sort_order', 'description', 'type'])]
 class TransactionCategory extends Model
@@ -22,5 +23,10 @@ class TransactionCategory extends Model
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];
+    }
+
+    public function financialTransactions(): HasMany
+    {
+        return $this->hasMany(FinancialTransaction::class, 'transaction_category_id');
     }
 }

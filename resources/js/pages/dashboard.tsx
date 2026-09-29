@@ -54,26 +54,28 @@ function statusSlugToTone(
     slug: string | null | undefined,
 ): 'emerald' | 'amber' | 'rose' | 'blue' | 'slate' {
     if (!slug) {
-return 'slate';
-}
+        return 'slate';
+    }
 
     if (
         ['tersedia', 'selesai', 'sudah-diambil', 'lunas', 'paid'].includes(slug)
     ) {
-return 'emerald';
-}
+        return 'emerald';
+    }
 
-    if (['booking', 'proses', 'repairing', 'pending', 'unpaid'].includes(slug)) {
-return 'amber';
-}
+    if (
+        ['booking', 'proses', 'repairing', 'pending', 'unpaid'].includes(slug)
+    ) {
+        return 'amber';
+    }
 
     if (['rusak', 'dibatalkan', 'batal', 'gagal'].includes(slug)) {
-return 'rose';
-}
+        return 'rose';
+    }
 
     if (['terjual', 'draft', 'disimpan'].includes(slug)) {
-return 'blue';
-}
+        return 'blue';
+    }
 
     return 'slate';
 }
@@ -114,8 +116,8 @@ function StatusPill({
 
 function Sparkline({ data, color }: { data: number[]; color: string }) {
     if (data.length === 0) {
-return null;
-}
+        return null;
+    }
 
     const max = Math.max(...data, 1);
     const min = Math.min(...data, 0);
@@ -341,14 +343,17 @@ export default function Dashboard({
     recent_laptops,
     recent_services,
 }: DashboardPageProps) {
-    const activeServices = recent_services.filter(
-        (s) =>
-            s.status?.slug !== 'selesai' &&
-            s.status?.slug !== 'sudah-diambil' &&
-            s.status?.slug !== 'dibatalkan',
+    const activeServices = recent_services.filter((s) =>
+        ['selesai', 'siap-diambil', 'sudah-diambil'].includes(
+            s.status?.slug ?? '',
+        )
+            ? false
+            : true,
     );
 
     const servicesCount = recent_services.length;
+    // Grafik memakai angka dummy yang diskalakan dari jumlah servis —
+    // BUKAN data keuangan nyata. Jangan dibaca sebagai laporan.
     const sales = [60, 45, 75, 55, 85, 70, 90, 80].map(
         (v) => v * (1 + servicesCount * 0.02),
     );
@@ -447,7 +452,7 @@ export default function Dashboard({
                                     Tren Penjualan & Servis
                                 </h3>
                                 <p className="text-xs text-slate-500">
-                                    8 bulan terakhir
+                                    Ilustrasi tren (belum data aktual)
                                 </p>
                             </div>
                             <div className="flex items-center gap-4 text-xs">
@@ -571,7 +576,7 @@ export default function Dashboard({
                                                     {laptop.name ?? laptop.sku}
                                                 </p>
                                                 <p className="truncate text-xs text-slate-500">
-                                                    {laptop.brand} ·{' '}
+                                                    {laptop.brand?.name} ·{' '}
                                                     {laptop.model}
                                                 </p>
                                             </div>

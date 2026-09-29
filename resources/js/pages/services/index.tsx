@@ -6,13 +6,13 @@ import DeleteDialog from '@/components/shared/delete-dialog';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
-import type { Customer, Service, ServiceStatus, User } from '@/types';
+import type { Customer, ModelUser, Service, ServiceStatus } from '@/types';
 
 type ServiceListItem = Service & {
     code?: string | null;
     customer?: Customer | null;
     status?: ServiceStatus | null;
-    technician?: User | null;
+    technician?: ModelUser | null;
     created_at?: string | null;
     received_date?: string | null;
 };
@@ -32,7 +32,7 @@ interface Props {
         technician_id?: string;
     };
     statuses: ServiceStatus[];
-    technicians: User[];
+    technicians: ModelUser[];
 }
 
 type HalamanComponent = ((props: Props) => ReactNode) & {
@@ -41,8 +41,8 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
 
 function formatTanggal(value?: string | null) {
     if (!value) {
-return '-';
-}
+        return '-';
+    }
 
     return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
         new Date(value),
@@ -51,8 +51,8 @@ return '-';
 
 function truncate(value?: string | null, limit = 72) {
     if (!value) {
-return '-';
-}
+        return '-';
+    }
 
     return value.length > limit ? `${value.slice(0, limit)}...` : value;
 }
@@ -68,15 +68,13 @@ function HapusServiceDialog({
     service: Service;
     onClose: () => void;
 }) {
-    const [deleting, setDeleting] = useState(false);
-
+    // Gagal hapus (mis. servis selesai dilindungi audit) dikirim backend
+    // sebagai flash toast error — dialog cukup ditutup.
     const handleDelete = () => {
-        setDeleting(true);
         router.delete(`/services/${service.id}`, {
             preserveState: true,
             replace: true,
             onFinish: () => {
-                setDeleting(false);
                 onClose();
             },
         });
@@ -134,8 +132,8 @@ const ServicesIndex: HalamanComponent = ({
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-applyFilters();
-}
+            applyFilters();
+        }
     };
 
     return (
@@ -429,7 +427,7 @@ applyFilters();
                                         href={
                                             services.current_page <= 1
                                                 ? '#'
-                                                : `/services?page=${Math.max(1, services.current_page - 1)}`
+                                                : `/services?page=${Math.max(1, services.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}${technicianId !== 'all' ? `&technician_id=${technicianId}` : ''}`
                                         }
                                         className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                             services.current_page <= 1
@@ -449,7 +447,7 @@ applyFilters();
                                             services.current_page >=
                                             services.last_page
                                                 ? '#'
-                                                : `/services?page=${Math.min(services.last_page, services.current_page + 1)}`
+                                                : `/services?page=${Math.min(services.last_page, services.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}${technicianId !== 'all' ? `&technician_id=${technicianId}` : ''}`
                                         }
                                         className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                             services.current_page >=

@@ -13,23 +13,77 @@ use Inertia\Response;
 class PaymentMethodController extends Controller
 {
     /** Display a paginated payment method listing. */
-    public function index(Request $request): Response { return Inertia::render('master-data/payment-methods/index', ['paymentMethods' => PaymentMethod::query()->when($request->string('search')->isNotEmpty(), fn ($query) => $query->where('name', 'like', '%'.$request->string('search')->toString().'%'))->orderBy('sort_order')->orderBy('name')->paginate(10)->withQueryString(), 'filters' => $request->only('search')]); }
+    public function index(Request $request): Response
+    {
+        return Inertia::render('master-data/payment-methods/index', ['paymentMethods' => PaymentMethod::query()->when($request->string('search')->isNotEmpty(), fn ($query) => $query->where('name', 'like', '%'.$request->string('search')->toString().'%'))->orderBy('sort_order')->orderBy('name')->paginate(10)->withQueryString(), 'filters' => $request->only('search')]);
+    }
 
     /** Show the payment method creation page. */
-    public function create(): Response { return Inertia::render('master-data/payment-methods/create'); }
+    public function create(): Response
+    {
+        return Inertia::render('master-data/payment-methods/create');
+    }
 
     /** Store a newly created payment method. */
-    public function store(Request $request): RedirectResponse { $data = $this->validated($request); PaymentMethod::query()->create([...$data, 'slug' => Str::slug($data['name'])]); Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil ditambahkan.']); return to_route('master-data.payment-methods.index'); }
+    public function store(Request $request): RedirectResponse
+    {
+        $data = $this->validated($request);
+        PaymentMethod::query()->create([...$data, 'slug' => Str::slug($data['name'])]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil ditambahkan.']);
+
+        return to_route('master-data.payment-methods.index');
+    }
 
     /** Show the payment method edit page. */
-    public function edit(PaymentMethod $paymentMethod): Response { return Inertia::render('master-data/payment-methods/edit', ['paymentMethod' => $paymentMethod]); }
+    public function edit(PaymentMethod $paymentMethod): Response
+    {
+        return Inertia::render('master-data/payment-methods/edit', [
+            'paymentMethod' => $paymentMethod,
+            'isCash' => $paymentMethod->slug === 'cash',
+            'inUse' => $paymentMethod->financialTransactions()->exists(),
+        ]);
+    }
 
     /** Update the selected payment method. */
-    public function update(Request $request, PaymentMethod $paymentMethod): RedirectResponse { $data = $this->validated($request); $paymentMethod->update([...$data, 'slug' => Str::slug($data['name'])]); Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil diperbarui.']); return to_route('master-data.payment-methods.index'); }
+    public function update(Request $request, PaymentMethod $paymentMethod): RedirectResponse
+    {
+        // Slug 'cash' adalah lookup prioritas jurnal otomatis — rename akan
+        // mengubah metode semua jurnal auto berikutnya secara diam-diam.
+        if ($paymentMethod->slug === 'cash') {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Metode Tunai (cash) dipakai jurnal otomatis dan namanya tidak bisa diubah.']);
+
+            return back()->withErrors([
+                'name' => 'Metode Tunai (cash) dipakai jurnal otomatis dan namanya tidak bisa diubah.',
+            ]);
+        }
+
+        $data = $this->validated($request);
+        $paymentMethod->update([...$data, 'slug' => Str::slug($data['name'])]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil diperbarui.']);
+
+        return to_route('master-data.payment-methods.index');
+    }
 
     /** Delete the selected payment method. */
-    public function destroy(PaymentMethod $paymentMethod): RedirectResponse { $paymentMethod->delete(); Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil dihapus.']); return to_route('master-data.payment-methods.index'); }
+    public function destroy(PaymentMethod $paymentMethod): RedirectResponse
+    {
+        if ($paymentMethod->financialTransactions()->exists()) {
+            Inertia::flash('toast', ['type' => 'error', 'message' => 'Metode masih dipakai transaksi dan tidak bisa dihapus.']);
+
+            return back()->withErrors([
+                'method' => 'Metode masih dipakai transaksi dan tidak bisa dihapus.',
+            ]);
+        }
+
+        $paymentMethod->delete();
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'Metode pembayaran berhasil dihapus.']);
+
+        return to_route('master-data.payment-methods.index');
+    }
 
     /** @return array<string, mixed> */
-    private function validated(Request $request): array { return $request->validate(['name' => ['required', 'string', 'max:255'], 'is_active' => ['required', 'boolean'], 'description' => ['nullable', 'string']]); }
+    private function validated(Request $request): array
+    {
+        return $request->validate(['name' => ['required', 'string', 'max:255'], 'is_active' => ['required', 'boolean'], 'description' => ['nullable', 'string']]);
+    }
 }

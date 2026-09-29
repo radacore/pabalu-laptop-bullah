@@ -17,7 +17,6 @@ import {
     YoutubeLogo,
 } from '@phosphor-icons/react';
 import { useState } from 'react';
-import PageHeader from '@/components/layout/page-header';
 import InputError from '@/components/shared/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,12 +82,20 @@ export default function WebsiteSettings({ setting }: Props) {
     const [logoPreview, setLogoPreview] = useState<string | null>(
         setting.logo_url ?? null,
     );
-    const [removeLogo, setRemoveLogo] = useState(false);
+    const [, setRemoveLogo] = useState(false);
+    const [heroPreview, setHeroPreview] = useState<string | null>(
+        setting.hero_image_url ?? null,
+    );
+    const [, setRemoveHeroImage] = useState(false);
 
     const form = useForm({
         website_name: setting.website_name ?? '',
         tagline: setting.tagline ?? '',
         logo: null as File | null,
+        hero_image: null as File | null,
+        meta_title: setting.meta_title ?? '',
+        meta_description: setting.meta_description ?? '',
+        google_site_verification: setting.google_site_verification ?? '',
         address: setting.address ?? '',
         whatsapp_number: setting.whatsapp_number ?? '',
         phone: setting.phone ?? '',
@@ -102,10 +109,12 @@ export default function WebsiteSettings({ setting }: Props) {
         youtube_url: setting.youtube_url ?? '',
         tiktok_url: setting.tiktok_url ?? '',
         remove_logo: false as boolean,
+        remove_hero_image: false as boolean,
     });
 
     function submit(event: React.FormEvent) {
         event.preventDefault();
+        form.transform((data) => ({ ...data, _method: 'PUT' }));
         form.post(websiteSettingsUpdate().url, {
             forceFormData: true,
             preserveScroll: true,
@@ -128,6 +137,24 @@ export default function WebsiteSettings({ setting }: Props) {
         setRemoveLogo(true);
         form.setData('logo', null);
         form.setData('remove_logo', true);
+    }
+
+    function handleHeroChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0] ?? null;
+        form.setData('hero_image', file);
+
+        if (file) {
+            setHeroPreview(URL.createObjectURL(file));
+            setRemoveHeroImage(false);
+            form.setData('remove_hero_image', false);
+        }
+    }
+
+    function handleRemoveHeroImage() {
+        setHeroPreview(null);
+        setRemoveHeroImage(true);
+        form.setData('hero_image', null);
+        form.setData('remove_hero_image', true);
     }
 
     return (
@@ -207,12 +234,12 @@ export default function WebsiteSettings({ setting }: Props) {
                                 <div className="flex flex-1 flex-col gap-2">
                                     <input
                                         type="file"
-                                        accept="image/jpeg,image/jpg,image/png,image/svg+xml,image/webp"
+                                        accept="image/jpeg,image/jpg,image/png,image/webp"
                                         onChange={handleLogoChange}
                                         className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700"
                                     />
                                     <p className="text-xs text-slate-500">
-                                        JPG, PNG, SVG, atau WebP. Maks 2MB.
+                                        JPG, PNG, atau WebP. Maks 2MB.
                                     </p>
                                     {logoPreview && (
                                         <button
@@ -551,6 +578,134 @@ export default function WebsiteSettings({ setting }: Props) {
                                 />
                                 <InputError message={form.errors.tiktok_url} />
                             </div>
+                        </div>
+                    </SectionCard>
+
+                    {/* Hero & SEO */}
+                    <SectionCard
+                        icon={Image}
+                        title="Gambar Hero & SEO"
+                        description="Gambar latar hero dan meta tag agar mudah terindeks Google."
+                        className="lg:col-span-2"
+                    >
+                        <div className={inputGroup}>
+                            <Label>Gambar Hero</Label>
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                                <div className="flex h-28 w-full flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-950 sm:w-64">
+                                    {heroPreview ? (
+                                        <img
+                                            src={heroPreview}
+                                            alt="Hero preview"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    ) : (
+                                        <Image
+                                            className="h-8 w-8 text-slate-600"
+                                            weight="duotone"
+                                        />
+                                    )}
+                                </div>
+                                <div className="flex flex-1 flex-col gap-2">
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                                        onChange={handleHeroChange}
+                                        className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700"
+                                    />
+                                    <p className="text-xs text-slate-500">
+                                        JPG, PNG, atau WebP landscape
+                                        (disarankan minimal 1600px). Maks 5MB.
+                                        Kosongkan untuk memakai gambar bawaan.
+                                    </p>
+                                    {heroPreview && (
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveHeroImage}
+                                            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700"
+                                        >
+                                            <Trash
+                                                className="h-3.5 w-3.5"
+                                                weight="duotone"
+                                            />
+                                            Hapus Gambar Hero
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                            <InputError message={form.errors.hero_image} />
+                        </div>
+
+                        <div className={inputGroup}>
+                            <Label htmlFor="meta_title">Judul SEO</Label>
+                            <Input
+                                id="meta_title"
+                                className={fieldClass}
+                                value={form.data.meta_title}
+                                onChange={(e) =>
+                                    form.setData('meta_title', e.target.value)
+                                }
+                                placeholder="Pabalu Laptop | Laptop Bekas & Servis Terpercaya"
+                                maxLength={160}
+                            />
+                            <p className="text-xs text-slate-500">
+                                Muncul sebagai judul di hasil pencarian Google (
+                                {form.data.meta_title.length}/160).
+                            </p>
+                            <InputError message={form.errors.meta_title} />
+                        </div>
+
+                        <div className={inputGroup}>
+                            <Label htmlFor="meta_description">
+                                Deskripsi SEO
+                            </Label>
+                            <textarea
+                                id="meta_description"
+                                className={`${textareaClass} min-h-20`}
+                                value={form.data.meta_description}
+                                onChange={(e) =>
+                                    form.setData(
+                                        'meta_description',
+                                        e.target.value,
+                                    )
+                                }
+                                rows={3}
+                                placeholder="Toko laptop bekas berkualitas dan jasa servis terpercaya…"
+                                maxLength={300}
+                            />
+                            <p className="text-xs text-slate-500">
+                                Ringkasan di bawah judul hasil pencarian (
+                                {form.data.meta_description.length}/300).
+                            </p>
+                            <InputError
+                                message={form.errors.meta_description}
+                            />
+                        </div>
+
+                        <div className={inputGroup}>
+                            <Label htmlFor="google_site_verification">
+                                Kode Verifikasi Google Search Console
+                            </Label>
+                            <Input
+                                id="google_site_verification"
+                                className={`${fieldClass} font-mono text-xs`}
+                                value={form.data.google_site_verification}
+                                onChange={(e) =>
+                                    form.setData(
+                                        'google_site_verification',
+                                        e.target.value,
+                                    )
+                                }
+                                placeholder="AbC123XyZ…"
+                                maxLength={100}
+                            />
+                            <p className="text-xs text-slate-500">
+                                Tempel kode dari Search Console → Settings →
+                                Verification (hanya kodenya, tanpa tag HTML).
+                                Dipakai Google untuk memverifikasi situs ini.
+                            </p>
+                            <InputError
+                                message={form.errors.google_site_verification}
+                            />
                         </div>
                     </SectionCard>
 

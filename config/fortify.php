@@ -142,8 +142,9 @@ return [
     |
     */
 
+    // Aplikasi ini internal-only. Registrasi publik DISABLED — akun admin/staff
+    // dibuat lewat seeder atau perintah artisan (bukan lewat form publik).
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
     ],
 

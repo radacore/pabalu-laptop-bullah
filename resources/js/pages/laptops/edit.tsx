@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { Brand, Laptop, LaptopSource } from '@/types';
 
@@ -28,25 +29,21 @@ const emptySelectValue = '__pabalu__empty__';
 
 function nullableString(value: unknown): string {
     if (value === null || value === undefined) {
-return '';
-}
+        return '';
+    }
 
     return String(value);
 }
 
 function toTanggalInput(value: string | null | undefined): string {
     if (!value) {
-return '';
-}
+        return '';
+    }
 
     return value.split('T')[0] ?? '';
 }
 
-export default function LaptopEdit({
-    laptop,
-    brands,
-    sources,
-}: LaptopEditHalamanProps) {
+function LaptopEdit({ laptop, brands, sources }: LaptopEditHalamanProps) {
     const form = useForm({
         sku: laptop.sku ?? '',
         name: nullableString(laptop.name),
@@ -63,6 +60,8 @@ export default function LaptopEdit({
         repair_cost: String(
             (laptop.repair_cost ?? '') as string | number | null,
         ),
+        is_rentable: Boolean(laptop.is_rentable),
+        daily_rate: String((laptop.daily_rate ?? '') as string | number | null),
         mines: nullableString(laptop.mines),
         specification: {
             other_specifications: nullableString(
@@ -286,6 +285,42 @@ export default function LaptopEdit({
                                 </p>
                                 <InputError message={form.errors.repair_cost} />
                             </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="daily_rate">
+                                    Tarif Sewa / Hari (Opsional)
+                                </Label>
+                                <Input
+                                    id="daily_rate"
+                                    type="number"
+                                    min={0}
+                                    value={form.data.daily_rate}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'daily_rate',
+                                            event.target.value,
+                                        )
+                                    }
+                                    placeholder="0"
+                                />
+                                <p className="text-muted-foreground text-xs">
+                                    Isi bila unit juga disewakan.
+                                </p>
+                                <InputError message={form.errors.daily_rate} />
+                            </div>
+                            <label className="flex items-center gap-2 text-sm md:col-span-2">
+                                <input
+                                    type="checkbox"
+                                    checked={form.data.is_rentable}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'is_rentable',
+                                            event.target.checked,
+                                        )
+                                    }
+                                    className="size-4"
+                                />
+                                Unit ini bisa disewa (tampil di katalog sewa)
+                            </label>
                             <div className="grid gap-2 md:col-span-2">
                                 <Label htmlFor="mines">
                                     Keterangan Mines (Opsional)
@@ -349,10 +384,16 @@ export default function LaptopEdit({
     );
 }
 
-LaptopEdit.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Inventaris', href: '/laptops' },
-        { title: 'Edit Laptop', href: '' },
-    ],
-};
+LaptopEdit.layout = (page: React.ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Inventaris', href: '/laptops' },
+            { title: 'Edit Laptop', href: '' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default LaptopEdit;

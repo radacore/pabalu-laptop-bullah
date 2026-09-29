@@ -12,7 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'phone', 'password', 'role', 'is_active'])]
+// `role` dan `is_active` SENGAJA tidak masuk fillable untuk mencegah
+// privilege escalation via `User::create($request->all())` atau `$user->fill($input)`.
+// Set kedua field ini via property assignment eksplisit (e.g. `$user->role = 'staff'`).
+#[Fillable(['name', 'email', 'phone', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {

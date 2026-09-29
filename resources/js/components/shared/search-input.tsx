@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -18,14 +18,29 @@ export default function SearchInput({
     className,
 }: SearchInputProps) {
     const [localValue, setLocalValue] = useState(value ?? '');
+    // onChange disimpan di ref agar effect tidak refire saat caller
+    // passing inline arrow (referensi baru tiap render) — hanya localValue
+    // yang memicu debounce. Skip tembakan pertama saat mount.
+    const onChangeRef = useRef(onChange);
+    const mountedRef = useRef(false);
 
     useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
+
+    useEffect(() => {
+        if (!mountedRef.current) {
+            mountedRef.current = true;
+
+            return;
+        }
+
         const timeout = window.setTimeout(() => {
-            onChange(localValue);
+            onChangeRef.current(localValue);
         }, 300);
 
         return () => window.clearTimeout(timeout);
-    }, [localValue, onChange]);
+    }, [localValue]);
 
     return (
         <div className={cn('relative w-full sm:max-w-sm', className)}>

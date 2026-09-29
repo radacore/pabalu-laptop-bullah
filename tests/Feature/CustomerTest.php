@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\Service;
+use App\Models\ServiceStatus;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -65,7 +67,7 @@ test('customer store validates required fields', function () {
 
 test('authenticated users can store a customer', function () {
     $user = User::factory()->create();
-    $payload = validCustomerPayload(['create_user_account' => true]);
+    $payload = validCustomerPayload();
 
     $response = $this
         ->actingAs($user)
@@ -80,13 +82,6 @@ test('authenticated users can store a customer', function () {
         'phone' => $payload['phone'],
         'address' => $payload['address'],
         'note' => $payload['note'],
-    ]);
-
-    $this->assertDatabaseHas('users', [
-        'name' => $payload['name'],
-        'phone' => $payload['phone'],
-        'role' => 'customer',
-        'is_active' => true,
     ]);
 });
 
@@ -143,7 +138,73 @@ test('authenticated users can destroy a customer', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect(route('customers.index'));
 
-    $this->assertDatabaseMissing('customers', [
+    $this->assertSoftDeleted('customers', [
         'id' => $customer->id,
+    ]);
+});
+
+test('staff cannot enumerate customers via search', function () {
+    $staff = User::factory()->create(['role' => 'staff']);
+    $customer = createCustomerRecord(['name' => 'UnikCariNama']);
+
+    $response = $this
+        ->actingAs($staff)
+        ->get(route('search', ['q' => 'UnikCariNama']));
+
+    $response->assertOk();
+
+    $customers = $response->viewData('page')['props']['customers'] ?? [];
+
+    expect($customers)->toBeEmpty();
+    expect($customer->exists())->toBeTrue();
+});
+
+test('admin can find customers via search', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    createCustomerRecord(['name' => 'UnikCariNamaAdmin']);
+
+    $response = $this
+        ->actingAs($admin)
+        ->get(route('search', ['q' => 'UnikCariNamaAdmin']));
+
+    $response->assertOk();
+
+    $customers = $response->viewData('page')['props']['customers'] ?? [];
+
+    expect($customers)->not->toBeEmpty();
+});
+
+test('customer with active service cannot be destroyed', function () {
+    $user = User::factory()->create();
+    $customer = createCustomerRecord();
+    $status = ServiceStatus::query()->firstOrCreate(
+        ['slug' => 'diterima'],
+        ['name' => 'Diterima', 'is_active' => true, 'sort_order' => 0],
+    );
+
+    Service::query()->create([
+        'service_code' => 'SRV-DELGUARD-001',
+        'customer_id' => $customer->id,
+        'device_name' => 'Test Device',
+        'complaint' => 'Test complaint.',
+        'service_status_id' => $status->id,
+        'tracking_code' => bin2hex(random_bytes(8)),
+        'payment_status' => 'unpaid',
+        'received_at' => now(),
+        'created_by' => $user->id,
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->from(route('customers.index'))
+        ->delete(route('customers.destroy', $customer));
+
+    $response
+        ->assertRedirect(route('customers.index'))
+        ->assertSessionHasErrors('customer');
+
+    $this->assertDatabaseHas('customers', [
+        'id' => $customer->id,
+        'deleted_at' => null,
     ]);
 });

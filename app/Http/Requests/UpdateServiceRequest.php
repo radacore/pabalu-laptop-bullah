@@ -31,8 +31,11 @@ class UpdateServiceRequest extends StoreServiceRequest
             'picked_up_at' => ['nullable', 'date'],
 
             'parts' => ['nullable', 'array'],
+            'sparepartsSignature' => ['nullable', 'string', 'max:2000'],
+            'parts.*.id' => ['nullable', 'integer', 'exists:service_parts,id'],
             'parts.*.kind' => ['required_with:parts', 'in:used,sold'],
             'parts.*.sparepart_type_id' => ['nullable', 'exists:sparepart_types,id'],
+            'parts.*.sparepart_id' => ['nullable', 'exists:spareparts,id'],
             'parts.*.part_name' => ['required_with:parts', 'string', 'max:255'],
             'parts.*.quantity' => ['required_with:parts', 'integer', 'min:1'],
             'parts.*.cost_price' => ['required_with:parts', 'numeric', 'min:0'],

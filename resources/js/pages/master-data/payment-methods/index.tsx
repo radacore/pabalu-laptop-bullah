@@ -19,24 +19,6 @@ interface PaymentMethodsIndexProps {
     filters: { search?: string };
 }
 
-function buildUrl(page: number, search: string | undefined) {
-    const params = new URLSearchParams();
-
-    if (search) {
-params.set('search', search);
-}
-
-    if (page > 1) {
-params.set('page', String(page));
-}
-
-    const query = params.toString();
-
-    return query
-        ? `/master-data/payment-methods?${query}`
-        : '/master-data/payment-methods';
-}
-
 const PaymentMethodsIndex = ({
     paymentMethods,
     filters,
@@ -55,8 +37,8 @@ const PaymentMethodsIndex = ({
 
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/payment-methods/${toDelete.id}`, {
             preserveState: true,
@@ -190,8 +172,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Metode Pembayaran?"

@@ -19,24 +19,6 @@ interface ServiceStatusesIndexProps {
     filters: { search?: string };
 }
 
-function buildUrl(page: number, search: string | undefined) {
-    const params = new URLSearchParams();
-
-    if (search) {
-params.set('search', search);
-}
-
-    if (page > 1) {
-params.set('page', String(page));
-}
-
-    const query = params.toString();
-
-    return query
-        ? `/master-data/service-statuses?${query}`
-        : '/master-data/service-statuses';
-}
-
 const ServiceStatusesIndex = ({
     serviceStatuses,
     filters,
@@ -55,8 +37,8 @@ const ServiceStatusesIndex = ({
 
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/service-statuses/${toDelete.id}`, {
             preserveState: true,
@@ -213,8 +195,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Status Servis?"

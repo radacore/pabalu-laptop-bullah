@@ -64,6 +64,9 @@ export type LaptopPhoto = {
 export type Laptop = {
     id: number;
     sku: string;
+    slug?: string | null;
+    is_rentable?: boolean;
+    daily_rate?: number | string | null;
     name?: string | null;
     brand_id?: number | null;
     brand?: MasterData | null;
@@ -82,6 +85,7 @@ export type Laptop = {
     source?: LaptopSource | null;
     specification?: LaptopSpecification | null;
     photos?: LaptopPhoto[];
+    financialTransactions?: FinancialTransaction[];
 };
 
 export type Customer = {
@@ -89,6 +93,77 @@ export type Customer = {
     name: string;
     phone?: string | null;
     email?: string | null;
+};
+
+export type RentalStatus = MasterData;
+
+export type Rental = {
+    id: number;
+    rental_code: string;
+    customer_id?: number;
+    customer?: Customer | null;
+    laptop_id?: number;
+    laptop?: Laptop | null;
+    rental_status_id?: number | null;
+    status?: RentalStatus | null;
+    tracking_code?: string;
+    daily_rate?: number | string | null;
+    deposit?: number | string | null;
+    deposit_returned?: boolean;
+    total_days?: number | null;
+    total_cost?: number | string | null;
+    paid_amount?: number | string | null;
+    payment_status?: string;
+    rented_at?: string | null;
+    due_at?: string | null;
+    returned_at?: string | null;
+    completed_at?: string | null;
+    note?: string | null;
+    created_by?: number;
+    created_at?: string;
+};
+
+export type SparepartPhoto = {
+    id: number;
+    sparepart_id: number;
+    file_path: string;
+    caption?: string | null;
+    sort_order?: number;
+};
+
+export type Sparepart = {
+    id: number;
+    sku: string;
+    slug?: string | null;
+    name: string;
+    sparepart_type_id?: number | null;
+    type?: MasterData | null;
+    condition: 'baru' | 'bekas';
+    stock: number;
+    cost_price?: number | string | null;
+    selling_price: number | string;
+    description?: string | null;
+    is_active: boolean;
+    photos?: SparepartPhoto[];
+    created_by?: number;
+    created_at?: string;
+};
+
+export type SparepartSale = {
+    id: number;
+    sale_code: string;
+    customer_id?: number | null;
+    customer?: Customer | null;
+    sparepart_id: number;
+    sparepart?: Sparepart | null;
+    quantity: number;
+    unit_price: number | string;
+    total_amount: number | string;
+    payment_method_id?: number | null;
+    sold_at: string;
+    note?: string | null;
+    created_by?: number;
+    created_at?: string;
 };
 
 export type Service = {
@@ -123,6 +198,8 @@ export type ServicePart = {
     service_id?: number;
     kind?: 'used' | 'sold';
     sparepart_type_id?: number | null;
+    sparepart_id?: number | null;
+    sparepart?: Sparepart | null;
     name?: string;
     part_name?: string | null;
     quantity: number;
@@ -162,6 +239,13 @@ export type FinancialTransaction = {
     created_by: number;
     category?: TransactionCategory | null;
     paymentMethod?: PaymentMethod | null;
+    related?: {
+        id: number;
+        service_code?: string;
+        sku?: string;
+        name?: string;
+        customer?: { name: string } | null;
+    } | null;
 };
 
 export type DashboardStats = {
@@ -180,6 +264,11 @@ export type WebsiteSetting = {
     tagline?: string | null;
     logo?: string | null;
     logo_url?: string | null;
+    hero_image?: string | null;
+    hero_image_url?: string | null;
+    meta_title?: string | null;
+    meta_description?: string | null;
+    google_site_verification?: string | null;
     address?: string | null;
     whatsapp_number?: string | null;
     phone?: string | null;
@@ -193,5 +282,18 @@ export type WebsiteSetting = {
     youtube_url?: string | null;
     tiktok_url?: string | null;
     updated_by?: number | null;
+    updated_at?: string;
+};
+
+export type Testimonial = {
+    id: number;
+    name: string;
+    role?: string | null;
+    content: string;
+    rating?: number;
+    avatar_color?: string | null;
+    is_active?: boolean;
+    sort_order?: number;
+    created_at?: string;
     updated_at?: string;
 };

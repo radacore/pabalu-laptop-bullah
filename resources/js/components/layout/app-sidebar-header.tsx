@@ -16,6 +16,8 @@ const navItems = [
     { title: 'Dashboard', href: '/dashboard', icon: 'dashboard' },
     { title: 'Inventory', href: '/laptops', icon: 'laptop_mac' },
     { title: 'Services', href: '/services', icon: 'build' },
+    { title: 'Rentals', href: '/rentals', icon: 'event_available' },
+    { title: 'Spareparts', href: '/spareparts', icon: 'memory' },
     { title: 'Customers', href: '/customers', icon: 'group' },
     { title: 'Finance', href: '/financial-transactions', icon: 'payments' },
     { title: 'Master Data', href: '/master-data', icon: 'database' },
@@ -32,8 +34,8 @@ function MobileSidebar({
 
     function isActive(href: string) {
         if (href === '/dashboard') {
-return url === '/dashboard';
-}
+            return url === '/dashboard';
+        }
 
         return url.startsWith(href);
     }

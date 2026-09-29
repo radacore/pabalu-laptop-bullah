@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,11 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+
+            // Global website settings — di-share ke semua halaman biar tidak
+            // perlu dipanggil manual di setiap controller. Menggunakan lazy
+            // closure supaya query DB hanya jalan kalau frontend akses prop.
+            'website' => fn () => WebsiteSetting::current(),
         ];
     }
 }

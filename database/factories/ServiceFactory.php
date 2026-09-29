@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Service;
 use App\Models\Customer;
+use App\Models\Service;
 use App\Models\ServiceStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Service>
@@ -43,11 +42,10 @@ class ServiceFactory extends Factory
             'estimated_cost' => fake()->numberBetween(100_000, 1_500_000),
             'final_cost' => null,
             'estimated_completion_date' => fake()->date(),
-            'service_status_id' => fn () => ServiceStatus::query()->create([
-                'name' => 'Diterima',
-                'slug' => 'diterima-'.Str::random(8),
-                'is_active' => true,
-            ])->id,
+            'service_status_id' => fn () => ServiceStatus::query()->firstOrCreate(
+                ['slug' => 'diterima'],
+                ['name' => 'Diterima', 'is_active' => true, 'sort_order' => 0],
+            )->id,
             'technician_id' => fn () => User::factory()->create(['role' => 'staff'])->id,
             'tracking_code' => fake()->unique()->bothify('TRK########'),
             'payment_status' => 'unpaid',

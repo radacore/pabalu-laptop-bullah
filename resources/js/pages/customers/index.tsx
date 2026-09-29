@@ -44,8 +44,8 @@ function customerInitials(name: string) {
 
 function formatDate(value: string | null) {
     if (!value) {
-return '-';
-}
+        return '-';
+    }
 
     return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
         new Date(value),
@@ -54,8 +54,8 @@ return '-';
 
 function relativeTime(value: string | null) {
     if (!value) {
-return '-';
-}
+        return '-';
+    }
 
     const seconds = Math.max(
         0,
@@ -68,24 +68,24 @@ return '-';
     const years = Math.floor(days / 365);
 
     if (years > 0) {
-return `${years} tahun lalu`;
-}
+        return `${years} tahun lalu`;
+    }
 
     if (months > 0) {
-return `${months} bulan lalu`;
-}
+        return `${months} bulan lalu`;
+    }
 
     if (days > 0) {
-return `${days} hari lalu`;
-}
+        return `${days} hari lalu`;
+    }
 
     if (hours > 0) {
-return `${hours} jam lalu`;
-}
+        return `${hours} jam lalu`;
+    }
 
     if (minutes > 0) {
-return `${minutes} menit lalu`;
-}
+        return `${minutes} menit lalu`;
+    }
 
     return 'baru saja';
 }
@@ -118,14 +118,14 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
-applyFilters();
-}
+            applyFilters();
+        }
     }
 
     function confirmDelete() {
         if (!customerToDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/customers/${customerToDelete.id}`, {
             preserveState: true,

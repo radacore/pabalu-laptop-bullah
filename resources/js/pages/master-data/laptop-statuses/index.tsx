@@ -19,24 +19,6 @@ interface LaptopStatusesIndexProps {
     filters: { search?: string };
 }
 
-function buildUrl(page: number, search: string | undefined) {
-    const params = new URLSearchParams();
-
-    if (search) {
-params.set('search', search);
-}
-
-    if (page > 1) {
-params.set('page', String(page));
-}
-
-    const query = params.toString();
-
-    return query
-        ? `/master-data/laptop-statuses?${query}`
-        : '/master-data/laptop-statuses';
-}
-
 const LaptopStatusesIndex = ({
     laptopStatuses,
     filters,
@@ -55,8 +37,8 @@ const LaptopStatusesIndex = ({
 
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/laptop-statuses/${toDelete.id}`, {
             preserveState: true,
@@ -213,8 +195,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Status Laptop?"

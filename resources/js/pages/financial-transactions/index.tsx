@@ -83,13 +83,13 @@ function buildTransactionsHref(page: number, filters: Props['filters']) {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
         if (value) {
-params.set(key, value);
-}
+            params.set(key, value);
+        }
     });
 
     if (page > 1) {
-params.set('page', String(page));
-}
+        params.set('page', String(page));
+    }
 
     const query = params.toString();
 
@@ -104,12 +104,12 @@ function buildPeriodLabel(filters: Props['filters']) {
     }
 
     if (filters.from_date) {
-return `Mulai ${formatTanggal(filters.from_date)}`;
-}
+        return `Mulai ${formatTanggal(filters.from_date)}`;
+    }
 
     if (filters.to_date) {
-return `Sampai ${formatTanggal(filters.to_date)}`;
-}
+        return `Sampai ${formatTanggal(filters.to_date)}`;
+    }
 
     return 'Semua Periode';
 }
@@ -242,10 +242,10 @@ function CashflowChart({
         const existing = buckets.get(key) ?? { income: 0, expense: 0 };
 
         if (t.type === 'income') {
-existing.income += Number(t.amount ?? 0);
-} else {
-existing.expense += Number(t.amount ?? 0);
-}
+            existing.income += Number(t.amount ?? 0);
+        } else {
+            existing.expense += Number(t.amount ?? 0);
+        }
 
         buckets.set(key, existing);
     });
@@ -347,10 +347,10 @@ function CategoryBreakdownCard({
         const existing = grouped.get(name) ?? { income: 0, expense: 0 };
 
         if (t.type === 'income') {
-existing.income += Number(t.amount ?? 0);
-} else {
-existing.expense += Number(t.amount ?? 0);
-}
+            existing.income += Number(t.amount ?? 0);
+        } else {
+            existing.expense += Number(t.amount ?? 0);
+        }
 
         grouped.set(name, existing);
     });
@@ -456,7 +456,8 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                             Keuangan
                         </h2>
                         <p className="mt-1 text-sm text-slate-500">
-                            Pantau kesehatan kas dan catatan transaksi Anda
+                            Transaksi dicatat otomatis dari servis & penjualan
+                            laptop
                         </p>
                     </div>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -475,7 +476,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                             className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
                         >
                             <Plus className="size-4" />
-                            Transaksi Baru
+                            Catat Pengeluaran
                         </Link>
                     </div>
                 </header>
@@ -719,7 +720,8 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                 Belum ada transaksi
                             </h3>
                             <p className="mt-1 text-sm text-slate-500">
-                                Sesuaikan filter atau buat transaksi baru.
+                                Transaksi akan muncul otomatis dari aktivitas
+                                servis & penjualan.
                             </p>
                         </div>
                     ) : (
@@ -741,6 +743,9 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                         </th>
                                         <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
                                             Metode
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                            Sumber
                                         </th>
                                         <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
                                             Tipe
@@ -784,6 +789,39 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                                 <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
                                                     {transaction.paymentMethod
                                                         ?.name ?? '—'}
+                                                </td>
+                                                <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
+                                                    {transaction.related
+                                                        ?.service_code ? (
+                                                        <Link
+                                                            href={`/services/${transaction.related.id}`}
+                                                            className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                        >
+                                                            Servis{' '}
+                                                            {
+                                                                transaction
+                                                                    .related
+                                                                    .service_code
+                                                            }
+                                                        </Link>
+                                                    ) : transaction.related
+                                                          ?.sku ? (
+                                                        <Link
+                                                            href={`/laptops/${transaction.related.id}`}
+                                                            className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                        >
+                                                            Laptop{' '}
+                                                            {transaction.related
+                                                                .name ??
+                                                                transaction
+                                                                    .related
+                                                                    .sku}
+                                                        </Link>
+                                                    ) : (
+                                                        <span className="text-sm text-slate-400">
+                                                            —
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
                                                     <span

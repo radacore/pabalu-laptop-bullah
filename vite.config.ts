@@ -19,7 +19,7 @@ export default defineConfig({
                     weights: [400, 500, 600, 700, 800],
                 }),
                 bunny('Plus Jakarta Sans', {
-                    weights: [400, 500, 600, 700],
+                    weights: [400, 500, 600, 700, 800],
                 }),
                 bunny('JetBrains Mono', {
                     weights: [400, 500, 600],
@@ -37,4 +37,36 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    build: {
+        // Split vendor libs ke chunk terpisah supaya page code tidak
+        // menyertakan seluruh library berat di setiap navigasi. Charts
+        // dan icon library (~200KB) hanya di-load kalau halaman butuh.
+        rollupOptions: {
+            output: {
+                manualChunks(id: string) {
+                    if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+                        return 'react-vendor';
+                    }
+
+                    if (id.includes('node_modules/@inertiajs/')) {
+                        return 'inertia';
+                    }
+
+                    if (id.includes('node_modules/@phosphor-icons/')) {
+                        return 'icons-phosphor';
+                    }
+
+                    if (id.includes('node_modules/lucide-react/')) {
+                        return 'icons-lucide';
+                    }
+
+                    if (id.includes('node_modules/recharts/')) {
+                        return 'charts';
+                    }
+
+                    return undefined;
+                },
+            },
+        },
+    },
 });

@@ -28,7 +28,18 @@ class UpdateLaptopRequest extends FormRequest
             'repair_cost' => ['nullable', 'numeric', 'min:0'],
             'mines' => ['nullable', 'string'],
             'laptop_status_id' => ['nullable', 'exists:laptop_statuses,id'],
+            'is_rentable' => ['nullable', 'boolean'],
+            'daily_rate' => ['nullable', 'numeric', 'min:0'],
             'sold_at' => ['nullable', 'date'],
+            'specification' => ['nullable', 'array'],
+            'specification.processor' => ['nullable', 'string', 'max:255'],
+            'specification.ram' => ['nullable', 'string', 'max:255'],
+            'specification.storage' => ['nullable', 'string', 'max:255'],
+            'specification.display' => ['nullable', 'string', 'max:255'],
+            'specification.graphics' => ['nullable', 'string', 'max:255'],
+            'specification.operating_system' => ['nullable', 'string', 'max:255'],
+            'specification.battery' => ['nullable', 'string', 'max:255'],
+            'specification.condition' => ['nullable', 'string', 'max:255'],
             'specification.other_specifications' => ['nullable', 'string'],
         ];
     }

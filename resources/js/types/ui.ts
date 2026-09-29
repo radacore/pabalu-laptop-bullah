@@ -13,7 +13,7 @@ export type FlashToast = {
     message: string;
 };
 
-export type PabaluToastVariant = 'success' | 'update' | 'delete';
+export type PabaluToastVariant = 'success' | 'update' | 'delete' | 'error';
 
 export type AuthLayoutProps = {
     children?: ReactNode;

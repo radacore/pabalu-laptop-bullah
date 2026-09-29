@@ -23,12 +23,12 @@ function buildUrl(page: number, search: string | undefined) {
     const params = new URLSearchParams();
 
     if (search) {
-params.set('search', search);
-}
+        params.set('search', search);
+    }
 
     if (page > 1) {
-params.set('page', String(page));
-}
+        params.set('page', String(page));
+    }
 
     const query = params.toString();
 
@@ -52,8 +52,8 @@ const CategoriesIndex = ({ categories, filters }: CategoriesIndexProps) => {
 
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/categories/${toDelete.id}`, {
             preserveState: true,
@@ -247,8 +247,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Kategori?"

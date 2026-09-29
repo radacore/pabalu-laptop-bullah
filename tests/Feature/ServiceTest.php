@@ -4,6 +4,7 @@ use App\Models\Customer;
 use App\Models\Service;
 use App\Models\ServiceStatus;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 
 function validServicePayload(array $overrides = []): array
@@ -42,13 +43,14 @@ function createServiceCustomer(): Customer
     ]);
 }
 
-function createServiceStatus(string $name): ServiceStatus
+function createServiceStatus(string $name, ?string $slug = null): ServiceStatus
 {
-    return ServiceStatus::query()->create([
-        'name' => $name,
-        'slug' => fake()->unique()->slug(),
-        'is_active' => true,
-    ]);
+    $slug ??= Str::slug($name);
+
+    return ServiceStatus::query()->firstOrCreate(
+        ['slug' => $slug],
+        ['name' => $name, 'is_active' => true, 'sort_order' => 0],
+    );
 }
 
 function createServiceRecord(array $overrides = []): Service
@@ -101,7 +103,7 @@ test('service store validates required fields', function () {
 
     $response
         ->assertRedirect(route('services.index'))
-        ->assertSessionHasErrors(['customer_id', 'device_name', 'complaint']);
+        ->assertSessionHasErrors(['customer_id', 'complaint']);
 });
 
 test('authenticated users can store a service', function () {
@@ -144,7 +146,7 @@ test('service update validates required fields', function () {
 
     $response
         ->assertRedirect(route('services.index'))
-        ->assertSessionHasErrors(['customer_id', 'device_name', 'complaint']);
+        ->assertSessionHasErrors(['customer_id', 'complaint']);
 });
 
 test('authenticated users can update a service', function () {
@@ -200,7 +202,7 @@ test('authenticated users can destroy a service', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect(route('services.index'));
 
-    $this->assertDatabaseMissing('services', [
+    $this->assertSoftDeleted('services', [
         'id' => $service->id,
     ]);
 });

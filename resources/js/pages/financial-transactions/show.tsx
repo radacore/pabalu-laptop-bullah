@@ -71,27 +71,27 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
                     <div className="space-y-1">
                         <p className="text-sm font-medium text-primary">
-                            Accounting & Cashflow
+                            Akuntansi & Arus Kas
                         </p>
                         <h1 className="text-2xl font-semibold tracking-tight">
                             {transaction.transaction_code}
                         </h1>
                         <p className="text-muted-foreground text-sm">
-                            Transaction detail and related accounting metadata.
+                            Detail transaksi dan metadata akuntansi terkait.
                         </p>
                     </div>
 
                     <div className="flex flex-wrap gap-3">
                         <Button variant="outline" asChild>
                             <Link href="/financial-transactions">
-                                Back to Transactions
+                                Kembali ke Transaksi
                             </Link>
                         </Button>
                         <Button asChild>
                             <Link
                                 href={`/financial-transactions/${transaction.id}/edit`}
                             >
-                                Edit Transaction
+                                Ubah Transaksi
                             </Link>
                         </Button>
                     </div>
@@ -101,9 +101,9 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                     <CardHeader>
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <div>
-                                <CardTitle>Transaction Summary</CardTitle>
+                                <CardTitle>Ringkasan Transaksi</CardTitle>
                                 <CardDescription>
-                                    Posted on{' '}
+                                    Tercatat pada{' '}
                                     {formatTanggal(
                                         transaction.transaction_date,
                                     )}
@@ -130,7 +130,7 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
 
                         <dl className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                             <DetailItem
-                                label="Code"
+                                label="Kode"
                                 value={transaction.transaction_code}
                             />
                             <DetailItem
@@ -148,17 +148,17 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                                 value={transaction.paymentMethod?.name ?? '-'}
                             />
                             <DetailItem
-                                label="Related Tipe"
+                                label="Tipe Terkait"
                                 value={transaction.related_type ?? '-'}
                             />
                             <DetailItem
-                                label="Related ID"
+                                label="ID Terkait"
                                 value={
                                     transaction.related_id?.toString() ?? '-'
                                 }
                             />
                             <DetailItem
-                                label="Dibuat By"
+                                label="Dibuat Oleh"
                                 value={transaction.created_by.toString()}
                             />
                         </dl>

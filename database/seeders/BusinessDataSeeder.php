@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use App\Models\Customer;
 use App\Models\FinancialTransaction;
 use App\Models\Laptop;
@@ -12,10 +13,12 @@ use App\Models\ServiceUpdate;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class BusinessDataSeeder extends Seeder
 {
     private int $adminId;
+
     private int $teknisiId;
 
     public function run(): void
@@ -57,7 +60,7 @@ class BusinessDataSeeder extends Seeder
                 ['phone' => $data['phone']],
                 [
                     'name' => $data['name'],
-                    'email' => strtolower($firstName) . '@gmail.com',
+                    'email' => strtolower($firstName).'@gmail.com',
                     'password' => bcrypt('password'),
                     'role' => 'customer',
                     'is_active' => true,
@@ -218,11 +221,24 @@ class BusinessDataSeeder extends Seeder
             $specs = $data['specs'];
             unset($data['specs']);
 
+            // Konversi label brand (string) ke brand_id (FK) — kolom string
+            // `brand` sudah di-drop di migration `drop_legacy_brand_column_from_laptops_table`.
+            $brandName = $data['brand'] ?? null;
+            unset($data['brand']);
+
+            if ($brandName) {
+                $data['brand_id'] = Brand::query()
+                    ->firstOrCreate(
+                        ['slug' => Str::slug($brandName)],
+                        ['name' => $brandName, 'is_active' => true, 'sort_order' => 0],
+                    )->id;
+            }
+
             $laptop = Laptop::firstOrCreate(
                 ['sku' => $data['sku']],
                 [
                     ...$data,
-                    'additional_cost' => 0,
+                    'repair_cost' => 0,
                     'description' => null,
                     'created_by' => $this->adminId,
                 ]
@@ -474,14 +490,14 @@ class BusinessDataSeeder extends Seeder
 
                 // Create financial transaction for each part usage (expense for cost_price)
                 FinancialTransaction::firstOrCreate(
-                    ['transaction_code' => 'EXP-' . $service->service_code . '-' . str_replace(' ', '-', $partData['part_name'])],
+                    ['transaction_code' => 'EXP-'.$service->service_code.'-'.str_replace(' ', '-', $partData['part_name'])],
                     [
                         'type' => 'expense',
                         'transaction_category_id' => 3,
                         'amount' => $partData['cost_price'] * $partData['quantity'],
                         'payment_method_id' => 1,
                         'transaction_date' => Carbon::parse($service->received_at)->format('Y-m-d'),
-                        'description' => 'Pembelian ' . $partData['part_name'] . ' untuk ' . $service->service_code,
+                        'description' => 'Pembelian '.$partData['part_name'].' untuk '.$service->service_code,
                         'created_by' => $this->adminId,
                     ]
                 );
@@ -490,14 +506,14 @@ class BusinessDataSeeder extends Seeder
             // Create financial transaction for service income if completed
             if (in_array($service->service_status_id, [7, 8, 9]) && $service->final_cost) {
                 FinancialTransaction::firstOrCreate(
-                    ['transaction_code' => 'INC-' . $service->service_code],
+                    ['transaction_code' => 'INC-'.$service->service_code],
                     [
                         'type' => 'income',
                         'transaction_category_id' => 2,
                         'amount' => $service->final_cost,
                         'payment_method_id' => $service->payment_status === 'paid' ? 1 : null,
                         'transaction_date' => Carbon::parse($service->picked_up_at ?? $service->completed_at ?? $service->received_at)->format('Y-m-d'),
-                        'description' => 'Pembayaran service ' . $service->service_code . ' - ' . $service->device_name,
+                        'description' => 'Pembayaran service '.$service->service_code.' - '.$service->device_name,
                         'related_type' => 'service',
                         'related_id' => $service->id,
                         'created_by' => $this->adminId,
@@ -586,7 +602,7 @@ class BusinessDataSeeder extends Seeder
         ];
 
         foreach ($transactions as $data) {
-            $code = ($data['type'] === 'income' ? 'INC' : 'EXP') . '-' . now()->format('ymd') . '-' . str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
+            $code = ($data['type'] === 'income' ? 'INC' : 'EXP').'-'.now()->format('ymd').'-'.str_pad((string) random_int(1, 9999), 4, '0', STR_PAD_LEFT);
 
             FinancialTransaction::firstOrCreate(
                 ['transaction_code' => $code],

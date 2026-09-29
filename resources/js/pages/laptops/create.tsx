@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { Brand, LaptopSource } from '@/types';
 
@@ -25,10 +26,7 @@ const textareaClass =
 
 const emptySelectValue = '__pabalu__empty__';
 
-export default function LaptopBuat({
-    brands,
-    sources,
-}: LaptopBuatHalamanProps) {
+function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) {
     const form = useForm({
         name: '',
         brand_id: '',
@@ -38,6 +36,8 @@ export default function LaptopBuat({
         cost_price: '',
         selling_price: '',
         repair_cost: '',
+        is_rentable: false as boolean,
+        daily_rate: '',
         mines: '',
         specification: {
             other_specifications: '',
@@ -261,6 +261,42 @@ export default function LaptopBuat({
                                 </p>
                                 <InputError message={form.errors.repair_cost} />
                             </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="daily_rate">
+                                    Tarif Sewa / Hari (Opsional)
+                                </Label>
+                                <Input
+                                    id="daily_rate"
+                                    type="number"
+                                    min={0}
+                                    value={form.data.daily_rate}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'daily_rate',
+                                            event.target.value,
+                                        )
+                                    }
+                                    placeholder="0"
+                                />
+                                <p className="text-muted-foreground text-xs">
+                                    Isi bila unit juga disewakan.
+                                </p>
+                                <InputError message={form.errors.daily_rate} />
+                            </div>
+                            <label className="flex items-center gap-2 text-sm md:col-span-2">
+                                <input
+                                    type="checkbox"
+                                    checked={form.data.is_rentable}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'is_rentable',
+                                            event.target.checked,
+                                        )
+                                    }
+                                    className="size-4"
+                                />
+                                Unit ini bisa disewa (tampil di katalog sewa)
+                            </label>
                             <div className="grid gap-2 md:col-span-2">
                                 <Label htmlFor="mines">
                                     Keterangan Mines (Opsional)
@@ -326,10 +362,16 @@ export default function LaptopBuat({
     );
 }
 
-LaptopBuat.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Inventaris', href: '/laptops' },
-        { title: 'Tambah Laptop Baru', href: '/laptops/create' },
-    ],
-};
+LaptopBuat.layout = (page: React.ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Inventaris', href: '/laptops' },
+            { title: 'Tambah Laptop Baru', href: '/laptops/create' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default LaptopBuat;

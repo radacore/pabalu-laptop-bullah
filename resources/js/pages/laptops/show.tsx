@@ -3,6 +3,7 @@ import { ArrowLeft, Edit, ImageIcon } from 'lucide-react';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { Laptop } from '@/types';
 
@@ -24,7 +25,7 @@ function detailValue(value: string | number | null | undefined) {
     return value === null || value === undefined || value === '' ? '-' : value;
 }
 
-export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
+function LaptopShow({ laptop }: LaptopShowHalamanProps) {
     const specification = laptop.specification;
     const margin =
         Number(laptop.selling_price ?? 0) -
@@ -196,7 +197,7 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                     <Card className="border-sidebar-border/70 dark:border-sidebar-border border-dashed shadow-sm">
                         <CardContent className="text-muted-foreground flex items-center gap-3 p-6 text-sm">
                             <ImageIcon className="size-5" />
-                            Tidak photos have been uploaded for this laptop.
+                            Belum ada foto untuk laptop ini.
                         </CardContent>
                     </Card>
                 )}
@@ -229,15 +230,134 @@ export default function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                         )}
                     </section>
                 )}
+
+                {laptop.financialTransactions &&
+                    laptop.financialTransactions.length > 0 && (
+                        <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
+                            <CardHeader>
+                                <CardTitle>Transaksi Penjualan</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full text-left text-sm">
+                                        <thead>
+                                            <tr className="border-b">
+                                                <th className="text-muted-foreground px-4 py-3 font-semibold">
+                                                    Kode
+                                                </th>
+                                                <th className="text-muted-foreground px-4 py-3 font-semibold">
+                                                    Tipe
+                                                </th>
+                                                <th className="text-muted-foreground px-4 py-3 font-semibold">
+                                                    Tanggal
+                                                </th>
+                                                <th className="text-muted-foreground px-4 py-3 font-semibold">
+                                                    Jumlah
+                                                </th>
+                                                <th className="text-muted-foreground px-4 py-3 font-semibold">
+                                                    Aksi
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y">
+                                            {laptop.financialTransactions.map(
+                                                (ft) => (
+                                                    <tr
+                                                        key={ft.id}
+                                                        className="hover:bg-muted/30 transition-colors"
+                                                    >
+                                                        <td className="px-4 py-3 font-mono text-sm font-medium">
+                                                            {
+                                                                ft.transaction_code
+                                                            }
+                                                        </td>
+                                                        <td className="px-4 py-3">
+                                                            <span
+                                                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                                                    ft.type ===
+                                                                    'income'
+                                                                        ? 'bg-emerald-50 text-emerald-700'
+                                                                        : 'bg-rose-50 text-rose-700'
+                                                                }`}
+                                                            >
+                                                                {ft.type ===
+                                                                'income'
+                                                                    ? 'Pemasukan'
+                                                                    : 'Pengeluaran'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="text-muted-foreground px-4 py-3">
+                                                            {new Intl.DateTimeFormat(
+                                                                'id-ID',
+                                                                {
+                                                                    dateStyle:
+                                                                        'medium',
+                                                                },
+                                                            ).format(
+                                                                new Date(
+                                                                    ft.transaction_date,
+                                                                ),
+                                                            )}
+                                                        </td>
+                                                        <td
+                                                            className={`px-4 py-3 font-bold tabular-nums ${
+                                                                ft.type ===
+                                                                'income'
+                                                                    ? 'text-emerald-700'
+                                                                    : 'text-rose-700'
+                                                            }`}
+                                                        >
+                                                            {ft.type ===
+                                                            'income'
+                                                                ? '+'
+                                                                : '−'}{' '}
+                                                            {new Intl.NumberFormat(
+                                                                'id-ID',
+                                                                {
+                                                                    style: 'currency',
+                                                                    currency:
+                                                                        'IDR',
+                                                                    maximumFractionDigits: 0,
+                                                                },
+                                                            ).format(
+                                                                Number(
+                                                                    ft.amount ??
+                                                                        0,
+                                                                ),
+                                                            )}
+                                                        </td>
+                                                        <td className="px-4 py-3">
+                                                            <Link
+                                                                href={`/financial-transactions/${ft.id}`}
+                                                                className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                            >
+                                                                Lihat
+                                                            </Link>
+                                                        </td>
+                                                    </tr>
+                                                ),
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
             </div>
         </>
     );
 }
 
-LaptopShow.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Inventaris', href: '/laptops' },
-        { title: 'Laptop Detail', href: '#' },
-    ],
-};
+LaptopShow.layout = (page: React.ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Inventaris', href: '/laptops' },
+            { title: 'Laptop Detail', href: '#' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
+
+export default LaptopShow;

@@ -19,9 +19,11 @@ type ServiceStatus = {
 };
 
 type PartItem = {
+    id?: number | string | null;
     tempId: string;
     kind: 'used' | 'sold';
     sparepart_type_id: string;
+    sparepart_id: string;
     part_name: string;
     quantity: string;
     cost_price: string;
@@ -43,6 +45,7 @@ type ServiceForm = {
     estimated_completion_date: string;
     technician_id: string;
     service_status_id: string;
+    sparepartsSignature: string;
     parts: PartItem[];
 };
 
@@ -60,22 +63,36 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
 
 function nullableString(value: unknown): string {
     if (value === null || value === undefined) {
-return '';
-}
+        return '';
+    }
 
     return String(value);
 }
 
+function sparepartsSignature(
+    parts: Array<{
+        id?: number | string | null;
+        sparepart_id?: number | string | null;
+        quantity?: number | string | null;
+    }>,
+): string {
+    return parts
+        .map((p) => `${p.id ?? ''}:${p.sparepart_id ?? ''}:${p.quantity ?? ''}`)
+        .sort()
+        .join('|');
+}
+
 function toTanggalInput(value?: string | null): string {
     if (!value) {
-return '';
-}
+        return '';
+    }
 
     return value.split('T')[0] ?? '';
 }
 
 function partFromExisting(p: ServicePart): PartItem {
     return {
+        id: p.id ?? null,
         tempId:
             typeof crypto !== 'undefined' && 'randomUUID' in crypto
                 ? crypto.randomUUID()
@@ -84,6 +101,14 @@ function partFromExisting(p: ServicePart): PartItem {
         sparepart_type_id: p.sparepart_type_id
             ? String(p.sparepart_type_id)
             : '',
+        sparepart_id:
+            (p as { sparepart_id?: number | string | null }).sparepart_id !=
+            null
+                ? String(
+                      (p as { sparepart_id?: number | string | null })
+                          .sparepart_id,
+                  )
+                : '',
         part_name: p.part_name ?? p.name ?? '',
         quantity: String(p.quantity ?? 1),
         cost_price: String(p.cost_price ?? 0),
@@ -100,6 +125,7 @@ const newPart = (): PartItem => ({
             : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
     kind: 'used',
     sparepart_type_id: '',
+    sparepart_id: '',
     part_name: '',
     quantity: '1',
     cost_price: '0',
@@ -110,8 +136,8 @@ const newPart = (): PartItem => ({
 
 function FieldError({ message }: { message?: string }) {
     if (!message) {
-return null;
-}
+        return null;
+    }
 
     return <p className="mt-1 text-sm text-red-600">{message}</p>;
 }
@@ -143,6 +169,15 @@ const ServicesEdit: HalamanComponent = ({
         ),
         technician_id: String(service.technician?.id ?? ''),
         service_status_id: String(service.status?.id ?? ''),
+        sparepartsSignature: sparepartsSignature(
+            (service.parts ?? []).map((p) => ({
+                id: p.id ?? null,
+                sparepart_id:
+                    (p as { sparepart_id?: number | string | null })
+                        .sparepart_id ?? null,
+                quantity: p.quantity ?? 1,
+            })),
+        ),
         parts: (service.parts ?? []).map(partFromExisting),
     });
 
@@ -172,13 +207,57 @@ const ServicesEdit: HalamanComponent = ({
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        form.put(`/services/${service.id}`);
+        form.transform((data) => ({
+            ...data,
+            sparepartsSignature: sparepartsSignature(
+                data.parts.map((p) => ({
+                    id: p.id ?? null,
+                    sparepart_id: p.sparepart_id || null,
+                    quantity: Number(p.quantity) || 1,
+                })),
+            ),
+            parts: data.parts.map(
+                ({
+                    id,
+                    kind,
+                    sparepart_type_id,
+                    sparepart_id,
+                    part_name,
+                    quantity,
+                    cost_price,
+                    selling_price,
+                    installation_fee,
+                    note,
+                }) => ({
+                    ...(id ? { id } : {}),
+                    kind,
+                    sparepart_type_id: sparepart_type_id || null,
+                    sparepart_id: sparepart_id || null,
+                    part_name,
+                    quantity: Number(quantity) || 1,
+                    cost_price: Number(cost_price) || 0,
+                    selling_price: Number(selling_price) || 0,
+                    installation_fee: Number(installation_fee) || 0,
+                    note: note || null,
+                }),
+            ),
+        }));
+        form.put(`/services/${service.id}`, {
+            onFinish: () => form.clearErrors(),
+        });
     };
 
     return (
         <>
             <Head title={`Edit Servis — ${service.service_code}`} />
             <form onSubmit={submit} className="mx-auto max-w-5xl space-y-6">
+                <input
+                    type="hidden"
+                    value={form.data.sparepartsSignature}
+                    readOnly
+                    aria-hidden="true"
+                    tabIndex={-1}
+                />
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
@@ -498,6 +577,35 @@ const ServicesEdit: HalamanComponent = ({
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div>
+                                            <label className="mb-1 block text-xs font-medium text-slate-600">
+                                                Stok Inventori (opsional)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={part.sparepart_id}
+                                                onChange={(e) =>
+                                                    updatePart(
+                                                        part.tempId,
+                                                        'sparepart_id',
+                                                        e.target.value.replace(
+                                                            /[^0-9]/g,
+                                                            '',
+                                                        ),
+                                                    )
+                                                }
+                                                placeholder="ID stok, kosongkan bila manual"
+                                                inputMode="numeric"
+                                                className={inputClass}
+                                            />
+                                            <FieldError
+                                                message={
+                                                    form.errors[
+                                                        `parts.${index}.sparepart_id` as keyof typeof form.errors
+                                                    ] as string | undefined
+                                                }
+                                            />
+                                        </div>
                                         <div>
                                             <label className="mb-1 block text-xs font-medium text-slate-600">
                                                 Tipe Sparepart

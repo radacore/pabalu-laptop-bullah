@@ -49,24 +49,24 @@ function buildLaptopsUrl(
     const params = new URLSearchParams();
 
     if (filters.search) {
-params.set('search', filters.search);
-}
+        params.set('search', filters.search);
+    }
 
     if (filters.brand_id) {
-params.set('brand_id', filters.brand_id);
-}
+        params.set('brand_id', filters.brand_id);
+    }
 
     if (filters.laptop_status_id) {
-params.set('laptop_status_id', filters.laptop_status_id);
-}
+        params.set('laptop_status_id', filters.laptop_status_id);
+    }
 
     if (filters.laptop_source_id) {
-params.set('laptop_source_id', filters.laptop_source_id);
-}
+        params.set('laptop_source_id', filters.laptop_source_id);
+    }
 
     if (page > 1) {
-params.set('page', String(page));
-}
+        params.set('page', String(page));
+    }
 
     const query = params.toString();
 
@@ -109,8 +109,8 @@ const LaptopsIndex: HalamanComponent = ({
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.key === 'Enter') {
-applyFilters();
-}
+            applyFilters();
+        }
     }
 
     function deleteLaptop() {
@@ -118,8 +118,15 @@ applyFilters();
             return;
         }
 
-        router.delete(`/laptops/${toDelete.id}`);
-        setToDelete(null);
+        // Gagal hapus (disewa/riwayat rental) dikirim backend sebagai flash
+        // toast error — dialog ditutup setelah request selesai.
+        router.delete(`/laptops/${toDelete.id}`, {
+            preserveState: true,
+            replace: true,
+            onFinish: () => {
+                setToDelete(null);
+            },
+        });
     }
 
     return (

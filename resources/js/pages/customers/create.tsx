@@ -9,7 +9,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -19,7 +18,6 @@ type PelangganForm = {
     phone: string;
     address: string;
     note: string;
-    create_user_account: boolean;
 };
 
 type HalamanComponent = (() => ReactNode) & {
@@ -84,7 +82,6 @@ const PelanggansBuat: HalamanComponent = () => {
         phone: '',
         address: '',
         note: '',
-        create_user_account: false,
     });
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -113,7 +110,7 @@ const PelanggansBuat: HalamanComponent = () => {
                     <CardHeader>
                         <CardTitle>Detail Pelanggan</CardTitle>
                         <CardDescription>
-                            Simpan informasi kontak dan akses akun opsional.
+                            Simpan informasi kontak pelanggan.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4">
@@ -160,27 +157,6 @@ const PelanggansBuat: HalamanComponent = () => {
                                 placeholder="Catatan internal"
                             />
                         </Field>
-                        <div className="flex items-center gap-3 rounded-lg border p-4">
-                            <Checkbox
-                                checked={form.data.create_user_account}
-                                onCheckedChange={(checked) =>
-                                    form.setData(
-                                        'create_user_account',
-                                        checked === true,
-                                    )
-                                }
-                                id="create_user_account"
-                            />
-                            <div className="grid gap-1">
-                                <Label htmlFor="create_user_account">
-                                    Buat Akun User
-                                </Label>
-                                <p className="text-muted-foreground text-sm">
-                                    Buat kredensial login untuk pelanggan ini.
-                                </p>
-                            </div>
-                        </div>
-                        <InputError message={form.errors.create_user_account} />
                     </CardContent>
                 </Card>
 

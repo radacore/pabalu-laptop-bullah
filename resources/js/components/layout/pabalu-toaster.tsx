@@ -5,13 +5,12 @@ import {
     useContext,
     useEffect,
     useRef,
-    useState
-    
+    useState,
 } from 'react';
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import type { FlashToast } from '@/types/ui';
 
-type ToastVariant = 'success' | 'update' | 'delete';
+type ToastVariant = 'success' | 'update' | 'delete' | 'error';
 
 type Toast = {
     id: string;
@@ -34,20 +33,20 @@ export function useToast(): ToastContextType {
     const ctx = useContext(ToastContext);
 
     if (!ctx) {
-throw new Error('useToast must be used within a <ToastProvider />');
-}
+        throw new Error('useToast must be used within a <ToastProvider />');
+    }
 
     return ctx;
 }
 
 function detectVariant(message: string): ToastVariant {
     if (message.includes('dihapus')) {
-return 'delete';
-}
+        return 'delete';
+    }
 
     if (message.includes('diperbarui') || message.includes('diedit')) {
-return 'update';
-}
+        return 'update';
+    }
 
     return 'success';
 }
@@ -71,12 +70,18 @@ const variantConfig: Record<
         icon: 'delete',
         iconColor: 'text-[#ba1a1a]',
     },
+    error: {
+        border: 'border-[#ba1a1a]',
+        icon: 'error',
+        iconColor: 'text-[#ba1a1a]',
+    },
 };
 
 const defaultDescriptions: Record<ToastVariant, string> = {
     success: 'Informasi baru telah ditambahkan ke sistem.',
     update: 'Data berhasil diperbarui.',
     delete: 'Data telah dihapus dari sistem.',
+    error: 'Periksa kembali data Anda lalu coba lagi.',
 };
 
 function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
@@ -135,17 +140,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         [removeToast],
     );
 
-    /* Listen for Inertia flash toasts */
+    /* Listen for Inertia flash toasts (success + error).
+     * Backend mengirim flash toast error untuk guard yang gagal (mis.
+     * hapus entitas berelasi) — tanpa ini kegagalan tampil sebagai diam
+     * total karena key withErrors tidak dirender halaman manapun. */
     useEffect(() => {
         return router.on('flash', (event) => {
             const flash = (event as CustomEvent).detail?.flash;
             const data = flash?.toast as FlashToast | undefined;
 
             if (!data) {
-return;
-}
+                return;
+            }
 
-            const variant = detectVariant(data.message);
+            const variant =
+                data.type === 'error' ? 'error' : detectVariant(data.message);
 
             let message = data.message;
             /* Capitalise first letter */

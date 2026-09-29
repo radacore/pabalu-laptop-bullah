@@ -1,120 +1,120 @@
-# Hallmark Hum — Design Reference
+---
+name: TechCycle Design System
+description: Design system minimalis dan bersih untuk platform jual beli laptop bekas, sewa laptop, dan servis perangkat keras.
+colors:
+  primary: "#111111"
+  primary-hover: "#262626"
+  secondary: "#71717A"
+  background: "#F8F9FA"
+  surface: "#FFFFFF"
+  surface-media: "#F1F3F5"
+  surface-dark: "#1E1F22"
+  text-primary: "#111111"
+  text-secondary: "#71717A"
+  text-inverted: "#FFFFFF"
+  border: "#E5E7EB"
+  accent-badge: "#FF4D4D"
+  rating-star: "#F59E0B"
+  success: "#10B981"
+typography:
+  font-family: "Plus Jakarta Sans, Inter, sans-serif"
+  display:
+    fontSize: "6.5rem"
+    fontWeight: "800"
+    lineHeight: "0.95"
+    letterSpacing: "-0.04em"
+  h2:
+    fontSize: "2rem"
+    fontWeight: "700"
+    lineHeight: "1.25"
+    letterSpacing: "-0.02em"
+  h3:
+    fontSize: "1.25rem"
+    fontWeight: "600"
+    lineHeight: "1.3"
+  product-title:
+    fontSize: "1rem"
+    fontWeight: "600"
+    lineHeight: "1.35"
+  body-base:
+    fontSize: "0.875rem"
+    fontWeight: "400"
+    lineHeight: "1.6"
+  caption:
+    fontSize: "0.75rem"
+    fontWeight: "500"
+rounded:
+  sm: "6px"
+  md: "10px"
+  lg: "16px"
+  xl: "20px"
+  2xl: "24px"
+  full: "9999px"
+spacing:
+  xs: "4px"
+  sm: "8px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
+  2xl: "64px"
+  3xl: "80px"
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.text-inverted}"
+    rounded: "{rounded.full}"
+    padding: "10px 22px"
+    fontSize: "0.875rem"
+    fontWeight: "600"
+  button-secondary:
+    backgroundColor: "transparent"
+    border: "1px solid {colors.border}"
+    textColor: "{colors.text-primary}"
+    rounded: "{rounded.full}"
+    padding: "10px 18px"
+    fontSize: "0.875rem"
+    fontWeight: "600"
+  card:
+    backgroundColor: "{colors.surface}"
+    mediaBackground: "{colors.surface-media}"
+    border: "1px solid {colors.border}"
+    rounded: "{rounded.2xl}"
+    padding: "{spacing.lg}"
+  floating-search:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.full}"
+    padding: "8px 8px 8px 24px"
+    elevation: "0 12px 32px -4px rgba(0, 0, 0, 0.08)"
+---
 
-> Warm, alive, smart-but-joyful. Cream paper, multi-accent palette, rounded sans typography, generous radii, soft lifting shadows.
+## Overview
+TechCycle menggabungkan estetika *clean e-commerce* dengan kejelasan informasi perangkat *refurbished* dan layanan servis[cite: 1]. Pendekatan visual berfokus pada tipografi *oversized*, latar kanvas netral, kontainer media abu-abu lembut tanpa distraksi, serta tombol aksi *pill-shaped* kontras tinggi[cite: 1].
 
-**Theme:** playful · Hum
+## Colors
+* **Primary (`#111111`)**: Aksi utama (tombol beli/sewa, pencarian, dan container callout banner)[cite: 1, 2].
+* **Background (`#F8F9FA`)**: Kanvas utama yang memberikan suasana lapang dan bersih[cite: 1, 2].
+* **Surface Media (`#F1F3F5`)**: Container visual untuk foto hardware laptop agar detail fisik terlihat jelas dan terisolasi[cite: 1, 2].
+* **Text Primary (`#111111`)**: Keterbacaan tinggi dengan rasio kontras melebihi standar WCAG AAA[cite: 1, 2].
+* **Text Secondary (`#71717A`)**: Penanda spesifikasi perangkat, detail garansi, dan metadata[cite: 1, 2].
+* **Accent & Star (`#FF4D4D`, `#F59E0B`)**: Penanda kuota/promo penting dan rating kepuasan pelanggan[cite: 1, 2].
 
-The products don't take themselves too seriously — the interface feels like the room is warm and someone smart is smiling. Cream paper (never pure white), three accent colours that each own their own surface, rounded everything, and motion that makes every interaction feel alive.
+## Typography
+* **Font Family**: Plus Jakarta Sans atau Inter untuk seluruh elemen tampilan[cite: 1, 2].
+* **Display Hero**: Tipografi judul ekstra besar dengan efek masked transparan di atas gambar hero suasana studio[cite: 1, 2].
+* **Tabular Figures**: Digunakan untuk harga, kapasitas RAM/SSD, dan hitungan unit agar pembandingan visual tetap sejajar[cite: 2].
 
-## Tokens — Colors
+## Layout & Spacing
+* **Sistem Spacing**: Kelipatan 8px grid[cite: 1, 2].
+* **Container**: Lebar maksimum `1440px` terpusat dengan padding samping responsif[cite: 1, 2].
+* **Hero Search**: Bilah pencarian berbentuk kapsul diletakkan mengambang (*overlap*) pada batas bawah container hero banner[cite: 1, 2].
 
-| Name | OKLCH | Token | Role |
-|------|-------|-------|------|
-| Paper | `oklch(97% 0.012 95)` | `--color-paper` | Warm cream canvas — never pure white |
-| Paper 2 | `oklch(94% 0.016 95)` | `--color-paper-2` | Tinted band (yellower) |
-| Paper 3 | `oklch(91% 0.020 95)` | `--color-paper-3` | Deeper hover surface |
-| Ink | `oklch(20% 0.012 250)` | `--color-ink` | Primary text — near-black with cool tilt, never pure black |
-| Ink 2 | `oklch(34% 0.018 257)` | `--color-ink-2` | Secondary text |
-| Accent (Pear) | `oklch(86% 0.18 95)` | `--color-accent` | Primary CTA, streaks, character mark |
-| Accent Deep | `oklch(76% 0.20 95)` | `--color-accent-deep` | Button edge shadow |
-| Accent 2 (Cyan) | `oklch(66% 0.18 235)` | `--color-accent-2` | Links, hover tints, illustrations |
-| Accent 3 (Coral) | `oklch(68% 0.24 18)` | `--color-accent-3` | Pop — single high-energy moment per page |
-| Mint | `oklch(80% 0.16 150)` | `--color-mint` | Occasional — success states |
-| Lavender | `oklch(74% 0.16 305)` | `--color-lavender` | Occasional — tag chips |
-| Graphite | `oklch(22% 0.016 260)` | `--color-graphite` | Dark code cards |
-| Surface | `oklch(94% 0.016 95)` | `--color-surface` | Tinted sections |
-| Rule | `oklch(88% 0.012 95)` | `--color-rule` | Soft dividers |
+## Shapes & Elevation
+* **Pill Shape (`9999px`)**: Digunakan konsisten untuk tombol aksi, filter chip, badge, input pencarian, dan tautan navigasi sekunder[cite: 1, 2].
+* **Border Radius (`20px - 24px`)**: Diterapkan pada kartu produk, kontainer media gambar, dan banner utama[cite: 1, 2].
+* **Depth**: Mengutamakan pemisahan tonal (*tonal elevation*) dan garis border tipis 1px (`#E5E7EB`), dengan bayangan lembut hanya pada bilah pencarian mengambang[cite: 1, 2].
 
-**Three-rule for accents:**
-1. Each accent owns its own surface. Pear = primary action. Cyan = links/hover. Coral = single emphatic moment.
-2. Accents never blend in gradients.
-3. Mint and lavender are occasional — never more than one per page.
-
-## Tokens — Typography
-
-Three font families. Rounded sans throughout.
-
-### Plus Jakarta Sans — Display headlines
-- **Role:** Hero headlines, section headings, product names
-- **Weights:** 500, 600, 700
-- **Tracking:** -0.025em at display size
-- **Token:** `--font-display`
-
-### Inter — Body copy, navigation, buttons
-- **Role:** Everything that isn't a headline or code
-- **Weights:** 400, 500
-- **Token:** `--font-body`
-
-### JetBrains Mono — Labels, specs, code
-- **Role:** Uppercase labels, spec values, tracking codes, status badges
-- **Weights:** 400, 500
-- **Tracking:** 0.10em uppercase
-- **Token:** `--font-mono`
-
-## Tokens — Shapes
-
-| Element | Value | Token |
-|---------|-------|-------|
-| Cards | 20px | `--radius-card` |
-| Buttons | 999px (pill) | `--radius-btn` |
-| Inputs | 12px | `--radius-input` |
-
-## Tokens — Shadows
-
-| Name | Value | Usage |
-|------|-------|-------|
-| Card | `0 12px 32px -16px oklch(20% 0.012 250 / 0.12)` | Default card lift |
-| Card Hover | `0 20px 40px -12px oklch(20% 0.012 250 / 0.18)` | Card on hover |
-| Product | `0 16px 40px -12px oklch(20% 0.012 250 / 0.20)` | Product imagery |
-| Button | `0 4px 0 0 accent-deep, 0 6px 12px -3px accent-cast` | Push button edge |
-
-## Tokens — Motion
-
-| Element | Motion |
-|---------|--------|
-| Primary CTA | Lift 2px on hover, press DOWN 3px on `:active` |
-| Cards | Lift 4px + shadow brighten + tint deepen on hover (220ms spring) |
-| Character mark | Pulse at rest (4s gentle scale 1 → 1.04 → 1) |
-| Star-burst | 420ms on CTA click, fires once |
-
-## Components
-
-### Push Button (`.hum-btn`)
-Solid colour edge + soft ground shadow. The press is the feedback — physically depresses on `:active`.
-
-### Soft Button (`.hum-btn--soft`)
-Flat lift, no colour edge. For secondary actions.
-
-### Outline Button (`.hum-btn--outline`)
-Hairline + accent fill sweeps up on hover.
-
-### Color-shift Card (`.hum-card`)
-Each card has a different accent tint at rest (~6%). On hover: tint deepens (~12%), card lifts 4px.
-
-### Character Mark
-One small CSS-only element that pulses at rest. Lives in pear-yellow by default.
-
-## Layout
-
-- **Max content width:** 980px
-- **Section padding:** py-16 md:py-20
-- **Section rhythm:** alternating bg-paper and bg-paper-2/bands with accent tints
-- **Hero:** left-aligned title + lede + CTA, product image right
-
-## Do's and Don'ts
-
-### Do
-- Use Plus Jakarta Sans for all display headlines
-- Use three accent colours, each owning its own surface
-- Give cards rounded corners (20px) and soft shadows
-- Use push buttons with color edge + shadow for primary actions
-- Add hover lift + tint deepen on cards
-- Add one character moment per page (optional)
-
-### Don't
-- Don't use pure #000 or #fff — use oklch ink/paper tokens
-- Don't use square corners anywhere
-- Don't use gradients between accents
-- Don't use serif fonts anywhere
-- Don't use more than one character moment per page
-- Don't use three identical accent cards in a row — vary the shape
+## Rules to Never Break
+* Dilarang menggunakan shadow gelap pekat atau border hitam tebal bergaya neubrutalisme[cite: 1, 2].
+* Tombol CTA utama wajib mempertahankan format *full pill* dengan warna hitam pekat (`#111111`)[cite: 1, 2].
+* Seluruh foto unit laptop harus berada di dalam container media abu-abu (`#F1F3F5`) berlatar belakang bersih atau transparan[cite: 1, 2].
+* Hindari penambahan badge dekoratif yang menumpuk di atas banner judul utama agar visual tetap tenang dan minimalis[cite: 1].

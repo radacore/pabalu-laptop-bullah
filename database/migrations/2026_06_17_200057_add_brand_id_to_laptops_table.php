@@ -32,7 +32,7 @@ return new class extends Migration
                 ->whereRaw('LOWER(name) = ?', [strtolower($brandName)])
                 ->first();
 
-            if (!$brand) {
+            if (! $brand) {
                 $brandId = DB::table('brands')->insertGetId([
                     'name' => $brandName,
                     'slug' => strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $brandName)),

@@ -17,6 +17,17 @@ class EnsureUserHasRole
             abort(403);
         }
 
+        // User yang di-nonaktifkan (is_active=false) tidak boleh mengakses
+        // resource protected walaupun session masih valid. Logout paksa
+        // supaya cookie session tidak "menghidupkan" akses lagi.
+        if ($user->is_active === false) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            abort(403, 'Akun Anda telah dinonaktifkan.');
+        }
+
         return $next($request);
     }
 }

@@ -1,7 +1,6 @@
 import { Head } from '@inertiajs/react';
 import AppearanceTabs from '@/components/layout/appearance-tabs';
 import Heading from '@/components/layout/heading';
-import { edit as editAppearance } from '@/routes/appearance';
 
 export default function Appearance() {
     return (
@@ -21,12 +20,3 @@ export default function Appearance() {
         </>
     );
 }
-
-Appearance.layout = {
-    breadcrumbs: [
-        {
-            title: 'Appearance settings',
-            href: editAppearance(),
-        },
-    ],
-};

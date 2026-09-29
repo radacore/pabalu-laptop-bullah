@@ -16,9 +16,9 @@ createInertiaApp({
                 return null;
             case name === 'services/tracking':
                 return null;
-            case name === 'public/laptop-catalog':
+            case name === 'rentals/tracking':
                 return null;
-            case name === 'public/laptop-detail':
+            case name.startsWith('public/'):
                 return null;
             case name === 'auth/login':
                 return undefined;

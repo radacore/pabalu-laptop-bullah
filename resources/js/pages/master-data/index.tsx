@@ -4,7 +4,6 @@ import {
     ChartBar,
     CircleNotch,
     Cpu,
-    Database,
     GearSix,
     HardDrives,
     Package,

@@ -23,7 +23,7 @@ class WebsiteSettingController extends Controller
     {
         $setting = WebsiteSetting::current();
         $data = $request->validated();
-        unset($data['logo'], $data['remove_logo']);
+        unset($data['logo'], $data['remove_logo'], $data['hero_image'], $data['remove_hero_image']);
 
         if ($request->boolean('remove_logo') && $setting->logo) {
             Storage::disk('public')->delete($setting->logo);
@@ -35,6 +35,18 @@ class WebsiteSettingController extends Controller
                 Storage::disk('public')->delete($setting->logo);
             }
             $data['logo'] = $request->file('logo')->store('website', 'public');
+        }
+
+        if ($request->boolean('remove_hero_image') && $setting->hero_image) {
+            Storage::disk('public')->delete($setting->hero_image);
+            $data['hero_image'] = null;
+        }
+
+        if ($request->hasFile('hero_image')) {
+            if ($setting->hero_image) {
+                Storage::disk('public')->delete($setting->hero_image);
+            }
+            $data['hero_image'] = $request->file('hero_image')->store('website', 'public');
         }
 
         $data['updated_by'] = Auth::id();

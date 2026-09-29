@@ -1,18 +1,26 @@
-/* Hallmark · genre: modern-minimal · macrostructure: split-studio · theme: hum */
+/* TechCycle · detail produk · locked system: design.md
+ * Media abu #F1F3F5 + harga tabular + CTA pill hitam + sticky buy bar mobile.
+ */
 
+import { Link } from '@inertiajs/react';
 import {
     ArrowRight,
     BatteryFull,
     CaretRight,
+    ChatCircle,
     Cpu,
     HardDrive,
     Laptop as LaptopIcon,
     Monitor,
+    ShieldCheck,
 } from '@phosphor-icons/react';
 import type { ComponentType } from 'react';
 import { useState } from 'react';
-import { PublicPage, formatCurrency } from '@/components/public-layout';
+import { PublicPage } from '@/components/public-layout';
+import { formatShortPrice, formatSoldCount } from '@/lib/format';
+import { mockCommerce, originalPrice } from '@/lib/mock-commerce';
 import type { Laptop as LaptopType, MasterData, WebsiteSetting } from '@/types';
+import { StarGlyph } from './laptop-catalog';
 
 type LaptopPhoto = NonNullable<LaptopType['photos']>[number];
 
@@ -47,6 +55,12 @@ function brandName(brand: MasterData | null | undefined, fallback: string) {
 }
 
 function laptopDisplayName(laptop: LaptopType) {
+    const name = laptop.name?.trim();
+
+    if (name) {
+        return name;
+    }
+
     return `${brandName(laptop.brand, '')} ${laptop.model}`.trim();
 }
 
@@ -66,20 +80,14 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                 laptop.name ??
                 `${laptopDisplayName(laptop)} foto ${index + 1}`,
         }));
-    const images =
-        galleryImages.length > 0
-            ? galleryImages
-            : [
-                  {
-                      id: 'fallback',
-                      src: 'https://picsum.photos/seed/pabalu-laptop-detail/1200/900',
-                      alt: laptop.name ?? laptopDisplayName(laptop),
-                  },
-              ];
+    const hasPhotos = galleryImages.length > 0;
+    const images = hasPhotos ? galleryImages : [];
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
     const selectedImage =
-        images[Math.min(selectedPhotoIndex, images.length - 1)] ?? images[0];
+        images[Math.min(selectedPhotoIndex, images.length - 1)];
     const spec = laptop.specification;
+    const commerce = mockCommerce(laptop.id);
+    const orig = originalPrice(laptop.selling_price, commerce.discountPct);
     const waText = encodeURIComponent(
         `Halo, saya tertarik dengan ${laptop.name ?? laptop.sku}. Apakah masih tersedia?`,
     );
@@ -88,12 +96,17 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
         '',
     );
     const waLink = `https://wa.me/${waNumber}?text=${waText}`;
+    const isRentable = Boolean(laptop.is_rentable);
+    const sewaText = encodeURIComponent(
+        `Halo, saya tertarik menyewa ${laptop.name ?? laptop.sku}. Apakah masih tersedia?`,
+    );
+    const sewaLink = `https://wa.me/${waNumber}?text=${sewaText}`;
 
     const specs: Array<{ icon: SpecIcon; label: string; value: string }> = [
-        { icon: Cpu, label: 'Processor', value: spec?.processor ?? '—' },
-        { icon: HardDrive, label: 'RAM', value: spec?.ram ?? '—' },
-        { icon: HardDrive, label: 'Storage', value: spec?.storage ?? '—' },
-        { icon: Monitor, label: 'Layar', value: spec?.display ?? '—' },
+        { icon: Cpu, label: 'Processor', value: spec?.processor ?? '-' },
+        { icon: HardDrive, label: 'RAM', value: spec?.ram ?? '-' },
+        { icon: HardDrive, label: 'Storage', value: spec?.storage ?? '-' },
+        { icon: Monitor, label: 'Layar', value: spec?.display ?? '-' },
         {
             icon: BatteryFull,
             label: 'Baterai',
@@ -104,150 +117,261 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
     return (
         <PublicPage
             website={website}
-            title={`${laptop.name ?? laptop.sku} - ${website.website_name}`}
+            title={`${laptopDisplayName(laptop)} - ${website.website_name}`}
             currentPath="/shop"
         >
-            <section className="border-b border-rule/60">
-                <div className="mx-auto max-w-[980px] px-4 py-3">
-                    <nav
-                        className="flex flex-wrap items-center gap-1 hum-caption text-ink-2/60"
-                        aria-label="Breadcrumb"
+            <div className="mx-auto max-w-[1440px] px-4 pt-5 md:px-6">
+                <nav
+                    className="flex flex-wrap items-center gap-1.5 tc-caption"
+                    aria-label="Breadcrumb"
+                >
+                    <a
+                        href="/"
+                        className="transition hover:underline"
+                        style={{ color: 'var(--color-tc-ink)' }}
                     >
-                        <a
-                            href="/"
-                            className="text-accent-2 transition hover:text-accent-2/80"
-                        >
-                            Beranda
-                        </a>
-                        <CaretRight
-                            className="h-3 w-3"
-                            weight="bold"
-                            aria-hidden="true"
-                        />
-                        <a
-                            href="/shop"
-                            className="text-accent-2 transition hover:text-accent-2/80"
-                        >
-                            Katalog
-                        </a>
-                        <CaretRight
-                            className="h-3 w-3"
-                            weight="bold"
-                            aria-hidden="true"
-                        />
-                        <span className="text-ink">
-                            {brandName(laptop.brand, laptop.model)}
-                        </span>
-                    </nav>
-                </div>
-            </section>
+                        Beranda
+                    </a>
+                    <CaretRight
+                        className="h-3 w-3"
+                        weight="bold"
+                        aria-hidden="true"
+                    />
+                    <a
+                        href="/shop"
+                        className="transition hover:underline"
+                        style={{ color: 'var(--color-tc-ink)' }}
+                    >
+                        Katalog
+                    </a>
+                    <CaretRight
+                        className="h-3 w-3"
+                        weight="bold"
+                        aria-hidden="true"
+                    />
+                    <span style={{ color: 'var(--color-tc-ink)' }}>
+                        {brandName(laptop.brand, laptop.model)}
+                    </span>
+                </nav>
+            </div>
 
-            <section className="bg-paper py-12 md:py-20">
-                <div className="mx-auto max-w-[980px] px-4">
-                    <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-                        <div>
-                            <div className="aspect-[4/3] overflow-hidden rounded-[20px] shadow-product">
+            <section className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 md:py-12">
+                <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+                    <div>
+                        <div className="tc-media aspect-[4/3]">
+                            {selectedImage ? (
                                 <img
                                     alt={selectedImage.alt}
                                     src={selectedImage.src}
+                                    decoding="async"
+                                    fetchPriority="high"
                                     className="h-full w-full object-cover"
                                 />
-                            </div>
-                            {images.length > 1 ? (
-                                <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-                                    {images.map((photo, index) => (
-                                        <button
-                                            key={photo.id}
-                                            type="button"
-                                            onClick={() => {
-                                                setSelectedPhotoIndex(index);
-                                            }}
-                                            className={`h-16 w-16 shrink-0 overflow-hidden rounded-[20px] border transition ${
-                                                index === selectedPhotoIndex
-                                                    ? 'border-accent'
-                                                    : 'border-rule opacity-60 hover:opacity-100'
-                                            }`}
-                                        >
-                                            <img
-                                                alt={photo.alt}
-                                                src={photo.src}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </button>
-                                    ))}
+                            ) : (
+                                <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-8 text-center">
+                                    <LaptopIcon
+                                        className="h-16 w-16"
+                                        weight="duotone"
+                                        aria-hidden="true"
+                                        style={{
+                                            color: 'var(--color-tc-secondary)',
+                                            opacity: 0.5,
+                                        }}
+                                    />
+                                    <p className="tc-caption">
+                                        Foto unit ini belum tersedia. Hubungi
+                                        kami untuk foto asli via WhatsApp.
+                                    </p>
                                 </div>
-                            ) : null}
+                            )}
+                        </div>
+                        {images.length > 1 ? (
+                            <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                                {images.map((photo, index) => (
+                                    <button
+                                        key={photo.id}
+                                        type="button"
+                                        onClick={() => {
+                                            setSelectedPhotoIndex(index);
+                                        }}
+                                        aria-label={`Lihat foto ${index + 1}`}
+                                        aria-pressed={
+                                            index === selectedPhotoIndex
+                                        }
+                                        className="tc-media h-20 w-20 shrink-0 transition"
+                                        style={
+                                            index === selectedPhotoIndex
+                                                ? {
+                                                      outline:
+                                                          '2px solid var(--color-tc-ink)',
+                                                      outlineOffset: 2,
+                                                  }
+                                                : { opacity: 0.6 }
+                                        }
+                                    >
+                                        <img
+                                            alt={photo.alt}
+                                            src={photo.src}
+                                            loading="lazy"
+                                            decoding="async"
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        ) : null}
+                    </div>
+
+                    <div>
+                        {laptop.brand?.name && (
+                            <p className="tc-eyebrow">{laptop.brand.name}</p>
+                        )}
+                        <h1 className="mt-2 tc-h1">
+                            {laptopDisplayName(laptop)}
+                        </h1>
+
+                        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 tc-caption">
+                            <span
+                                className="tc-stars"
+                                role="img"
+                                aria-label={`${commerce.rating.toFixed(1)} dari 5 bintang`}
+                            >
+                                <StarGlyph className="h-4 w-4" />
+                            </span>
+                            <span
+                                className="font-semibold"
+                                style={{ color: 'var(--color-tc-ink)' }}
+                            >
+                                {commerce.rating.toFixed(1)}
+                            </span>
+                            <span>
+                                · Terjual {formatSoldCount(commerce.soldCount)}
+                            </span>
+                            <span>· {commerce.location}</span>
+                        </p>
+
+                        <div className="mt-5 flex flex-wrap items-baseline gap-3">
+                            <p
+                                className="tc-price"
+                                style={{ fontSize: '2rem' }}
+                            >
+                                {formatShortPrice(laptop.selling_price)}
+                            </p>
+                            {orig && (
+                                <p
+                                    className="tc-caption"
+                                    style={{
+                                        textDecoration: 'line-through',
+                                        fontSize: '0.9375rem',
+                                    }}
+                                >
+                                    {formatShortPrice(orig)}
+                                </p>
+                            )}
+                            {commerce.discountPct > 0 && (
+                                <span className="tc-badge tc-badge--promo">
+                                    Hemat {commerce.discountPct}%
+                                </span>
+                            )}
                         </div>
 
-                        <div>
-                            <h1 className="hum-heading-lg text-ink">
-                                {laptopDisplayName(laptop)}
-                            </h1>
-                            {laptop.name ? (
-                                <p className="mt-2 hum-body-lg text-ink-2">
-                                    {laptop.name}
-                                </p>
-                            ) : null}
+                        <p className="mt-5 max-w-xl tc-body">
+                            Unit sudah dicek fungsi utama, dibersihkan, dan siap
+                            dikonsultasikan sebelum pembelian.
+                        </p>
 
-                            <p className="mt-6 hum-heading-lg text-ink">
-                                {formatCurrency(laptop.selling_price)}
-                            </p>
+                        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                            <a
+                                href={waLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="tc-btn tc-btn--primary flex-1"
+                            >
+                                Beli sekarang
+                                <ArrowRight className="h-4 w-4" weight="bold" />
+                            </a>
+                            <a
+                                href={waLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="tc-btn tc-btn--secondary flex-1"
+                            >
+                                <ChatCircle className="h-4 w-4" weight="bold" />
+                                Tanya via WhatsApp
+                            </a>
+                        </div>
 
-                            <p className="mt-6 hum-body text-ink-2">
-                                Unit sudah dicek fungsi utama, dibersihkan, dan
-                                siap dikonsultasikan sebelum pembelian.
-                            </p>
+                        {isRentable ? (
+                            <a
+                                href={sewaLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="tc-btn tc-btn--secondary mt-3 w-full"
+                            >
+                                Sewa unit ini
+                                {laptop.daily_rate != null ? (
+                                    <>
+                                        {' '}
+                                        · {formatShortPrice(laptop.daily_rate)}
+                                        /hari
+                                    </>
+                                ) : null}
+                            </a>
+                        ) : null}
 
-                            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                                <a
-                                    href={waLink}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="hum-btn hum-btn--pear gap-2 px-6 hum-body font-medium text-accent-ink transition"
+                        <div className="tc-card mt-6 flex items-start gap-3 p-4">
+                            <ShieldCheck
+                                className="mt-0.5 h-5 w-5 shrink-0"
+                                weight="bold"
+                                aria-hidden="true"
+                                style={{ color: 'var(--color-tc-ink)' }}
+                            />
+                            <p className="tc-body">
+                                <span
+                                    className="font-semibold"
+                                    style={{ color: 'var(--color-tc-ink)' }}
                                 >
-                                    Beli sekarang
-                                    <ArrowRight
-                                        className="h-4 w-4"
-                                        weight="duotone"
-                                    />
-                                </a>
-                                <a
-                                    href={waLink}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="hum-btn hum-btn--outline gap-2 px-6 hum-body text-ink transition hover:text-accent-2"
-                                >
-                                    Tanya lewat WhatsApp
-                                </a>
-                            </div>
+                                    Bergaransi toko.
+                                </span>{' '}
+                                Cek fisik langsung di toko atau via video call
+                                sebelum pembayaran.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section className="bg-paper-2 py-16 md:py-20">
-                <div className="mx-auto max-w-[640px] px-4">
-                    <h2 className="hum-subheading text-ink">
-                        Spesifikasi
-                    </h2>
-                    <dl className="mt-8 space-y-0">
+            <section className="border-t border-tc-rule bg-tc-surface">
+                <div className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                    <h2 className="tc-h2">Spesifikasi</h2>
+                    <dl className="mt-6">
                         {specs.map((item) => {
                             const Icon = item.icon;
 
                             return (
                                 <div
                                     key={item.label}
-                                    className="flex items-center gap-3 border-b border-rule/60 py-4"
+                                    className="flex items-center gap-3 border-b border-tc-rule py-4"
                                 >
-                                    <Icon
-                                        className="h-4 w-4 shrink-0 text-ink-2/60"
-                                        weight="duotone"
+                                    <span
+                                        className="shrink-0"
+                                        style={{
+                                            color: 'var(--color-tc-secondary)',
+                                        }}
                                         aria-hidden="true"
-                                    />
-                                    <dt className="hum-caption text-ink-2/60">
-                                        {item.label}
-                                    </dt>
-                                    <dd className="ml-auto text-right hum-body text-ink">
+                                    >
+                                        <Icon
+                                            className="h-4 w-4"
+                                            weight="duotone"
+                                        />
+                                    </span>
+                                    <dt className="tc-caption">{item.label}</dt>
+                                    <dd
+                                        className="ml-auto text-right tc-body font-medium tabular-nums"
+                                        style={{
+                                            color: 'var(--color-tc-ink)',
+                                        }}
+                                    >
                                         {item.value}
                                     </dd>
                                 </div>
@@ -258,46 +382,36 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
             </section>
 
             {laptop.description || spec?.other_specifications ? (
-                <section className="bg-paper py-16 md:py-20">
-                    <div className="mx-auto max-w-[640px] px-4">
-                        <h2 className="hum-subheading text-ink">
-                            Detail unit
-                        </h2>
-                        <div className="mt-6 space-y-4 hum-body text-ink-2">
-                            {laptop.description ? (
-                                <p className="whitespace-pre-line">
-                                    {laptop.description}
-                                </p>
-                            ) : null}
-                            {spec?.other_specifications ? (
-                                <p className="whitespace-pre-line">
-                                    {spec.other_specifications}
-                                </p>
-                            ) : null}
-                        </div>
+                <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                    <h2 className="tc-h2">Detail unit</h2>
+                    <div className="mt-5 space-y-4 tc-body">
+                        {laptop.description ? (
+                            <p className="whitespace-pre-line">
+                                {laptop.description}
+                            </p>
+                        ) : null}
+                        {spec?.other_specifications ? (
+                            <p className="whitespace-pre-line">
+                                {spec.other_specifications}
+                            </p>
+                        ) : null}
                     </div>
                 </section>
             ) : null}
 
             {related.length > 0 ? (
-                <section className="bg-paper-2 py-16 md:py-20">
-                    <div className="mx-auto max-w-[980px] px-4">
-                        <div className="mb-10 text-center">
-                            <h2 className="hum-subheading text-ink">
-                                Pilihan lain yang serupa
-                            </h2>
+                <section className="border-t border-tc-rule bg-tc-surface">
+                    <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14">
+                        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                            <h2 className="tc-h2">Pilihan lain yang serupa</h2>
                             <a
                                 href="/shop"
-                                className="mt-3 inline-flex items-center gap-1 hum-body text-accent transition hover:text-accent/80"
+                                className="tc-btn tc-btn--secondary tc-btn--sm"
                             >
                                 Lihat semua
-                                <ArrowRight
-                                    className="h-4 w-4"
-                                    weight="duotone"
-                                />
                             </a>
                         </div>
-                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+                        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                             {related.map((item) => (
                                 <RelatedCard key={item.id} laptop={item} />
                             ))}
@@ -305,45 +419,77 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                     </div>
                 </section>
             ) : null}
+
+            {/* Sticky buy bar (mobile): harga + beli, tanpa menutup konten */}
+            <div className="sticky bottom-0 z-30 border-t border-tc-rule bg-white/95 px-4 py-3 backdrop-blur md:hidden">
+                <div className="flex items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                        <p className="truncate tc-caption">
+                            {laptopDisplayName(laptop)}
+                        </p>
+                        <p className="tc-price text-lg">
+                            {formatShortPrice(laptop.selling_price)}
+                        </p>
+                    </div>
+                    <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="tc-btn tc-btn--primary tc-btn--sm shrink-0"
+                    >
+                        Beli sekarang
+                    </a>
+                </div>
+            </div>
         </PublicPage>
     );
 }
 
 function RelatedCard({ laptop }: { laptop: LaptopType }) {
     const image = laptopPhoto(laptop);
+    const commerce = mockCommerce(laptop.id);
 
     return (
-        <a href={`/laptops/${laptop.id}`} className="group block">
-            <div className="overflow-hidden rounded-[20px] shadow-card">
-                <div className="aspect-[4/3] overflow-hidden bg-paper-2">
-                    {image ? (
-                        <img
-                            alt={laptop.name ?? laptop.sku}
-                            src={image}
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+        <Link
+            href={`/shop/${laptop.slug ?? laptop.id}`}
+            className="tc-card group flex flex-col p-3 md:p-4"
+        >
+            <div className="tc-media relative aspect-square">
+                {image ? (
+                    <img
+                        alt={laptop.name ?? laptop.sku}
+                        src={image}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                    />
+                ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                        <LaptopIcon
+                            className="h-10 w-10"
+                            weight="duotone"
+                            aria-hidden="true"
+                            style={{
+                                color: 'var(--color-tc-secondary)',
+                                opacity: 0.5,
+                            }}
                         />
-                    ) : (
-                        <div className="flex h-full w-full items-center justify-center text-ink-2/60">
-                            <LaptopIcon
-                                className="h-10 w-10"
-                                weight="duotone"
-                                aria-hidden="true"
-                            />
-                        </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
-            <div className="pt-3">
-                <p className="hum-caption text-ink-2/60">
-                    {brandName(laptop.brand, '')}
-                </p>
-                <h3 className="mt-1 hum-body font-semibold text-ink">
-                    {laptop.model}
+            <div className="flex flex-1 flex-col gap-1 pt-3">
+                <p className="tc-caption">{brandName(laptop.brand, '')}</p>
+                <h3 className="line-clamp-2 min-h-[2.7em] tc-product-title">
+                    {laptopDisplayName(laptop)}
                 </h3>
-                <p className="mt-2 hum-body-sm text-accent">
-                    {formatCurrency(laptop.selling_price)}
+                <p className="mt-1 tc-price">
+                    {formatShortPrice(laptop.selling_price)}
+                </p>
+                <p className="mt-0.5 tc-caption">
+                    {commerce.rating.toFixed(1)} · Terjual{' '}
+                    {formatSoldCount(commerce.soldCount)}
                 </p>
             </div>
-        </a>
+        </Link>
     );
 }

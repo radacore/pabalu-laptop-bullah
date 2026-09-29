@@ -1,6 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
 import {
-    ArrowLeft,
     MagnifyingGlass,
     PencilSimple,
     Plus,
@@ -24,12 +23,12 @@ function buildUrl(page: number, search: string | undefined) {
     const params = new URLSearchParams();
 
     if (search) {
-params.set('search', search);
-}
+        params.set('search', search);
+    }
 
     if (page > 1) {
-params.set('page', String(page));
-}
+        params.set('page', String(page));
+    }
 
     const query = params.toString();
 
@@ -49,18 +48,10 @@ const BrandsIndex = ({ brands, filters }: BrandsIndexProps) => {
         );
     }
 
-    function goToPage(page: number) {
-        router.get(
-            buildUrl(page, search),
-            {},
-            { preserveState: true, replace: true },
-        );
-    }
-
     function handleDelete() {
         if (!toDelete) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/brands/${toDelete.id}`, {
             preserveState: true,
@@ -259,8 +250,8 @@ return;
                     open={toDelete !== null}
                     onOpenChange={(open) => {
                         if (!open) {
-setToDelete(null);
-}
+                            setToDelete(null);
+                        }
                     }}
                     onKonfirmasi={handleDelete}
                     title="Hapus Merek?"

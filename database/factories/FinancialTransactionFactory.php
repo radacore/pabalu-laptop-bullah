@@ -7,7 +7,6 @@ use App\Models\PaymentMethod;
 use App\Models\TransactionCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<FinancialTransaction>
@@ -28,18 +27,19 @@ class FinancialTransactionFactory extends Factory
         return [
             'transaction_code' => fake()->unique()->bothify('TXN-########-####'),
             'type' => $type,
-            'transaction_category_id' => fn () => TransactionCategory::query()->create([
-                'name' => Str::title($type).' Category',
-                'slug' => $type.'-category-'.Str::random(8),
-                'is_active' => true,
-                'type' => $type,
-            ])->id,
+            'transaction_category_id' => fn () => TransactionCategory::query()->firstOrCreate(
+                ['type' => $type, 'slug' => $type === 'income' ? 'service-laptop' : 'operasional-toko'],
+                [
+                    'name' => $type === 'income' ? 'Service Laptop' : 'Operasional Toko',
+                    'is_active' => true,
+                    'sort_order' => 0,
+                ],
+            )->id,
             'amount' => fake()->numberBetween(50_000, 5_000_000),
-            'payment_method_id' => fn () => PaymentMethod::query()->create([
-                'name' => 'Cash',
-                'slug' => 'cash-'.Str::random(8),
-                'is_active' => true,
-            ])->id,
+            'payment_method_id' => fn () => PaymentMethod::query()->firstOrCreate(
+                ['slug' => 'cash'],
+                ['name' => 'Tunai', 'is_active' => true, 'sort_order' => 0],
+            )->id,
             'transaction_date' => fake()->date(),
             'description' => fake()->sentence(),
             'related_type' => null,

@@ -35,8 +35,8 @@ export default function LaptopSourceIndex({
     const [q, setQ] = useState(filters.search ?? '');
     function hd() {
         if (!did) {
-return;
-}
+            return;
+        }
 
         router.delete(`/master-data/laptop-sources/${did}`, {
             preserveState: true,
@@ -219,8 +219,8 @@ return;
                 open={did !== null}
                 onOpenChange={(o) => {
                     if (!o) {
-setDid(null);
-}
+                        setDid(null);
+                    }
                 }}
                 onKonfirmasi={hd}
                 title="Delete"

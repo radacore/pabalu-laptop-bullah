@@ -95,7 +95,7 @@ function SearchIndex() {
                                         {laptop.name || laptop.sku}
                                     </p>
                                     <p className="mt-0.5 text-xs text-on-surface-variant">
-                                        {laptop.brand} {laptop.model}{' '}
+                                        {laptop.brand?.name} {laptop.model}{' '}
                                         {laptop.sku && `· ${laptop.sku}`}
                                     </p>
                                 </div>

@@ -18,7 +18,6 @@ class StoreCustomerRequest extends FormRequest
             'phone' => ['required', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'note' => ['nullable', 'string'],
-            'create_user_account' => ['boolean'],
         ];
     }
 }

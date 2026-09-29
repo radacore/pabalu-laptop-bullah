@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,7 +18,6 @@ class CustomerController extends Controller
     public function index(Request $request): Response
     {
         $customers = Customer::query()
-            ->with('user:id,email')
             ->withCount('services')
             ->when($request->string('search')->isNotEmpty(), function ($query) use ($request) {
                 $search = $request->string('search')->toString();
@@ -49,36 +45,18 @@ class CustomerController extends Controller
 
     /**
      * Store a newly created customer.
+     *
+     * Fitur auto-create User account sebelumnya dihapus — aplikasi ini
+     * internal-only, tidak ada portal customer. Kalau ke depan portal
+     * customer dibuat, tambahkan flow proper (email verification +
+     * password reset link), bukan password random + email placeholder.
      */
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $createUserAccount = (bool) ($data['create_user_account'] ?? false);
         unset($data['create_user_account']);
 
-        DB::transaction(function () use ($data, $createUserAccount): void {
-            $userId = null;
-
-            if ($createUserAccount) {
-                $user = User::query()->firstOrCreate(
-                    ['phone' => $data['phone']],
-                    [
-                        'name' => $data['name'],
-                        'email' => $this->customerEmail($data['phone']),
-                        'password' => Str::password(16),
-                        'role' => 'customer',
-                        'is_active' => true,
-                    ]
-                );
-
-                $userId = $user->id;
-            }
-
-            Customer::query()->create([
-                ...$data,
-                'user_id' => $userId,
-            ]);
-        });
+        Customer::query()->create($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pelanggan berhasil ditambahkan.']);
 
@@ -91,7 +69,7 @@ class CustomerController extends Controller
     public function show(Customer $customer): Response
     {
         return Inertia::render('customers/show', [
-            'pelanggan' => $customer->load(['user', 'services' => fn ($query) => $query->with('status')->latest()->limit(5)]),
+            'pelanggan' => $customer->load(['services' => fn ($query) => $query->with('status')->latest()->limit(5)]),
         ]);
     }
 
@@ -119,23 +97,32 @@ class CustomerController extends Controller
 
     /**
      * Delete the selected customer.
+     *
+     * Ditolak bila masih punya servis, rental, atau penjualan sparepart
+     * agar tidak 500 FK violation dan riwayat tidak yatim.
      */
     public function destroy(Customer $customer): RedirectResponse
     {
+        $relations = [
+            'servis' => $customer->services()->exists(),
+            'penyewaan' => $customer->rentals()->exists(),
+            'penjualan sparepart' => $customer->sparepartSales()->exists(),
+        ];
+
+        foreach ($relations as $label => $exists) {
+            if ($exists) {
+                Inertia::flash('toast', ['type' => 'error', 'message' => "Pelanggan masih memiliki data {$label} dan tidak bisa dihapus."]);
+
+                return back()->withErrors([
+                    'customer' => "Pelanggan masih memiliki data {$label} dan tidak bisa dihapus.",
+                ]);
+            }
+        }
+
         $customer->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Pelanggan berhasil dihapus.']);
 
         return to_route('customers.index');
-    }
-
-    /**
-     * Build a deterministic placeholder email for phone-only customer accounts.
-     */
-    private function customerEmail(string $phone): string
-    {
-        $phone = preg_replace('/\D+/', '', $phone) ?: Str::random(8);
-
-        return "customer-{$phone}@pabalu.local";
     }
 }

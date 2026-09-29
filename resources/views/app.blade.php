@@ -34,16 +34,41 @@
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        {{-- SEO: meta tag dari Pengaturan (WebsiteSetting::current ter-cache) --}}
+        @php($seo = \App\Models\WebsiteSetting::current())
+        @if ($seo->meta_description)
+            <meta name="description" content="{{ $seo->meta_description }}">
+        @endif
+        @if ($seo->google_site_verification)
+            <meta name="google-site-verification" content="{{ $seo->google_site_verification }}">
+        @endif
+        <link rel="canonical" href="{{ url()->current() }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ $seo->website_name }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        @if ($seo->meta_description)
+            <meta property="og:description" content="{{ $seo->meta_description }}">
+        @endif
+        <meta name="twitter:card" content="summary_large_image">
+        @if ($seo->logo_url)
+            <meta property="og:image" content="{{ url($seo->logo_url) }}">
+        @endif
+
+        {{-- Bunny Fonts (Inter, Outfit, Plus Jakarta Sans, JetBrains Mono) --}}
         @fonts
+
+        {{-- Material Symbols hanya load untuk admin panel. Halaman publik pakai
+             Phosphor + Lucide icon lewat React import. --}}
+        @auth
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        @endauth
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title>{{ $seo->meta_title ?? config('app.name', 'Laravel') }}</title>
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

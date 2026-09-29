@@ -63,6 +63,18 @@ export default [
         },
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
+            // Argument atau variable yang diawali `_` sengaja ditandai tidak dipakai
+            // (contoh: prop React yang harus tetap ada di signature untuk consistency).
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    args: 'after-used',
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^_',
+                    caughtErrorsIgnorePattern: '^_',
+                    destructuredArrayIgnorePattern: '^_',
+                },
+            ],
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 {

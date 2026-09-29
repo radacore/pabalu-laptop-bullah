@@ -17,8 +17,6 @@ function validFinancialTransactionPayload(array $overrides = []): array
         'payment_method_id' => createPaymentMethod()->id,
         'transaction_date' => '2026-06-01',
         'description' => 'Laptop sale payment.',
-        'related_type' => null,
-        'related_id' => null,
         ...$overrides,
     ];
 }
@@ -172,7 +170,104 @@ test('authenticated users can destroy a financial transaction', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect(route('financial-transactions.index'));
 
-    $this->assertDatabaseMissing('financial_transactions', [
+    $this->assertSoftDeleted('financial_transactions', [
         'id' => $transaction->id,
+    ]);
+});
+
+test('manual transaction rejects reserved auto category', function () {
+    $user = User::factory()->create();
+    $reserved = TransactionCategory::query()->create([
+        'name' => 'Penjualan Laptop',
+        'slug' => 'penjualan-laptop',
+        'is_active' => true,
+        'type' => 'income',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->from(route('financial-transactions.index'))
+        ->post(route('financial-transactions.store'), [
+            'type' => 'income',
+            'transaction_category_id' => $reserved->id,
+            'amount' => 1000000,
+            'payment_method_id' => createPaymentMethod()->id,
+            'transaction_date' => '2026-06-01',
+        ]);
+
+    $response
+        ->assertRedirect(route('financial-transactions.index'))
+        ->assertSessionHasErrors('transaction_category_id');
+});
+
+test('manual transaction rejects type mismatch with category', function () {
+    $user = User::factory()->create();
+    $expenseCategory = TransactionCategory::query()->create([
+        'name' => 'Operasional',
+        'slug' => fake()->unique()->slug(),
+        'is_active' => true,
+        'type' => 'expense',
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->from(route('financial-transactions.index'))
+        ->post(route('financial-transactions.store'), [
+            'type' => 'income',
+            'transaction_category_id' => $expenseCategory->id,
+            'amount' => 1000000,
+            'payment_method_id' => createPaymentMethod()->id,
+            'transaction_date' => '2026-06-01',
+        ]);
+
+    $response
+        ->assertRedirect(route('financial-transactions.index'))
+        ->assertSessionHasErrors('transaction_category_id');
+});
+
+test('manual transaction rejects zero amount and related link', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->from(route('financial-transactions.index'))
+        ->post(route('financial-transactions.store'), array_merge(
+            validFinancialTransactionPayload(),
+            ['amount' => 0, 'related_type' => 'service', 'related_id' => 1],
+        ));
+
+    $response
+        ->assertRedirect(route('financial-transactions.index'))
+        ->assertSessionHasErrors(['amount', 'related_type', 'related_id']);
+});
+
+test('auto transaction cannot be updated or deleted manually', function () {
+    $user = User::factory()->create();
+    $transaction = createFinancialTransactionRecord([
+        'created_by' => $user->id,
+        'related_type' => 'service',
+        'related_id' => 1,
+    ]);
+
+    $this->actingAs($user)
+        ->from(route('financial-transactions.index'))
+        ->put(route('financial-transactions.update', $transaction), [
+            'type' => 'income',
+            'transaction_category_id' => $transaction->transaction_category_id,
+            'amount' => 999,
+            'payment_method_id' => $transaction->payment_method_id,
+            'transaction_date' => '2026-06-01',
+        ])
+        ->assertRedirect(route('financial-transactions.index'))
+        ->assertSessionHasErrors('transaction');
+
+    $this->actingAs($user)
+        ->delete(route('financial-transactions.destroy', $transaction))
+        ->assertRedirect()
+        ->assertSessionHasErrors('transaction');
+
+    $this->assertDatabaseHas('financial_transactions', [
+        'id' => $transaction->id,
+        'amount' => 500000,
     ]);
 });
