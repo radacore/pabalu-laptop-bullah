@@ -43,6 +43,13 @@ class DashboardController extends Controller
                 $terjualId = LaptopStatus::query()->where('slug', 'terjual')->value('id');
                 $finishedIds = ServiceStatus::query()->whereIn('slug', Service::completionSlugs())->pluck('id')->all();
 
+                // PENTING: simpan sebagai array polos (->toArray()), BUKAN
+                // Collection/model Eloquent. Store cache `database` berjalan
+                // dengan `serializable_classes=false` (hardening Laravel 13
+                // anti object-injection) sehingga semua objek yang dibaca
+                // kembali menjadi __PHP_Incomplete_Class dan dashboard crash
+                // (recent_services.filter is not a function). Test suite
+                // tidak menangkap ini karena memakai array store.
                 return [
                     'stats' => [
                         'total_laptops_available' => $tersediaId
@@ -70,8 +77,8 @@ class DashboardController extends Controller
                             ->whereBetween('transaction_date', [$monthStart->toDateString(), $monthEnd->toDateString()])
                             ->sum('amount'),
                     ],
-                    'recent_laptops' => Laptop::query()->with(['source', 'status', 'brand'])->latest()->limit(5)->get(),
-                    'recent_services' => Service::query()->with(['customer', 'status'])->latest()->limit(5)->get(),
+                    'recent_laptops' => Laptop::query()->with(['source', 'status', 'brand'])->latest()->limit(5)->get()->toArray(),
+                    'recent_services' => Service::query()->with(['customer', 'status'])->latest()->limit(5)->get()->toArray(),
                 ];
             });
         });

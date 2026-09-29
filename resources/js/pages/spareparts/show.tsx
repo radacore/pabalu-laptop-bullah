@@ -29,7 +29,7 @@ interface Props {
         type?: MasterData | null;
         photos?: SparepartPhoto[];
         sales?: Array<SparepartSale & { customer?: Customer | null }>;
-        financialTransactions?: Array<{
+        financial_transactions?: Array<{
             id: number;
             transaction_code: string;
             type: string;
@@ -143,7 +143,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
 
     const photos = sparepart.photos ?? [];
     const sales = sparepart.sales ?? [];
-    const transactions = sparepart.financialTransactions ?? [];
+    const transactions = sparepart.financial_transactions ?? [];
 
     return (
         <>

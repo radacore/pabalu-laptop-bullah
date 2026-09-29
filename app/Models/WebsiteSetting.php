@@ -74,6 +74,12 @@ class WebsiteSetting extends Model
      * berubah. Cache di-invalidate otomatis lewat boot event `saved`
      * setiap kali admin edit dari /website-settings.
      *
+     * PENTING: yang di-cache adalah array atribut, BUKAN model. Store
+     * `database` memakai serializable_classes=false sehingga model yang
+     * dibaca kembali menjadi __PHP_Incomplete_Class (cache tak pernah hit
+     * dan tiap halaman query ulang). Model dihidrasi ulang dari array
+     * agar pemanggil tetap dapat instance Eloquent yang bisa di-update.
+     *
      * Kalau cache corrupt (mis. class serialize berubah setelah deploy),
      * fallback ke fresh query — jangan crash aplikasi seluruhnya.
      */
@@ -82,8 +88,13 @@ class WebsiteSetting extends Model
         try {
             $cached = Cache::get('website_setting.current');
 
-            if ($cached instanceof self) {
-                return $cached;
+            if (is_array($cached) && isset($cached['id'])) {
+                $model = new static;
+                $model->forceFill($cached);
+                $model->exists = true;
+                $model->syncOriginal();
+
+                return $model;
             }
         } catch (\Throwable) {
             // Cache backend error — biar fallback ke fresh query di bawah.
@@ -94,7 +105,7 @@ class WebsiteSetting extends Model
             ['website_name' => 'Pabalu Laptop'],
         );
 
-        Cache::forever('website_setting.current', $fresh);
+        Cache::forever('website_setting.current', $fresh->getAttributes());
 
         return $fresh;
     }

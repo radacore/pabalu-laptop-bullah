@@ -59,11 +59,14 @@ class PublicSparepartController extends Controller
                 ->where('stock', '>', 0)
                 ->max('selling_price');
 
+            // Array polos — jangan cache Collection (Incomplete di store
+            // database, lihat DashboardController).
             return [
                 'types' => SparepartType::query()
                     ->whereIn('id', $availableTypeIds)
                     ->orderBy('name')
-                    ->get(['id', 'name', 'slug']),
+                    ->get(['id', 'name', 'slug'])
+                    ->toArray(),
                 'conditions' => Sparepart::conditions(),
                 'max_price' => (int) ceil((($maxAvailablePrice ?? 1000000) / 100000)) * 100000,
             ];

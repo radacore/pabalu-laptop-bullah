@@ -65,7 +65,7 @@ interface ServiceData {
     created_at?: string | null;
     updates?: ServiceUpdate[];
     parts?: ServicePart[];
-    financialTransactions?: FinancialTransaction[];
+    financial_transactions?: FinancialTransaction[];
 }
 
 type FinancialTransaction = {
@@ -872,8 +872,8 @@ const ServicesShow: HalamanComponent = ({
                             Transaksi otomatis yang terkait dengan servis ini.
                         </p>
                     </div>
-                    {!service.financialTransactions ||
-                    service.financialTransactions.length === 0 ? (
+                    {!service.financial_transactions ||
+                    service.financial_transactions.length === 0 ? (
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center">
                             <h3 className="text-sm font-semibold text-slate-900">
                                 Belum ada transaksi
@@ -906,63 +906,69 @@ const ServicesShow: HalamanComponent = ({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-200">
-                                    {service.financialTransactions.map((ft) => {
-                                        const isIncome = ft.type === 'income';
+                                    {service.financial_transactions.map(
+                                        (ft) => {
+                                            const isIncome =
+                                                ft.type === 'income';
 
-                                        return (
-                                            <tr
-                                                key={ft.id}
-                                                className="transition-colors hover:bg-slate-50"
-                                            >
-                                                <td className="px-4 py-3 font-mono text-sm font-medium text-slate-900">
-                                                    {ft.transaction_code}
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <span
-                                                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                            return (
+                                                <tr
+                                                    key={ft.id}
+                                                    className="transition-colors hover:bg-slate-50"
+                                                >
+                                                    <td className="px-4 py-3 font-mono text-sm font-medium text-slate-900">
+                                                        {ft.transaction_code}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <span
+                                                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                                                isIncome
+                                                                    ? 'bg-emerald-50 text-emerald-700'
+                                                                    : 'bg-rose-50 text-rose-700'
+                                                            }`}
+                                                        >
+                                                            {isIncome
+                                                                ? 'Pemasukan'
+                                                                : 'Pengeluaran'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-slate-500">
+                                                        {ft.category?.name ??
+                                                            '-'}
+                                                    </td>
+                                                    <td
+                                                        className={`px-4 py-3 font-bold tabular-nums ${
                                                             isIncome
-                                                                ? 'bg-emerald-50 text-emerald-700'
-                                                                : 'bg-rose-50 text-rose-700'
+                                                                ? 'text-emerald-700'
+                                                                : 'text-rose-700'
                                                         }`}
                                                     >
-                                                        {isIncome
-                                                            ? 'Pemasukan'
-                                                            : 'Pengeluaran'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-slate-500">
-                                                    {ft.category?.name ?? '-'}
-                                                </td>
-                                                <td
-                                                    className={`px-4 py-3 font-bold tabular-nums ${
-                                                        isIncome
-                                                            ? 'text-emerald-700'
-                                                            : 'text-rose-700'
-                                                    }`}
-                                                >
-                                                    {isIncome ? '+' : '−'}{' '}
-                                                    {new Intl.NumberFormat(
-                                                        'id-ID',
-                                                        {
-                                                            style: 'currency',
-                                                            currency: 'IDR',
-                                                            maximumFractionDigits: 0,
-                                                        },
-                                                    ).format(
-                                                        Number(ft.amount ?? 0),
-                                                    )}
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <Link
-                                                        href={`/financial-transactions/${ft.id}`}
-                                                        className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-                                                    >
-                                                        Lihat
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
+                                                        {isIncome ? '+' : '−'}{' '}
+                                                        {new Intl.NumberFormat(
+                                                            'id-ID',
+                                                            {
+                                                                style: 'currency',
+                                                                currency: 'IDR',
+                                                                maximumFractionDigits: 0,
+                                                            },
+                                                        ).format(
+                                                            Number(
+                                                                ft.amount ?? 0,
+                                                            ),
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <Link
+                                                            href={`/financial-transactions/${ft.id}`}
+                                                            className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                        >
+                                                            Lihat
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        },
+                                    )}
                                 </tbody>
                             </table>
                         </div>

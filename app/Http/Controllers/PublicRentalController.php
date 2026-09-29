@@ -62,11 +62,14 @@ class PublicRentalController extends Controller
                 ->when($tersediaStatus, fn ($query) => $query->where('laptop_status_id', $tersediaStatus->id))
                 ->max('daily_rate');
 
+            // Array polos — jangan cache Collection (Incomplete di store
+            // database, lihat DashboardController).
             return [
                 'brands' => Brand::query()
                     ->whereIn('id', $availableBrandIds)
                     ->orderBy('name')
-                    ->get(['id', 'name', 'slug']),
+                    ->get(['id', 'name', 'slug'])
+                    ->toArray(),
                 'max_rate' => (int) ceil((($maxAvailableRate ?? 500000) / 50000)) * 50000,
             ];
         });

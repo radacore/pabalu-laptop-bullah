@@ -13,7 +13,7 @@ interface Props {
     rental: Rental & {
         customer?: Customer | null;
         laptop?: Laptop | null;
-        financialTransactions?: Array<{
+        financial_transactions?: Array<{
             id: number;
             transaction_code: string;
             type: string;
@@ -87,7 +87,7 @@ function RentalLihat({ rental, statuses }: Props) {
         });
     }
 
-    const transactions = rental.financialTransactions ?? [];
+    const transactions = rental.financial_transactions ?? [];
 
     return (
         <>

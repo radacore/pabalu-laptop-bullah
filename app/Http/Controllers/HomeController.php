@@ -90,8 +90,12 @@ class HomeController extends Controller
 
         // Opsi filter jarang berubah (brand tersedia, harga max, varian
         // RAM/storage) — cache 10 menit agar tiap page-view katalog tidak
-        // mengulang 4 query referensi. Invalidasi otomatis via TTL; pola
-        // sama seperti WebsiteSetting::current() (Cache::forever + saved).
+        // mengulang 4 query referensi. Invalidasi otomatis via TTL.
+        //
+        // PENTING: simpan array polos (->toArray()/->all()), BUKAN Collection
+        // Eloquent. Store `database` memakai serializable_classes=false
+        // sehingga objek yang dibaca kembali menjadi Incomplete (lihat
+        // DashboardController).
         $filterOptions = Cache::remember('catalog.laptop_filter_options', 600, function () use ($tersediaStatus): array {
             $availableBrandIds = Laptop::query()
                 ->when($tersediaStatus, fn ($query) => $query->where('laptop_status_id', $tersediaStatus->id))
@@ -107,9 +111,10 @@ class HomeController extends Controller
                 'brands' => Brand::query()
                     ->whereIn('id', $availableBrandIds)
                     ->orderBy('name')
-                    ->get(['id', 'name', 'slug']),
-                'ram' => LaptopSpecification::query()->whereNotNull('ram')->distinct()->orderBy('ram')->pluck('ram')->take(8)->values(),
-                'storage' => LaptopSpecification::query()->whereNotNull('storage')->distinct()->orderBy('storage')->pluck('storage')->take(8)->values(),
+                    ->get(['id', 'name', 'slug'])
+                    ->toArray(),
+                'ram' => LaptopSpecification::query()->whereNotNull('ram')->distinct()->orderBy('ram')->pluck('ram')->take(8)->values()->all(),
+                'storage' => LaptopSpecification::query()->whereNotNull('storage')->distinct()->orderBy('storage')->pluck('storage')->take(8)->values()->all(),
                 'max_price' => (int) ceil((($maxAvailablePrice ?? 50000000) / 1000000)) * 1000000,
             ];
         });

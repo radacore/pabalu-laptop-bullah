@@ -231,8 +231,8 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                     </section>
                 )}
 
-                {laptop.financialTransactions &&
-                    laptop.financialTransactions.length > 0 && (
+                {laptop.financial_transactions &&
+                    laptop.financial_transactions.length > 0 && (
                         <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                             <CardHeader>
                                 <CardTitle>Transaksi Penjualan</CardTitle>
@@ -260,7 +260,7 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y">
-                                            {laptop.financialTransactions.map(
+                                            {laptop.financial_transactions.map(
                                                 (ft) => (
                                                     <tr
                                                         key={ft.id}

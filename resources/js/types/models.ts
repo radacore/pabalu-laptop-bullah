@@ -85,7 +85,9 @@ export type Laptop = {
     source?: LaptopSource | null;
     specification?: LaptopSpecification | null;
     photos?: LaptopPhoto[];
-    financialTransactions?: FinancialTransaction[];
+    // Kunci snake_case — server (Eloquent toArray) mengirim
+    // `financial_transactions`, bukan camelCase.
+    financial_transactions?: FinancialTransaction[];
 };
 
 export type Customer = {

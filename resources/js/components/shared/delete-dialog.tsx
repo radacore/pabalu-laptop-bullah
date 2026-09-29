@@ -42,7 +42,7 @@ export default function DeleteDialog({
                         variant="destructive"
                         onClick={onKonfirmasi}
                     >
-                        Delete
+                        Hapus
                     </Button>
                 </DialogFooter>
             </DialogContent>
