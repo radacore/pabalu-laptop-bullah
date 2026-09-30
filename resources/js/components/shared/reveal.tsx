@@ -12,6 +12,11 @@ interface RevealProps {
     style?: CSSProperties;
     /** Diteruskan ke wrapper (mis. anchor #services). */
     id?: string;
+    /**
+     * True = tampil langsung tanpa animasi. Dipakai katalog agar hasil
+     * filter/paginasi tidak fade-in ulang (terasa seperti refresh).
+     */
+    instant?: boolean;
 }
 
 /**
@@ -26,10 +31,15 @@ export default function Reveal({
     threshold = 0.12,
     style,
     id,
+    instant = false,
 }: RevealProps) {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        if (instant) {
+            return;
+        }
+
         const el = ref.current;
 
         if (!el) {
@@ -57,7 +67,15 @@ export default function Reveal({
         observer.observe(el);
 
         return () => observer.disconnect();
-    }, [threshold]);
+    }, [threshold, instant]);
+
+    if (instant) {
+        return (
+            <div ref={ref} id={id} className={className} style={style}>
+                {children}
+            </div>
+        );
+    }
 
     return (
         <div

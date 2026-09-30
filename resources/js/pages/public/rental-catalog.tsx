@@ -106,6 +106,13 @@ export default function RentalCatalog({
     );
     const [sort, setSort] = useState(filters.sort ?? 'newest');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    // Animasi Reveal hanya untuk kunjungan pertama. Kunjungan berikutnya
+    // (filter/paginasi) mematikan animasi agar tidak terasa refresh.
+    const [animationsOn, setAnimationsOn] = useState(true);
+
+    useEffect(() => {
+        return router.on('start', () => setAnimationsOn(false));
+    }, []);
 
     const activeFilterCount = useMemo(
         () =>
@@ -133,7 +140,14 @@ export default function RentalCatalog({
                         : undefined,
                 sort: next.sort === 'newest' ? undefined : next.sort,
             },
-            { preserveState: true, replace: true },
+            // preserveScroll: posisi diam di grid (tidak lompat ke atas).
+            // only: cukup data grid yang di-fetch ulang (payload kecil).
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['laptops'],
+            },
         );
     }
 
@@ -155,7 +169,16 @@ export default function RentalCatalog({
         setBrands([]);
         setMaxRate(filter_options.max_rate);
         setSort('newest');
-        router.get('/sewa', {}, { preserveState: true, replace: true });
+        router.get(
+            '/sewa',
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['laptops'],
+            },
+        );
     }
 
     // Slider tarif: debounce 400ms agar drag tidak menembak puluhan
@@ -454,7 +477,11 @@ export default function RentalCatalog({
                     ) : (
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
                             {laptops.data.map((laptop, i) => (
-                                <Reveal key={laptop.id} delay={(i % 9) * 60}>
+                                <Reveal
+                                    key={laptop.id}
+                                    delay={(i % 9) * 60}
+                                    instant={!animationsOn}
+                                >
                                     <RentalCard laptop={laptop} />
                                 </Reveal>
                             ))}
@@ -547,6 +574,7 @@ function Pager({
             <Link
                 href={buildUrl(Math.max(current - 1, 1), filters)}
                 preserveScroll
+                only={['laptops']}
                 aria-label="Halaman sebelumnya"
                 className="tc-btn tc-btn--secondary tc-btn--sm"
                 style={{ paddingLeft: 12, paddingRight: 12 }}
@@ -577,6 +605,7 @@ function Pager({
                         key={page}
                         href={buildUrl(page, filters)}
                         preserveScroll
+                        only={['laptops']}
                         aria-label={`Halaman ${page}`}
                         aria-current={page === current ? 'page' : undefined}
                         data-active={page === current}
@@ -590,6 +619,7 @@ function Pager({
             <Link
                 href={buildUrl(Math.min(current + 1, last), filters)}
                 preserveScroll
+                only={['laptops']}
                 aria-label="Halaman berikutnya"
                 className="tc-btn tc-btn--secondary tc-btn--sm"
                 style={{ paddingLeft: 12, paddingRight: 12 }}

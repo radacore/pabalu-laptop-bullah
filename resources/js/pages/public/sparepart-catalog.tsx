@@ -95,6 +95,13 @@ export default function SparepartCatalog({
     );
     const [sort, setSort] = useState(filters.sort ?? 'newest');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    // Animasi Reveal hanya untuk kunjungan pertama. Kunjungan berikutnya
+    // (filter/paginasi) mematikan animasi agar tidak terasa refresh.
+    const [animationsOn, setAnimationsOn] = useState(true);
+
+    useEffect(() => {
+        return router.on('start', () => setAnimationsOn(false));
+    }, []);
 
     const activeFilterCount = useMemo(
         () =>
@@ -125,7 +132,14 @@ export default function SparepartCatalog({
                         : undefined,
                 sort: next.sort === 'newest' ? undefined : next.sort,
             },
-            { preserveState: true, replace: true },
+            // preserveScroll: posisi diam di grid (tidak lompat ke atas).
+            // only: cukup data grid yang di-fetch ulang (payload kecil).
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['spareparts'],
+            },
         );
     }
 
@@ -148,7 +162,16 @@ export default function SparepartCatalog({
         setCondition('');
         setMaxPrice(filter_options.max_price);
         setSort('newest');
-        router.get('/spareparts', {}, { preserveState: true, replace: true });
+        router.get(
+            '/spareparts',
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['spareparts'],
+            },
+        );
     }
 
     // Slider harga: debounce 400ms agar drag tidak menembak puluhan
@@ -467,7 +490,11 @@ export default function SparepartCatalog({
                     ) : (
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
                             {spareparts.data.map((sparepart, i) => (
-                                <Reveal key={sparepart.id} delay={(i % 9) * 60}>
+                                <Reveal
+                                    key={sparepart.id}
+                                    delay={(i % 9) * 60}
+                                    instant={!animationsOn}
+                                >
                                     <SparepartCard sparepart={sparepart} />
                                 </Reveal>
                             ))}
@@ -485,6 +512,7 @@ export default function SparepartCatalog({
                                     filters,
                                 )}
                                 preserveScroll
+                                only={['spareparts']}
                                 aria-label="Halaman sebelumnya"
                                 className="tc-btn tc-btn--secondary tc-btn--sm"
                                 style={{ paddingLeft: 12, paddingRight: 12 }}
@@ -525,6 +553,7 @@ export default function SparepartCatalog({
                                             key={page}
                                             href={buildUrl(page, filters)}
                                             preserveScroll
+                                            only={['spareparts']}
                                             aria-label={`Halaman ${page}`}
                                             aria-current={
                                                 page === spareparts.current_page
@@ -554,6 +583,7 @@ export default function SparepartCatalog({
                                     filters,
                                 )}
                                 preserveScroll
+                                only={['spareparts']}
                                 aria-label="Halaman berikutnya"
                                 className="tc-btn tc-btn--secondary tc-btn--sm"
                                 style={{ paddingLeft: 12, paddingRight: 12 }}

@@ -125,6 +125,13 @@ export default function LaptopCatalog({
     );
     const [sort, setSort] = useState(filters.sort ?? 'newest');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    // Animasi Reveal hanya untuk kunjungan pertama. Kunjungan berikutnya
+    // (filter/paginasi) mematikan animasi agar tidak terasa refresh.
+    const [animationsOn, setAnimationsOn] = useState(true);
+
+    useEffect(() => {
+        return router.on('start', () => setAnimationsOn(false));
+    }, []);
 
     useEffect(() => {
         if (!showMobileFilters) {
@@ -181,7 +188,14 @@ export default function LaptopCatalog({
                         : undefined,
                 sort: next.sort === 'newest' ? undefined : next.sort,
             },
-            { preserveState: true, replace: true },
+            // preserveScroll: posisi diam di grid (tidak lompat ke atas).
+            // only: cukup data grid yang di-fetch ulang (payload kecil).
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['laptops'],
+            },
         );
     }
 
@@ -205,7 +219,16 @@ export default function LaptopCatalog({
         setStorage('');
         setMaxPrice(filter_options.max_price);
         setSort('newest');
-        router.get('/shop', {}, { preserveState: true, replace: true });
+        router.get(
+            '/shop',
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+                only: ['laptops'],
+            },
+        );
     }
 
     function handleSortChange(nextSort: string) {
@@ -557,7 +580,11 @@ export default function LaptopCatalog({
                     ) : (
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
                             {laptops.data.map((laptop, i) => (
-                                <Reveal key={laptop.id} delay={(i % 9) * 60}>
+                                <Reveal
+                                    key={laptop.id}
+                                    delay={(i % 9) * 60}
+                                    instant={!animationsOn}
+                                >
                                     <CatalogCard laptop={laptop} />
                                 </Reveal>
                             ))}
@@ -575,6 +602,7 @@ export default function LaptopCatalog({
                                     filters,
                                 )}
                                 preserveScroll
+                                only={['laptops']}
                                 aria-label="Halaman sebelumnya"
                                 className="tc-btn tc-btn--secondary tc-btn--sm"
                                 style={{ paddingLeft: 12, paddingRight: 12 }}
@@ -620,6 +648,7 @@ export default function LaptopCatalog({
                                                 filters,
                                             )}
                                             preserveScroll
+                                            only={['laptops']}
                                             aria-label={`Halaman ${page}`}
                                             aria-current={
                                                 active ? 'page' : undefined
@@ -645,6 +674,7 @@ export default function LaptopCatalog({
                                     filters,
                                 )}
                                 preserveScroll
+                                only={['laptops']}
                                 aria-label="Halaman berikutnya"
                                 className="tc-btn tc-btn--secondary tc-btn--sm"
                                 style={{ paddingLeft: 12, paddingRight: 12 }}
