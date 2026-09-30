@@ -15,6 +15,7 @@ import {
 import type { ComponentType } from 'react';
 import { useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatShortPrice } from '@/lib/format';
 import type { Laptop as LaptopType, MasterData, WebsiteSetting } from '@/types';
 
@@ -284,86 +285,93 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                 </div>
             </section>
 
-            <section className="border-t border-tc-rule bg-tc-surface">
-                <div className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                    <h2 className="tc-h2">Spesifikasi</h2>
-                    <dl className="mt-6">
-                        {specs.map((item) => {
-                            const Icon = item.icon;
+            <Reveal>
+                <section className="border-t border-tc-rule bg-tc-surface">
+                    <div className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                        <h2 className="tc-h2">Spesifikasi</h2>
+                        <dl className="mt-6">
+                            {specs.map((item) => {
+                                const Icon = item.icon;
 
-                            return (
-                                <div
-                                    key={item.label}
-                                    className="flex items-center gap-3 border-b border-tc-rule py-4"
-                                >
-                                    <span
-                                        className="shrink-0"
-                                        style={{
-                                            color: 'var(--color-tc-secondary)',
-                                        }}
-                                        aria-hidden="true"
+                                return (
+                                    <div
+                                        key={item.label}
+                                        className="flex items-center gap-3 border-b border-tc-rule py-4"
                                     >
-                                        <Icon
-                                            className="h-4 w-4"
-                                            weight="duotone"
-                                        />
-                                    </span>
-                                    <dt className="tc-caption">{item.label}</dt>
-                                    <dd
-                                        className="ml-auto text-right tc-body font-medium tabular-nums"
-                                        style={{
-                                            color: 'var(--color-tc-ink)',
-                                        }}
-                                    >
-                                        {item.value}
-                                    </dd>
-                                </div>
-                            );
-                        })}
-                    </dl>
-                </div>
-            </section>
-
-            {laptop.description || spec?.other_specifications ? (
-                <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                    <h2 className="tc-h2">Detail unit</h2>
-                    <div className="mt-5 space-y-4 tc-body">
-                        {laptop.description ? (
-                            <p className="whitespace-pre-line">
-                                {laptop.description}
-                            </p>
-                        ) : null}
-                        {spec?.other_specifications ? (
-                            <p className="whitespace-pre-line">
-                                {spec.other_specifications}
-                            </p>
-                        ) : null}
+                                        <span
+                                            className="shrink-0"
+                                            style={{
+                                                color: 'var(--color-tc-secondary)',
+                                            }}
+                                            aria-hidden="true"
+                                        >
+                                            <Icon
+                                                className="h-4 w-4"
+                                                weight="duotone"
+                                            />
+                                        </span>
+                                        <dt className="tc-caption">
+                                            {item.label}
+                                        </dt>
+                                        <dd
+                                            className="ml-auto text-right tc-body font-medium tabular-nums"
+                                            style={{
+                                                color: 'var(--color-tc-ink)',
+                                            }}
+                                        >
+                                            {item.value}
+                                        </dd>
+                                    </div>
+                                );
+                            })}
+                        </dl>
                     </div>
                 </section>
+            </Reveal>
+
+            {laptop.description || spec?.other_specifications ? (
+                <Reveal>
+                    <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                        <h2 className="tc-h2">Detail unit</h2>
+                        <div className="mt-5 space-y-4 tc-body">
+                            {laptop.description ? (
+                                <p className="whitespace-pre-line">
+                                    {laptop.description}
+                                </p>
+                            ) : null}
+                            {spec?.other_specifications ? (
+                                <p className="whitespace-pre-line">
+                                    {spec.other_specifications}
+                                </p>
+                            ) : null}
+                        </div>
+                    </section>
+                </Reveal>
             ) : null}
 
             {related.length > 0 ? (
-                <section className="border-t border-tc-rule bg-tc-surface">
-                    <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14">
-                        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-                            <h2 className="tc-h2">Unit sewa lain</h2>
-                            <Link
-                                href="/sewa"
-                                className="tc-btn tc-btn--secondary tc-btn--sm"
-                            >
-                                Lihat semua
-                            </Link>
+                <Reveal>
+                    <section className="border-t border-tc-rule bg-tc-surface">
+                        <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14">
+                            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                                <h2 className="tc-h2">Unit sewa lain</h2>
+                                <Link
+                                    href="/sewa"
+                                    className="tc-btn tc-btn--secondary tc-btn--sm"
+                                >
+                                    Lihat semua
+                                </Link>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                                {related.map((item, i) => (
+                                    <Reveal key={item.id} delay={(i % 4) * 70}>
+                                        <RelatedRentalCard laptop={item} />
+                                    </Reveal>
+                                ))}
+                            </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                            {related.map((item) => (
-                                <RelatedRentalCard
-                                    key={item.id}
-                                    laptop={item}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                </Reveal>
             ) : null}
 
             <div className="sticky bottom-0 z-30 border-t border-tc-rule bg-white/95 px-4 py-3 backdrop-blur md:hidden">

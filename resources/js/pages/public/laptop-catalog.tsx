@@ -16,6 +16,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatShortPrice, formatSoldCount } from '@/lib/format';
 import { mockCommerce, originalPrice } from '@/lib/mock-commerce';
 import type { Laptop, PaginatedResponse, WebsiteSetting } from '@/types';
@@ -414,7 +415,7 @@ export default function LaptopCatalog({
 
             <section className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14 lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
                 <aside className="hidden lg:block">
-                    <div className="sticky top-32">
+                    <Reveal className="sticky top-32">
                         <div className="mb-5 flex items-baseline justify-between border-b border-tc-rule pb-4">
                             <h2
                                 className="text-[0.9375rem] font-semibold"
@@ -432,7 +433,7 @@ export default function LaptopCatalog({
                             ) : null}
                         </div>
                         {filterContent}
-                    </div>
+                    </Reveal>
                 </aside>
 
                 <div className="mb-6 lg:hidden">
@@ -555,8 +556,10 @@ export default function LaptopCatalog({
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                            {laptops.data.map((laptop) => (
-                                <CatalogCard key={laptop.id} laptop={laptop} />
+                            {laptops.data.map((laptop, i) => (
+                                <Reveal key={laptop.id} delay={(i % 9) * 60}>
+                                    <CatalogCard laptop={laptop} />
+                                </Reveal>
                             ))}
                         </div>
                     )}

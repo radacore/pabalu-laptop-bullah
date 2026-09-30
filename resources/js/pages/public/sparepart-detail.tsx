@@ -10,6 +10,7 @@ import {
 } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatShortPrice } from '@/lib/format';
 import type { Sparepart, WebsiteSetting } from '@/types';
 
@@ -230,24 +231,28 @@ export default function SparepartDetail({
             </section>
 
             {related.length > 0 ? (
-                <section className="border-t border-tc-rule bg-tc-surface">
-                    <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14">
-                        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-                            <h2 className="tc-h2">Sparepart lain</h2>
-                            <Link
-                                href="/sparepart"
-                                className="tc-btn tc-btn--secondary tc-btn--sm"
-                            >
-                                Lihat semua
-                            </Link>
+                <Reveal>
+                    <section className="border-t border-tc-rule bg-tc-surface">
+                        <div className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14">
+                            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                                <h2 className="tc-h2">Sparepart lain</h2>
+                                <Link
+                                    href="/sparepart"
+                                    className="tc-btn tc-btn--secondary tc-btn--sm"
+                                >
+                                    Lihat semua
+                                </Link>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                                {related.map((item, i) => (
+                                    <Reveal key={item.id} delay={(i % 4) * 70}>
+                                        <RelatedCard sparepart={item} />
+                                    </Reveal>
+                                ))}
+                            </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                            {related.map((item) => (
-                                <RelatedCard key={item.id} sparepart={item} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                </Reveal>
             ) : null}
 
             <div className="sticky bottom-0 z-30 border-t border-tc-rule bg-white/95 px-4 py-3 backdrop-blur md:hidden">

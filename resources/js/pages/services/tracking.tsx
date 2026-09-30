@@ -11,6 +11,7 @@ import {
 } from '@phosphor-icons/react';
 
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatCurrency } from '@/lib/format';
 import type { Service, ServiceUpdate, WebsiteSetting } from '@/types';
 
@@ -238,48 +239,106 @@ export default function ServiceTracking({
                 </div>
             </section>
 
-            <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                <h2 className="text-center tc-h2">Progres servis</h2>
-                <p className="mt-2 text-center tc-caption">
-                    Tahap {stepIdx + 1} dari {stepLabels.length}
-                </p>
+            <Reveal>
+                <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                    <h2 className="text-center tc-h2">Progres servis</h2>
+                    <p className="mt-2 text-center tc-caption">
+                        Tahap {stepIdx + 1} dari {stepLabels.length}
+                    </p>
 
-                <div className="mt-10">
-                    <div className="hidden sm:block">
-                        <div className="relative flex items-start justify-between">
-                            <div className="absolute top-2 right-2 left-2 h-px bg-tc-rule" />
-                            <div
-                                className="absolute top-2 left-2 h-px bg-tc-ink transition-all duration-500"
-                                style={{
-                                    width: `calc(${
-                                        (stepIdx / (stepLabels.length - 1)) *
-                                        100
-                                    }%)`,
-                                }}
-                                aria-hidden="true"
-                            />
+                    <div className="mt-10">
+                        <div className="hidden sm:block">
+                            <div className="relative flex items-start justify-between">
+                                <div className="absolute top-2 right-2 left-2 h-px bg-tc-rule" />
+                                <div
+                                    className="absolute top-2 left-2 h-px bg-tc-ink transition-all duration-500"
+                                    style={{
+                                        width: `calc(${
+                                            (stepIdx /
+                                                (stepLabels.length - 1)) *
+                                            100
+                                        }%)`,
+                                    }}
+                                    aria-hidden="true"
+                                />
+                                {stepLabels.map((step, index) => {
+                                    const done = index <= stepIdx;
+
+                                    return (
+                                        <div
+                                            key={step.key}
+                                            className="relative flex w-20 flex-col items-center"
+                                        >
+                                            <span
+                                                className="relative z-10 flex h-4 w-4 items-center justify-center rounded-full"
+                                                style={{
+                                                    background: done
+                                                        ? 'var(--color-tc-ink)'
+                                                        : 'var(--color-tc-surface)',
+                                                    border: done
+                                                        ? 'none'
+                                                        : '2px solid var(--color-tc-rule)',
+                                                }}
+                                                aria-hidden="true"
+                                            />
+                                            <p
+                                                className="mt-3 text-center tc-caption"
+                                                style={
+                                                    done
+                                                        ? {
+                                                              color: 'var(--color-tc-ink)',
+                                                              fontWeight: 600,
+                                                          }
+                                                        : undefined
+                                                }
+                                            >
+                                                {String(index + 1).padStart(
+                                                    2,
+                                                    '0',
+                                                )}
+                                                <br />
+                                                {step.label}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <ol className="space-y-2 sm:hidden">
                             {stepLabels.map((step, index) => {
                                 const done = index <= stepIdx;
 
                                 return (
-                                    <div
+                                    <li
                                         key={step.key}
-                                        className="relative flex w-20 flex-col items-center"
+                                        className="flex items-center gap-3 rounded-[10px] border border-tc-rule bg-tc-surface px-4 py-3"
                                     >
                                         <span
-                                            className="relative z-10 flex h-4 w-4 items-center justify-center rounded-full"
+                                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                                             style={{
                                                 background: done
                                                     ? 'var(--color-tc-ink)'
-                                                    : 'var(--color-tc-surface)',
-                                                border: done
-                                                    ? 'none'
-                                                    : '2px solid var(--color-tc-rule)',
+                                                    : 'var(--color-tc-media)',
+                                                color: done
+                                                    ? '#fff'
+                                                    : 'var(--color-tc-secondary)',
                                             }}
                                             aria-hidden="true"
-                                        />
-                                        <p
-                                            className="mt-3 text-center tc-caption"
+                                        >
+                                            {done ? (
+                                                <Check
+                                                    className="h-3.5 w-3.5"
+                                                    weight="bold"
+                                                />
+                                            ) : (
+                                                <span className="tc-caption">
+                                                    {index + 1}
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span
+                                            className="tc-body"
                                             style={
                                                 done
                                                     ? {
@@ -289,291 +348,273 @@ export default function ServiceTracking({
                                                     : undefined
                                             }
                                         >
-                                            {String(index + 1).padStart(2, '0')}
-                                            <br />
                                             {step.label}
-                                        </p>
-                                    </div>
+                                        </span>
+                                    </li>
                                 );
                             })}
-                        </div>
+                        </ol>
                     </div>
 
-                    <ol className="space-y-2 sm:hidden">
-                        {stepLabels.map((step, index) => {
-                            const done = index <= stepIdx;
+                    <div className="mt-10 space-y-4">
+                        <Reveal>
+                            <div className="tc-card p-6 md:p-7">
+                                <h2 className="tc-h3">Informasi perangkat</h2>
+                                <dl className="mt-5">
+                                    <InfoRow
+                                        label="Model"
+                                        value={`${service.brand ?? '-'} ${
+                                            service.model ?? '-'
+                                        }`}
+                                    />
+                                    {service.device_name ? (
+                                        <InfoRow
+                                            label="Perangkat"
+                                            value={service.device_name}
+                                        />
+                                    ) : null}
+                                    {service.serial_number ? (
+                                        <InfoRow
+                                            label="Serial number"
+                                            value={service.serial_number}
+                                            mono
+                                        />
+                                    ) : null}
+                                    {service.kelengkapan ? (
+                                        <InfoRow
+                                            label="Kelengkapan"
+                                            value={service.kelengkapan}
+                                        />
+                                    ) : null}
+                                    <InfoRow
+                                        label="Keluhan"
+                                        value={service.complaint ?? '-'}
+                                    />
+                                    {service.initial_condition ? (
+                                        <InfoRow
+                                            label="Kondisi awal"
+                                            value={service.initial_condition}
+                                        />
+                                    ) : null}
+                                </dl>
+                            </div>
+                        </Reveal>
 
-                            return (
-                                <li
-                                    key={step.key}
-                                    className="flex items-center gap-3 rounded-[10px] border border-tc-rule bg-tc-surface px-4 py-3"
-                                >
-                                    <span
-                                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                                        style={{
-                                            background: done
-                                                ? 'var(--color-tc-ink)'
-                                                : 'var(--color-tc-media)',
-                                            color: done
-                                                ? '#fff'
-                                                : 'var(--color-tc-secondary)',
-                                        }}
-                                        aria-hidden="true"
-                                    >
-                                        {done ? (
-                                            <Check
-                                                className="h-3.5 w-3.5"
-                                                weight="bold"
-                                            />
-                                        ) : (
-                                            <span className="tc-caption">
-                                                {index + 1}
-                                            </span>
-                                        )}
-                                    </span>
-                                    <span
-                                        className="tc-body"
-                                        style={
-                                            done
-                                                ? {
-                                                      color: 'var(--color-tc-ink)',
-                                                      fontWeight: 600,
-                                                  }
-                                                : undefined
-                                        }
-                                    >
-                                        {step.label}
-                                    </span>
-                                </li>
-                            );
-                        })}
-                    </ol>
-                </div>
+                        {parts.length > 0 ? (
+                            <Reveal delay={80}>
+                                <div className="tc-card p-6 md:p-7">
+                                    <h2 className="tc-h3">
+                                        Sparepart digunakan
+                                    </h2>
+                                    <ul className="mt-5">
+                                        {parts.map((part) => (
+                                            <li
+                                                key={part.id}
+                                                className="flex items-center justify-between gap-4 border-b border-tc-rule py-3 first:pt-0 last:border-0 last:pt-3 last:pb-0"
+                                            >
+                                                <span className="tc-body">
+                                                    {part.part_name ??
+                                                        part.name ??
+                                                        '-'}{' '}
+                                                    <span>
+                                                        ×{part.quantity}
+                                                    </span>
+                                                </span>
+                                                <span
+                                                    className="tc-body font-semibold tabular-nums"
+                                                    style={{
+                                                        color: 'var(--color-tc-ink)',
+                                                    }}
+                                                >
+                                                    {formatCurrency(
+                                                        part.selling_price ??
+                                                            part.price ??
+                                                            0,
+                                                    )}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </Reveal>
+                        ) : null}
 
-                <div className="mt-10 space-y-4">
-                    <div className="tc-card p-6 md:p-7">
-                        <h2 className="tc-h3">Informasi perangkat</h2>
-                        <dl className="mt-5">
-                            <InfoRow
-                                label="Model"
-                                value={`${service.brand ?? '-'} ${
-                                    service.model ?? '-'
-                                }`}
-                            />
-                            {service.device_name ? (
-                                <InfoRow
-                                    label="Perangkat"
-                                    value={service.device_name}
-                                />
-                            ) : null}
-                            {service.serial_number ? (
-                                <InfoRow
-                                    label="Serial number"
-                                    value={service.serial_number}
-                                    mono
-                                />
-                            ) : null}
-                            {service.kelengkapan ? (
-                                <InfoRow
-                                    label="Kelengkapan"
-                                    value={service.kelengkapan}
-                                />
-                            ) : null}
-                            <InfoRow
-                                label="Keluhan"
-                                value={service.complaint ?? '-'}
-                            />
-                            {service.initial_condition ? (
-                                <InfoRow
-                                    label="Kondisi awal"
-                                    value={service.initial_condition}
-                                />
-                            ) : null}
-                        </dl>
-                    </div>
+                        {updates.length > 0 ? (
+                            <Reveal delay={80}>
+                                <div className="tc-card p-6 md:p-7">
+                                    <h2 className="tc-h3">Update servis</h2>
+                                    <ol className="mt-6 space-y-5">
+                                        {updates.map((update) => (
+                                            <li
+                                                key={update.id}
+                                                className="flex gap-4"
+                                            >
+                                                <span
+                                                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tc-ink"
+                                                    aria-hidden="true"
+                                                />
+                                                <div>
+                                                    <p
+                                                        className="tc-body font-semibold"
+                                                        style={{
+                                                            color: 'var(--color-tc-ink)',
+                                                        }}
+                                                    >
+                                                        {update.note ||
+                                                            update.description ||
+                                                            update.title ||
+                                                            `Status: ${
+                                                                update.new_status ??
+                                                                update.status_to ??
+                                                                '-'
+                                                            }`}
+                                                    </p>
+                                                    <p className="mt-1 tc-caption">
+                                                        {new Date(
+                                                            update.created_at,
+                                                        ).toLocaleString(
+                                                            'id-ID',
+                                                            {
+                                                                dateStyle:
+                                                                    'medium',
+                                                                timeStyle:
+                                                                    'short',
+                                                            },
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
+                            </Reveal>
+                        ) : null}
 
-                    {parts.length > 0 ? (
-                        <div className="tc-card p-6 md:p-7">
-                            <h2 className="tc-h3">Sparepart digunakan</h2>
-                            <ul className="mt-5">
-                                {parts.map((part) => (
-                                    <li
-                                        key={part.id}
-                                        className="flex items-center justify-between gap-4 border-b border-tc-rule py-3 first:pt-0 last:border-0 last:pt-3 last:pb-0"
-                                    >
+                        <Reveal delay={80}>
+                            <div className="tc-card p-6 md:p-7">
+                                <h2 className="tc-h3">Ringkasan</h2>
+
+                                {service.estimated_completion_date ? (
+                                    <div className="mt-4 flex items-baseline justify-between border-b border-tc-rule pb-3">
                                         <span className="tc-body">
-                                            {part.part_name ?? part.name ?? '-'}{' '}
-                                            <span>×{part.quantity}</span>
+                                            Estimasi selesai
                                         </span>
                                         <span
-                                            className="tc-body font-semibold tabular-nums"
+                                            className="tc-body font-medium"
                                             style={{
                                                 color: 'var(--color-tc-ink)',
                                             }}
                                         >
-                                            {formatCurrency(
-                                                part.selling_price ??
-                                                    part.price ??
-                                                    0,
+                                            {formatDate(
+                                                service.estimated_completion_date,
+                                                {
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                    year: 'numeric',
+                                                },
                                             )}
                                         </span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ) : null}
+                                    </div>
+                                ) : null}
 
-                    {updates.length > 0 ? (
-                        <div className="tc-card p-6 md:p-7">
-                            <h2 className="tc-h3">Update servis</h2>
-                            <ol className="mt-6 space-y-5">
-                                {updates.map((update) => (
-                                    <li key={update.id} className="flex gap-4">
+                                <div className="mt-4 space-y-2.5">
+                                    <div className="flex items-baseline justify-between">
+                                        <span className="tc-body">
+                                            Biaya diagnosa
+                                        </span>
                                         <span
-                                            className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tc-ink"
-                                            aria-hidden="true"
-                                        />
-                                        <div>
-                                            <p
-                                                className="tc-body font-semibold"
+                                            className="tc-body tabular-nums"
+                                            style={{
+                                                color: 'var(--color-tc-ink)',
+                                            }}
+                                        >
+                                            {formatCurrency(diagnosisCost)}
+                                        </span>
+                                    </div>
+                                    {parts.length > 0 ? (
+                                        <div className="flex items-baseline justify-between">
+                                            <span className="tc-body">
+                                                Sparepart + pasang
+                                            </span>
+                                            <span
+                                                className="tc-body tabular-nums"
                                                 style={{
                                                     color: 'var(--color-tc-ink)',
                                                 }}
                                             >
-                                                {update.note ||
-                                                    update.description ||
-                                                    update.title ||
-                                                    `Status: ${
-                                                        update.new_status ??
-                                                        update.status_to ??
-                                                        '-'
-                                                    }`}
-                                            </p>
-                                            <p className="mt-1 tc-caption">
-                                                {new Date(
-                                                    update.created_at,
-                                                ).toLocaleString('id-ID', {
-                                                    dateStyle: 'medium',
-                                                    timeStyle: 'short',
-                                                })}
-                                            </p>
+                                                {formatCurrency(partTotal)}
+                                            </span>
                                         </div>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    ) : null}
+                                    ) : null}
+                                </div>
 
-                    <div className="tc-card p-6 md:p-7">
-                        <h2 className="tc-h3">Ringkasan</h2>
-
-                        {service.estimated_completion_date ? (
-                            <div className="mt-4 flex items-baseline justify-between border-b border-tc-rule pb-3">
-                                <span className="tc-body">
-                                    Estimasi selesai
-                                </span>
-                                <span
-                                    className="tc-body font-medium"
-                                    style={{ color: 'var(--color-tc-ink)' }}
-                                >
-                                    {formatDate(
-                                        service.estimated_completion_date,
-                                        {
-                                            day: 'numeric',
-                                            month: 'short',
-                                            year: 'numeric',
-                                        },
-                                    )}
-                                </span>
-                            </div>
-                        ) : null}
-
-                        <div className="mt-4 space-y-2.5">
-                            <div className="flex items-baseline justify-between">
-                                <span className="tc-body">Biaya diagnosa</span>
-                                <span
-                                    className="tc-body tabular-nums"
-                                    style={{ color: 'var(--color-tc-ink)' }}
-                                >
-                                    {formatCurrency(diagnosisCost)}
-                                </span>
-                            </div>
-                            {parts.length > 0 ? (
-                                <div className="flex items-baseline justify-between">
-                                    <span className="tc-body">
-                                        Sparepart + pasang
-                                    </span>
+                                <div className="mt-5 flex items-baseline justify-between border-t border-tc-rule pt-4">
                                     <span
-                                        className="tc-body tabular-nums"
+                                        className="text-[0.9375rem] font-semibold"
                                         style={{
+                                            fontFamily: 'var(--font-tc-body)',
                                             color: 'var(--color-tc-ink)',
                                         }}
                                     >
-                                        {formatCurrency(partTotal)}
+                                        Total estimasi
+                                    </span>
+                                    <span
+                                        className="tc-price"
+                                        style={{ fontSize: '1.25rem' }}
+                                    >
+                                        {formatCurrency(estimatedTotal)}
                                     </span>
                                 </div>
-                            ) : null}
-                        </div>
+                                <p className="mt-2 tc-caption">
+                                    Harga transparan berdasarkan diagnosa
+                                    terkini. Anda akan diberi tahu jika ada
+                                    perubahan.
+                                </p>
 
-                        <div className="mt-5 flex items-baseline justify-between border-t border-tc-rule pt-4">
-                            <span
-                                className="text-[0.9375rem] font-semibold"
-                                style={{
-                                    fontFamily: 'var(--font-tc-body)',
-                                    color: 'var(--color-tc-ink)',
-                                }}
-                            >
-                                Total estimasi
-                            </span>
-                            <span
-                                className="tc-price"
-                                style={{ fontSize: '1.25rem' }}
-                            >
-                                {formatCurrency(estimatedTotal)}
-                            </span>
-                        </div>
-                        <p className="mt-2 tc-caption">
-                            Harga transparan berdasarkan diagnosa terkini. Anda
-                            akan diberi tahu jika ada perubahan.
-                        </p>
+                                <a
+                                    href={waLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="tc-btn tc-btn--primary tc-btn--block mt-6"
+                                >
+                                    <ChatCircle
+                                        className="h-4 w-4"
+                                        weight="bold"
+                                    />
+                                    Hubungi teknisi
+                                </a>
+                            </div>
+                        </Reveal>
 
-                        <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="tc-btn tc-btn--primary tc-btn--block mt-6"
-                        >
-                            <ChatCircle className="h-4 w-4" weight="bold" />
-                            Hubungi teknisi
-                        </a>
+                        <Reveal delay={80}>
+                            <div className="tc-card flex items-start gap-3 p-6">
+                                <Question
+                                    className="mt-0.5 h-5 w-5 shrink-0"
+                                    weight="bold"
+                                    aria-hidden="true"
+                                    style={{ color: 'var(--color-tc-ink)' }}
+                                />
+                                <div>
+                                    <h2
+                                        className="text-[0.9375rem] font-semibold"
+                                        style={{
+                                            fontFamily: 'var(--font-tc-body)',
+                                            color: 'var(--color-tc-ink)',
+                                        }}
+                                    >
+                                        Butuh bantuan?
+                                    </h2>
+                                    <p className="mt-1 tc-body">
+                                        Punya pertanyaan tentang status
+                                        perbaikan atau rincian biaya? Tim
+                                        support kami siap membantu via WhatsApp.
+                                    </p>
+                                </div>
+                            </div>
+                        </Reveal>
                     </div>
-
-                    <div className="tc-card flex items-start gap-3 p-6">
-                        <Question
-                            className="mt-0.5 h-5 w-5 shrink-0"
-                            weight="bold"
-                            aria-hidden="true"
-                            style={{ color: 'var(--color-tc-ink)' }}
-                        />
-                        <div>
-                            <h2
-                                className="text-[0.9375rem] font-semibold"
-                                style={{
-                                    fontFamily: 'var(--font-tc-body)',
-                                    color: 'var(--color-tc-ink)',
-                                }}
-                            >
-                                Butuh bantuan?
-                            </h2>
-                            <p className="mt-1 tc-body">
-                                Punya pertanyaan tentang status perbaikan atau
-                                rincian biaya? Tim support kami siap membantu
-                                via WhatsApp.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </Reveal>
         </PublicPage>
     );
 }

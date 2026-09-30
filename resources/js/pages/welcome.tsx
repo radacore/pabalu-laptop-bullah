@@ -16,6 +16,7 @@ import {
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatShortPrice, formatSoldCount } from '@/lib/format';
 import { mockCommerce, originalPrice } from '@/lib/mock-commerce';
 import type { Brand, Laptop, Testimonial, WebsiteSetting } from '@/types';
@@ -158,18 +159,26 @@ export default function Welcome() {
             </section>
 
             {/* QUICK LINKS */}
-            <QuickLinks />
+            <Reveal>
+                <QuickLinks />
+            </Reveal>
 
             {/* GRID REKOMENDASI */}
-            <ProductGrid laptops={laptops} brands={brands} />
+            <Reveal delay={80}>
+                <ProductGrid laptops={laptops} brands={brands} />
+            </Reveal>
 
             {/* TESTIMONI */}
             {testimonials.length > 0 && (
-                <TestimonialsBand testimonials={testimonials} />
+                <Reveal delay={80}>
+                    <TestimonialsBand testimonials={testimonials} />
+                </Reveal>
             )}
 
             {/* SERVIS + KONTAK */}
-            <ServicesCTA website={website} />
+            <Reveal delay={80}>
+                <ServicesCTA website={website} />
+            </Reveal>
         </PublicPage>
     );
 }
@@ -265,8 +274,10 @@ function ProductGrid({
                 </div>
             ) : (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {laptops.map((laptop) => (
-                        <ProductCard key={laptop.id} laptop={laptop} />
+                    {laptops.map((laptop, i) => (
+                        <Reveal key={laptop.id} delay={(i % 8) * 70}>
+                            <ProductCard laptop={laptop} />
+                        </Reveal>
                     ))}
                 </div>
             )}
@@ -498,8 +509,14 @@ function ServicesCTA({ website }: { website: WebsiteSetting }) {
 
                 <div
                     id="kontak"
-                    className="tc-card flex scroll-mt-24 flex-col bg-tc-ink p-6 text-white md:p-8"
-                    style={{ borderColor: 'var(--color-tc-ink)' }}
+                    className="tc-card flex scroll-mt-24 flex-col p-6 text-white md:p-8"
+                    style={{
+                        borderColor: 'var(--color-tc-ink)',
+                        // background inline (bukan bg-tc-ink): .tc-card
+                        // adalah CSS tanpa layer sehingga selalu menang
+                        // atas utility bg-*. Teks section ini putih.
+                        background: '#111111',
+                    }}
                 >
                     <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-white/10">
                         <MapPin className="h-6 w-6" weight="bold" />

@@ -8,6 +8,7 @@ import {
     Question,
 } from '@phosphor-icons/react';
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatCurrency } from '@/lib/format';
 import type { WebsiteSetting } from '@/types';
 
@@ -210,48 +211,106 @@ export default function RentalTracking({
                 </div>
             </section>
 
-            <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                <h2 className="text-center tc-h2">Progres sewa</h2>
-                <p className="mt-2 text-center tc-caption">
-                    Tahap {stepIdx + 1} dari {stepLabels.length}
-                </p>
+            <Reveal>
+                <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
+                    <h2 className="text-center tc-h2">Progres sewa</h2>
+                    <p className="mt-2 text-center tc-caption">
+                        Tahap {stepIdx + 1} dari {stepLabels.length}
+                    </p>
 
-                <div className="mt-10">
-                    <div className="hidden sm:block">
-                        <div className="relative flex items-start justify-between">
-                            <div className="absolute top-2 right-2 left-2 h-px bg-tc-rule" />
-                            <div
-                                className="absolute top-2 left-2 h-px bg-tc-ink transition-all duration-500"
-                                style={{
-                                    width: `calc(${
-                                        (stepIdx / (stepLabels.length - 1)) *
-                                        100
-                                    }%)`,
-                                }}
-                                aria-hidden="true"
-                            />
+                    <div className="mt-10">
+                        <div className="hidden sm:block">
+                            <div className="relative flex items-start justify-between">
+                                <div className="absolute top-2 right-2 left-2 h-px bg-tc-rule" />
+                                <div
+                                    className="absolute top-2 left-2 h-px bg-tc-ink transition-all duration-500"
+                                    style={{
+                                        width: `calc(${
+                                            (stepIdx /
+                                                (stepLabels.length - 1)) *
+                                            100
+                                        }%)`,
+                                    }}
+                                    aria-hidden="true"
+                                />
+                                {stepLabels.map((label, index) => {
+                                    const done = index <= stepIdx;
+
+                                    return (
+                                        <div
+                                            key={label}
+                                            className="relative flex w-20 flex-col items-center"
+                                        >
+                                            <span
+                                                className="relative z-10 flex h-4 w-4 items-center justify-center rounded-full"
+                                                style={{
+                                                    background: done
+                                                        ? 'var(--color-tc-ink)'
+                                                        : 'var(--color-tc-surface)',
+                                                    border: done
+                                                        ? 'none'
+                                                        : '2px solid var(--color-tc-rule)',
+                                                }}
+                                                aria-hidden="true"
+                                            />
+                                            <p
+                                                className="mt-3 text-center tc-caption"
+                                                style={
+                                                    done
+                                                        ? {
+                                                              color: 'var(--color-tc-ink)',
+                                                              fontWeight: 600,
+                                                          }
+                                                        : undefined
+                                                }
+                                            >
+                                                {String(index + 1).padStart(
+                                                    2,
+                                                    '0',
+                                                )}
+                                                <br />
+                                                {label}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <ol className="space-y-2 sm:hidden">
                             {stepLabels.map((label, index) => {
                                 const done = index <= stepIdx;
 
                                 return (
-                                    <div
+                                    <li
                                         key={label}
-                                        className="relative flex w-20 flex-col items-center"
+                                        className="flex items-center gap-3 rounded-[10px] border border-tc-rule bg-tc-surface px-4 py-3"
                                     >
                                         <span
-                                            className="relative z-10 flex h-4 w-4 items-center justify-center rounded-full"
+                                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                                             style={{
                                                 background: done
                                                     ? 'var(--color-tc-ink)'
-                                                    : 'var(--color-tc-surface)',
-                                                border: done
-                                                    ? 'none'
-                                                    : '2px solid var(--color-tc-rule)',
+                                                    : 'var(--color-tc-media)',
+                                                color: done
+                                                    ? '#fff'
+                                                    : 'var(--color-tc-secondary)',
                                             }}
                                             aria-hidden="true"
-                                        />
-                                        <p
-                                            className="mt-3 text-center tc-caption"
+                                        >
+                                            {done ? (
+                                                <Check
+                                                    className="h-3.5 w-3.5"
+                                                    weight="bold"
+                                                />
+                                            ) : (
+                                                <span className="tc-caption">
+                                                    {index + 1}
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span
+                                            className="tc-body"
                                             style={
                                                 done
                                                     ? {
@@ -261,143 +320,105 @@ export default function RentalTracking({
                                                     : undefined
                                             }
                                         >
-                                            {String(index + 1).padStart(2, '0')}
-                                            <br />
                                             {label}
-                                        </p>
-                                    </div>
+                                        </span>
+                                    </li>
                                 );
                             })}
-                        </div>
+                        </ol>
                     </div>
 
-                    <ol className="space-y-2 sm:hidden">
-                        {stepLabels.map((label, index) => {
-                            const done = index <= stepIdx;
-
-                            return (
-                                <li
-                                    key={label}
-                                    className="flex items-center gap-3 rounded-[10px] border border-tc-rule bg-tc-surface px-4 py-3"
-                                >
-                                    <span
-                                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                                        style={{
-                                            background: done
-                                                ? 'var(--color-tc-ink)'
-                                                : 'var(--color-tc-media)',
-                                            color: done
-                                                ? '#fff'
-                                                : 'var(--color-tc-secondary)',
-                                        }}
-                                        aria-hidden="true"
-                                    >
-                                        {done ? (
-                                            <Check
-                                                className="h-3.5 w-3.5"
-                                                weight="bold"
-                                            />
-                                        ) : (
-                                            <span className="tc-caption">
-                                                {index + 1}
-                                            </span>
+                    <div className="mt-10 space-y-4">
+                        <Reveal>
+                            <div className="tc-card p-6 md:p-7">
+                                <h2 className="tc-h3">Ringkasan sewa</h2>
+                                <dl className="mt-5">
+                                    <InfoRow
+                                        label="Tarif harian"
+                                        value={formatCurrency(
+                                            rental.daily_rate,
                                         )}
-                                    </span>
-                                    <span
-                                        className="tc-body"
-                                        style={
-                                            done
-                                                ? {
-                                                      color: 'var(--color-tc-ink)',
-                                                      fontWeight: 600,
-                                                  }
-                                                : undefined
-                                        }
+                                    />
+                                    <InfoRow
+                                        label="Deposit"
+                                        value={formatCurrency(rental.deposit)}
+                                    />
+                                    <InfoRow
+                                        label="Jatuh tempo"
+                                        value={formatDate(rental.due_at, {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: 'numeric',
+                                        })}
+                                    />
+                                    {rental.returned_at ? (
+                                        <InfoRow
+                                            label="Dikembalikan"
+                                            value={formatDate(
+                                                rental.returned_at,
+                                                {
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                    year: 'numeric',
+                                                },
+                                            )}
+                                        />
+                                    ) : null}
+                                    {rental.total_cost != null ? (
+                                        <InfoRow
+                                            label="Total biaya"
+                                            value={formatCurrency(
+                                                rental.total_cost,
+                                            )}
+                                            strong
+                                        />
+                                    ) : null}
+                                </dl>
+
+                                <a
+                                    href={waLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="tc-btn tc-btn--primary tc-btn--block mt-6"
+                                >
+                                    <ChatCircle
+                                        className="h-4 w-4"
+                                        weight="bold"
+                                    />
+                                    Hubungi kami
+                                </a>
+                            </div>
+                        </Reveal>
+
+                        <Reveal delay={80}>
+                            <div className="tc-card flex items-start gap-3 p-6">
+                                <Question
+                                    className="mt-0.5 h-5 w-5 shrink-0"
+                                    weight="bold"
+                                    aria-hidden="true"
+                                    style={{ color: 'var(--color-tc-ink)' }}
+                                />
+                                <div>
+                                    <h2
+                                        className="text-[0.9375rem] font-semibold"
+                                        style={{
+                                            fontFamily: 'var(--font-tc-body)',
+                                            color: 'var(--color-tc-ink)',
+                                        }}
                                     >
-                                        {label}
-                                    </span>
-                                </li>
-                            );
-                        })}
-                    </ol>
-                </div>
-
-                <div className="mt-10 space-y-4">
-                    <div className="tc-card p-6 md:p-7">
-                        <h2 className="tc-h3">Ringkasan sewa</h2>
-                        <dl className="mt-5">
-                            <InfoRow
-                                label="Tarif harian"
-                                value={formatCurrency(rental.daily_rate)}
-                            />
-                            <InfoRow
-                                label="Deposit"
-                                value={formatCurrency(rental.deposit)}
-                            />
-                            <InfoRow
-                                label="Jatuh tempo"
-                                value={formatDate(rental.due_at, {
-                                    day: 'numeric',
-                                    month: 'short',
-                                    year: 'numeric',
-                                })}
-                            />
-                            {rental.returned_at ? (
-                                <InfoRow
-                                    label="Dikembalikan"
-                                    value={formatDate(rental.returned_at, {
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                    })}
-                                />
-                            ) : null}
-                            {rental.total_cost != null ? (
-                                <InfoRow
-                                    label="Total biaya"
-                                    value={formatCurrency(rental.total_cost)}
-                                    strong
-                                />
-                            ) : null}
-                        </dl>
-
-                        <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="tc-btn tc-btn--primary tc-btn--block mt-6"
-                        >
-                            <ChatCircle className="h-4 w-4" weight="bold" />
-                            Hubungi kami
-                        </a>
+                                        Butuh bantuan?
+                                    </h2>
+                                    <p className="mt-1 tc-body">
+                                        Punya pertanyaan tentang status sewa
+                                        atau perpanjangan durasi? Tim support
+                                        kami siap membantu via WhatsApp.
+                                    </p>
+                                </div>
+                            </div>
+                        </Reveal>
                     </div>
-
-                    <div className="tc-card flex items-start gap-3 p-6">
-                        <Question
-                            className="mt-0.5 h-5 w-5 shrink-0"
-                            weight="bold"
-                            aria-hidden="true"
-                            style={{ color: 'var(--color-tc-ink)' }}
-                        />
-                        <div>
-                            <h2
-                                className="text-[0.9375rem] font-semibold"
-                                style={{
-                                    fontFamily: 'var(--font-tc-body)',
-                                    color: 'var(--color-tc-ink)',
-                                }}
-                            >
-                                Butuh bantuan?
-                            </h2>
-                            <p className="mt-1 tc-body">
-                                Punya pertanyaan tentang status sewa atau
-                                perpanjangan durasi? Tim support kami siap
-                                membantu via WhatsApp.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </Reveal>
         </PublicPage>
     );
 }

@@ -12,6 +12,7 @@ import {
 } from '@phosphor-icons/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
+import Reveal from '@/components/shared/reveal';
 import { formatShortPrice } from '@/lib/format';
 import type { PaginatedResponse, Sparepart, WebsiteSetting } from '@/types';
 
@@ -323,7 +324,7 @@ export default function SparepartCatalog({
 
             <section className="mx-auto max-w-[1440px] px-4 py-10 md:px-6 md:py-14 lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
                 <aside className="hidden lg:block">
-                    <div className="sticky top-32">
+                    <Reveal className="sticky top-32">
                         <div className="mb-5 flex items-baseline justify-between border-b border-tc-rule pb-4">
                             <h2
                                 className="text-[0.9375rem] font-semibold"
@@ -341,7 +342,7 @@ export default function SparepartCatalog({
                             ) : null}
                         </div>
                         {filterContent}
-                    </div>
+                    </Reveal>
                 </aside>
 
                 <div className="mb-6 lg:hidden">
@@ -465,11 +466,10 @@ export default function SparepartCatalog({
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                            {spareparts.data.map((sparepart) => (
-                                <SparepartCard
-                                    key={sparepart.id}
-                                    sparepart={sparepart}
-                                />
+                            {spareparts.data.map((sparepart, i) => (
+                                <Reveal key={sparepart.id} delay={(i % 9) * 60}>
+                                    <SparepartCard sparepart={sparepart} />
+                                </Reveal>
                             ))}
                         </div>
                     )}

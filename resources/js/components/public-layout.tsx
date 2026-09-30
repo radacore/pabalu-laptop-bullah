@@ -3,7 +3,7 @@
  * Footer: mega informatif (kontak asli toko).
  */
 
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     ChatCircle,
     FacebookLogo,
@@ -709,6 +709,10 @@ export function PublicPage({
     currentPath?: string;
     children: ReactNode;
 }) {
+    // Key per URL agar animasi .tc-page-enter terpicu ulang di setiap
+    // navigasi (tanpa ini React hanya reconcile dan animasi jalan sekali).
+    const { url } = usePage();
+
     return (
         <>
             <PublicHeader website={website} currentPath={currentPath} />
@@ -717,7 +721,9 @@ export function PublicPage({
                 style={{ fontFamily: 'var(--font-tc-body)' }}
             >
                 <Head title={title} />
-                <main>{children}</main>
+                <main key={url} className="tc-page-enter">
+                    {children}
+                </main>
                 <PublicFooter website={website} />
                 <FloatingWa website={website} />
             </div>
