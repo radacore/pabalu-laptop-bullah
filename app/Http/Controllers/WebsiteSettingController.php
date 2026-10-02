@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateWebsiteSettingRequest;
 use App\Models\WebsiteSetting;
+use App\Services\WebpImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +35,7 @@ class WebsiteSettingController extends Controller
             if ($setting->logo) {
                 Storage::disk('public')->delete($setting->logo);
             }
-            $data['logo'] = $request->file('logo')->store('website', 'public');
+            $data['logo'] = WebpImage::store($request->file('logo'), 'website');
         }
 
         if ($request->boolean('remove_hero_image') && $setting->hero_image) {
@@ -46,7 +47,7 @@ class WebsiteSettingController extends Controller
             if ($setting->hero_image) {
                 Storage::disk('public')->delete($setting->hero_image);
             }
-            $data['hero_image'] = $request->file('hero_image')->store('website', 'public');
+            $data['hero_image'] = WebpImage::store($request->file('hero_image'), 'website');
         }
 
         $data['updated_by'] = Auth::id();

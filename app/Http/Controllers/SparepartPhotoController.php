@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sparepart;
 use App\Models\SparepartPhoto;
+use App\Services\WebpImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +23,7 @@ class SparepartPhotoController extends Controller
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $path = $request->file('photo')->store("spareparts/{$sparepart->id}", 'public');
+        $path = WebpImage::store($request->file('photo'), "spareparts/{$sparepart->id}");
 
         $sparepart->photos()->create([
             'file_path' => $path,

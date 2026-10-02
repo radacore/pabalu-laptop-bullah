@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Laptop;
 use App\Models\LaptopPhoto;
+use App\Services\WebpImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +23,7 @@ class LaptopPhotoController extends Controller
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $path = $request->file('photo')->store("laptops/{$laptop->id}", 'public');
+        $path = WebpImage::store($request->file('photo'), "laptops/{$laptop->id}");
 
         $laptop->photos()->create([
             'file_path' => $path,
