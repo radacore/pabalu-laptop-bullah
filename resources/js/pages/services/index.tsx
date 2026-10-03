@@ -50,14 +50,6 @@ function formatTanggal(value?: string | null) {
     );
 }
 
-function truncate(value?: string | null, limit = 72) {
-    if (!value) {
-        return '-';
-    }
-
-    return value.length > limit ? `${value.slice(0, limit)}...` : value;
-}
-
 function serviceCode(service: ServiceListItem) {
     return service.service_code ?? service.code ?? `SRV-${service.id}`;
 }
@@ -283,12 +275,6 @@ const ServicesIndex: HalamanComponent = ({
                                                     scope="col"
                                                     className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase"
                                                 >
-                                                    Keluhan
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase"
-                                                >
                                                     Teknisi
                                                 </th>
                                                 <th
@@ -344,11 +330,6 @@ const ServicesIndex: HalamanComponent = ({
                                                                 .filter(Boolean)
                                                                 .join(' ')}
                                                         </div>
-                                                    </td>
-                                                    <td className="max-w-xs truncate px-6 py-4 text-sm text-slate-600">
-                                                        {truncate(
-                                                            service.complaint,
-                                                        )}
                                                     </td>
                                                     <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
                                                         {service.technician
