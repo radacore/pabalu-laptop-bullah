@@ -86,6 +86,22 @@ class ServiceController extends Controller
         $data['created_by'] = Auth::id();
 
         DB::transaction(function () use ($data, $parts): void {
+            // Mode 'new': buat pelanggan sekalian dalam transaksi yang
+            // sama — servis gagal validasi/simpan = pelanggan ikut batal.
+            if (($data['customer_mode'] ?? 'existing') === 'new') {
+                $customer = Customer::query()->create([
+                    'name' => $data['customer_name'],
+                    'phone' => $data['customer_phone'],
+                ]);
+                $data['customer_id'] = $customer->id;
+            }
+
+            unset(
+                $data['customer_mode'],
+                $data['customer_name'],
+                $data['customer_phone'],
+            );
+
             $service = Service::query()->create($data);
 
             $service->updates()->create([

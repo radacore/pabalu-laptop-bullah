@@ -7,6 +7,16 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreServiceRequest extends FormRequest
 {
     /**
+     * Default ke mode existing bila tidak dikirim (payload lama).
+     */
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('customer_mode')) {
+            $this->merge(['customer_mode' => 'existing']);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -14,7 +24,13 @@ class StoreServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'exists:customers,id'],
+            // Mode pelanggan: 'existing' (pilih dari daftar) atau 'new'
+            // (buat pelanggan baru sekalian). Default existing agar
+            // kompatibel dengan payload lama yang hanya kirim customer_id.
+            'customer_mode' => ['nullable', 'in:existing,new'],
+            'customer_id' => ['required_if:customer_mode,existing', 'nullable', 'exists:customers,id'],
+            'customer_name' => ['required_if:customer_mode,new', 'nullable', 'string', 'max:255'],
+            'customer_phone' => ['required_if:customer_mode,new', 'nullable', 'string', 'max:20'],
             'device_name' => ['nullable', 'string', 'max:255'],
             'brand' => ['nullable', 'string', 'max:255'],
             'model' => ['nullable', 'string', 'max:255'],

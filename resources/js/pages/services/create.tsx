@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import CustomerPicker from '@/components/shared/customer-picker';
+import type { CustomerMode } from '@/components/shared/customer-picker';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
@@ -19,6 +20,7 @@ type PartItem = {
 };
 
 type ServiceForm = {
+    customer_mode: CustomerMode;
     customer_id: string;
     customer_name: string;
     customer_phone: string;
@@ -79,8 +81,8 @@ const ServicesBuat: HalamanComponent = ({
     technicians,
     sparepart_types,
 }) => {
-    const [customerSearch, setCustomerSearch] = useState('');
     const form = useForm<ServiceForm>({
+        customer_mode: 'existing',
         customer_id: '',
         customer_name: '',
         customer_phone: '',
@@ -95,16 +97,6 @@ const ServicesBuat: HalamanComponent = ({
         service_status_id: '',
         parts: [],
     });
-
-    const filteredCustomers = useMemo(() => {
-        const query = customerSearch.toLowerCase();
-
-        return customers.filter((customer) =>
-            `${customer.name} ${customer.phone ?? ''}`
-                .toLowerCase()
-                .includes(query),
-        );
-    }, [customerSearch, customers]);
 
     const addPart = () => {
         form.setData('parts', [...form.data.parts, newPart()]);
@@ -164,75 +156,31 @@ const ServicesBuat: HalamanComponent = ({
                         Pilih pelanggan yang sudah ada atau tambah pelanggan
                         baru.
                     </p>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div className="col-span-1 md:col-span-2">
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Cari Pelanggan
-                            </label>
-                            <input
-                                type="text"
-                                value={customerSearch}
-                                onChange={(e) =>
-                                    setCustomerSearch(e.target.value)
-                                }
-                                placeholder="Cari berdasarkan nama atau telepon"
-                                className={inputClass}
-                            />
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Pelanggan
-                            </label>
-                            <select
-                                value={form.data.customer_id || ''}
-                                onChange={(e) =>
-                                    form.setData('customer_id', e.target.value)
-                                }
-                                className={selectClass}
-                            >
-                                <option value="">Pelanggan baru</option>
-                                {filteredCustomers.map((c) => (
-                                    <option key={c.id} value={String(c.id)}>
-                                        {c.name} - {c.phone ?? '-'}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Nama Pelanggan
-                            </label>
-                            <input
-                                type="text"
-                                value={form.data.customer_name}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'customer_name',
-                                        e.target.value,
-                                    )
-                                }
-                                className={inputClass}
-                                placeholder="Otomatis dari pelanggan"
-                            />
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Telepon
-                            </label>
-                            <input
-                                type="text"
-                                value={form.data.customer_phone}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'customer_phone',
-                                        e.target.value,
-                                    )
-                                }
-                                className={inputClass}
-                                placeholder="Otomatis dari pelanggan"
-                            />
-                        </div>
-                    </div>
+                    <CustomerPicker
+                        customers={customers}
+                        mode={form.data.customer_mode}
+                        onModeChange={(mode) =>
+                            form.setData('customer_mode', mode)
+                        }
+                        customerId={form.data.customer_id}
+                        onCustomerIdChange={(id) =>
+                            form.setData('customer_id', id)
+                        }
+                        customerName={form.data.customer_name}
+                        onCustomerNameChange={(value) =>
+                            form.setData('customer_name', value)
+                        }
+                        customerPhone={form.data.customer_phone}
+                        onCustomerPhoneChange={(value) =>
+                            form.setData('customer_phone', value)
+                        }
+                        errors={{
+                            customer_id: form.errors.customer_id,
+                            customer_name: form.errors.customer_name,
+                            customer_phone: form.errors.customer_phone,
+                        }}
+                        inputClass={inputClass}
+                    />
                 </div>
 
                 <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">

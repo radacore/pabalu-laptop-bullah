@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
+import CustomerPicker from '@/components/shared/customer-picker';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
@@ -281,59 +282,29 @@ const ServicesEdit: HalamanComponent = ({
                     <h3 className="text-lg font-semibold text-slate-900">
                         Informasi Pelanggan
                     </h3>
-                    <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div className="md:col-span-2">
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Pelanggan
-                            </label>
-                            <select
-                                value={form.data.customer_id || ''}
-                                onChange={(e) =>
-                                    form.setData('customer_id', e.target.value)
-                                }
-                                className={selectClass}
-                            >
-                                <option value="">—</option>
-                                {customers.map((c) => (
-                                    <option key={c.id} value={String(c.id)}>
-                                        {c.name} - {c.phone ?? '-'}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Nama Pelanggan
-                            </label>
-                            <input
-                                type="text"
-                                value={form.data.customer_name}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'customer_name',
-                                        e.target.value,
-                                    )
-                                }
-                                className={inputClass}
-                            />
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Telepon
-                            </label>
-                            <input
-                                type="text"
-                                value={form.data.customer_phone}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'customer_phone',
-                                        e.target.value,
-                                    )
-                                }
-                                className={inputClass}
-                            />
-                        </div>
-                    </div>
+                    <p className="mt-1 mb-5 text-sm text-slate-500">
+                        Pelanggan servis ini. Untuk pelanggan baru, buat servis
+                        baru.
+                    </p>
+                    <CustomerPicker
+                        customers={customers}
+                        mode="existing"
+                        onModeChange={() => {}}
+                        customerId={form.data.customer_id}
+                        onCustomerIdChange={(id) =>
+                            form.setData('customer_id', id)
+                        }
+                        customerName={form.data.customer_name}
+                        onCustomerNameChange={(value) =>
+                            form.setData('customer_name', value)
+                        }
+                        customerPhone={form.data.customer_phone}
+                        onCustomerPhoneChange={(value) =>
+                            form.setData('customer_phone', value)
+                        }
+                        allowNew={false}
+                        inputClass={inputClass}
+                    />
                 </div>
 
                 <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
