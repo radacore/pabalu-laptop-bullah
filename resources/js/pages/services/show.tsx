@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import type { User } from '@/types';
 
@@ -243,18 +244,14 @@ const ServicesShow: HalamanComponent = ({
                         </p>
                     </div>
                     <div className="flex gap-3">
-                        <Link
-                            href="/services"
-                            className="inline-block rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm transition-colors hover:bg-slate-50"
-                        >
-                            Kembali
-                        </Link>
-                        <Link
-                            href={`/services/${service.id}/edit`}
-                            className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
-                        >
-                            Edit Servis
-                        </Link>
+                        <Button variant="outline" asChild>
+                            <Link href="/services">Kembali</Link>
+                        </Button>
+                        <Button variant="primary" asChild>
+                            <Link href={`/services/${service.id}/edit`}>
+                                Edit Servis
+                            </Link>
+                        </Button>
                     </div>
                 </div>
 
@@ -559,15 +556,16 @@ const ServicesShow: HalamanComponent = ({
                                         </p>
                                     )}
                                 </div>
-                                <button
+                                <Button
                                     type="submit"
+                                    variant="primary"
                                     disabled={updateForm.processing}
-                                    className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="w-full"
                                 >
                                     {updateForm.processing
                                         ? 'Menyimpan...'
                                         : 'Simpan Update'}
-                                </button>
+                                </Button>
                             </form>
                         </div>
                     </div>
@@ -848,15 +846,16 @@ const ServicesShow: HalamanComponent = ({
                                         )}
                                     </div>
                                 </div>
-                                <button
+                                <Button
                                     type="submit"
+                                    variant="primary"
                                     disabled={partForm.processing}
-                                    className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="w-full"
                                 >
                                     {partForm.processing
                                         ? 'Menambahkan...'
                                         : 'Tambah Sparepart'}
-                                </button>
+                                </Button>
                             </form>
                         </div>
                     </div>
@@ -958,12 +957,17 @@ const ServicesShow: HalamanComponent = ({
                                                         )}
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        <Link
-                                                            href={`/financial-transactions/${ft.id}`}
-                                                            className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                        <Button
+                                                            variant="default"
+                                                            size="sm"
+                                                            asChild
                                                         >
-                                                            Lihat
-                                                        </Link>
+                                                            <Link
+                                                                href={`/financial-transactions/${ft.id}`}
+                                                            >
+                                                                Lihat
+                                                            </Link>
+                                                        </Button>
                                                     </td>
                                                 </tr>
                                             );

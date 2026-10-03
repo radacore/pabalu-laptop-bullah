@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { Service, ServicePart, SparepartType } from '@/types';
@@ -499,13 +500,14 @@ const ServicesEdit: HalamanComponent = ({
                         <h3 className="text-lg font-semibold text-slate-900">
                             Sparepart
                         </h3>
-                        <button
+                        <Button
                             type="button"
+                            variant="primary"
+                            size="sm"
                             onClick={addPart}
-                            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                         >
                             + Tambah Item
-                        </button>
+                        </Button>
                     </div>
                     <p className="mb-5 text-sm text-slate-500">
                         Tambahkan sparepart yang dipakai untuk servis
@@ -551,7 +553,7 @@ const ServicesEdit: HalamanComponent = ({
                                             }
                                             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                                                 part.kind === 'used'
-                                                    ? 'bg-blue-600 text-white'
+                                                    ? 'bg-brand text-white'
                                                     : 'text-slate-600 hover:text-slate-900'
                                             }`}
                                         >
@@ -568,7 +570,7 @@ const ServicesEdit: HalamanComponent = ({
                                             }
                                             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                                                 part.kind === 'sold'
-                                                    ? 'bg-blue-600 text-white'
+                                                    ? 'bg-brand text-white'
                                                     : 'text-slate-600 hover:text-slate-900'
                                             }`}
                                         >
@@ -755,19 +757,17 @@ const ServicesEdit: HalamanComponent = ({
                 </div>
 
                 <div className="flex justify-end gap-3">
-                    <Link
-                        href={`/services/${service.id}`}
-                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
-                    >
-                        Batal
-                    </Link>
-                    <button
+                    <Button variant="outline" asChild>
+                        <Link href={`/services/${service.id}`}>Batal</Link>
+                    </Button>
+                    <Button
                         type="submit"
+                        variant="primary"
+                        size="lg"
                         disabled={form.processing}
-                        className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
                     >
                         {form.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
-                    </button>
+                    </Button>
                 </div>
             </form>
         </>

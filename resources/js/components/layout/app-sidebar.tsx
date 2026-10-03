@@ -138,7 +138,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                                         <>
                                             <span>{item.title}</span>
                                             {active && (
-                                                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-600" />
+                                                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-brand" />
                                             )}
                                         </>
                                     )}
@@ -158,7 +158,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
             <div className="px-3 py-4">
                 <Link
                     href="/services/create"
-                    className={`flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.98] ${
+                    className={`flex items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.98] ${
                         collapsed ? '' : 'w-full'
                     }`}
                     title={collapsed ? 'New Ticket' : undefined}

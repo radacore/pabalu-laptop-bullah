@@ -9,6 +9,8 @@ import {
     Wallet,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import Reveal from '@/components/shared/reveal';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { index as financialTransactionsIndex } from '@/routes/financial-transactions';
 import type {
@@ -303,17 +305,19 @@ function CashflowChart({
                             >
                                 <div className="flex h-full w-full items-end justify-center gap-1">
                                     <div
-                                        className="w-3 rounded-t-sm bg-emerald-500 transition-all group-hover:opacity-80 sm:w-4"
+                                        className="admin-bar w-3 rounded-t-sm bg-brand-green transition-opacity group-hover:opacity-80 sm:w-4"
                                         style={{
                                             height: `${iH}%`,
                                             minHeight: '2px',
+                                            animationDelay: `${i * 60}ms`,
                                         }}
                                     />
                                     <div
-                                        className="w-3 rounded-t-sm bg-rose-500 transition-all group-hover:opacity-80 sm:w-4"
+                                        className="admin-bar w-3 rounded-t-sm bg-rose-500 transition-opacity group-hover:opacity-80 sm:w-4"
                                         style={{
                                             height: `${eH}%`,
                                             minHeight: '2px',
+                                            animationDelay: `${i * 60 + 60}ms`,
                                         }}
                                     />
                                 </div>
@@ -461,23 +465,23 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                         </p>
                     </div>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <button
+                        <Button
                             type="button"
+                            variant="outline"
+                            size="sm"
                             onClick={() =>
                                 exportVisibleTransactions(transactions.data)
                             }
-                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200/60 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                         >
                             <Download className="size-3.5" />
                             Ekspor CSV
-                        </button>
-                        <Link
-                            href="/financial-transactions/create"
-                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-                        >
-                            <Plus className="size-4" />
-                            Catat Pengeluaran
-                        </Link>
+                        </Button>
+                        <Button variant="primary" size="lg" asChild>
+                            <Link href="/financial-transactions/create">
+                                <Plus className="size-4" />
+                                Catat Pengeluaran
+                            </Link>
+                        </Button>
                     </div>
                 </header>
 
@@ -502,456 +506,486 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <section className="rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:col-span-2">
-                        <div className="mb-4 flex items-center justify-between">
-                            <div>
-                                <h3 className="text-base font-semibold text-slate-900">
-                                    Tren Arus Kas
-                                </h3>
-                                <p className="text-xs text-slate-500">
-                                    6 bulan terakhir
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-4 text-xs">
-                                <div className="flex items-center gap-1.5">
-                                    <span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                                    <span className="font-medium text-slate-600">
-                                        Pemasukan
-                                    </span>
+                    <Reveal tone="admin" className="lg:col-span-2">
+                        <section className="h-full rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="mb-4 flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-base font-semibold text-slate-900">
+                                        Tren Arus Kas
+                                    </h3>
+                                    <p className="text-xs text-slate-500">
+                                        6 bulan terakhir
+                                    </p>
                                 </div>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
-                                    <span className="font-medium text-slate-600">
-                                        Pengeluaran
-                                    </span>
+                                <div className="flex items-center gap-4 text-xs">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-sm bg-brand-green" />
+                                        <span className="font-medium text-slate-600">
+                                            Pemasukan
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-sm bg-rose-500" />
+                                        <span className="font-medium text-slate-600">
+                                            Pengeluaran
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <CashflowChart transactions={chart_transactions} />
-                    </section>
+                            <CashflowChart transactions={chart_transactions} />
+                        </section>
+                    </Reveal>
 
-                    <section className="rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h3 className="text-base font-semibold text-slate-900">
-                                Kategori
-                            </h3>
-                            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
-                                Top 5
-                            </span>
-                        </div>
-                        <CategoryBreakdownCard
-                            transactions={transactions.data}
-                        />
-                    </section>
+                    <Reveal tone="admin" delay={80}>
+                        <section className="h-full rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="text-base font-semibold text-slate-900">
+                                    Kategori
+                                </h3>
+                                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                                    Top 5
+                                </span>
+                            </div>
+                            <CategoryBreakdownCard
+                                transactions={transactions.data}
+                            />
+                        </section>
+                    </Reveal>
                 </div>
 
-                <form
-                    onSubmit={submitFilters}
-                    className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
-                >
-                    <div className="grid min-w-44 flex-1 gap-1.5">
-                        <label
-                            htmlFor="ft-search"
-                            className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
-                        >
-                            Cari
-                        </label>
-                        <input
-                            id="ft-search"
-                            type="text"
-                            value={filterForm.data.search}
-                            onChange={(e) =>
-                                filterForm.setData('search', e.target.value)
-                            }
-                            placeholder="Cari kode, deskripsi..."
-                            className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                        />
-                    </div>
-
-                    <div className="grid min-w-40 gap-1.5">
-                        <label
-                            htmlFor="ft-type"
-                            className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
-                        >
-                            Tipe
-                        </label>
-                        <div className="relative">
-                            <select
-                                id="ft-type"
-                                value={filterForm.data.type}
-                                onChange={(e) =>
-                                    filterForm.setData('type', e.target.value)
-                                }
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                <Reveal tone="admin">
+                    <form
+                        onSubmit={submitFilters}
+                        className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+                    >
+                        <div className="grid min-w-44 flex-1 gap-1.5">
+                            <label
+                                htmlFor="ft-search"
+                                className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
                             >
-                                <option value="">Semua</option>
-                                <option value="income">Pemasukan</option>
-                                <option value="expense">Pengeluaran</option>
-                            </select>
-                            <svg
-                                className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-slate-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M19 9l-7 7-7-7"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div className="grid min-w-48 gap-1.5">
-                        <label
-                            htmlFor="ft-category"
-                            className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
-                        >
-                            Kategori
-                        </label>
-                        <div className="relative">
-                            <select
-                                id="ft-category"
-                                value={filterForm.data.transaction_category_id}
-                                onChange={(e) =>
-                                    filterForm.setData(
-                                        'transaction_category_id',
-                                        e.target.value,
-                                    )
-                                }
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                            >
-                                <option value="">Semua kategori</option>
-                                {categories.map((c) => (
-                                    <option key={c.id} value={String(c.id)}>
-                                        {c.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <svg
-                                className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-slate-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M19 9l-7 7-7-7"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div className="grid w-full gap-1.5 sm:min-w-56">
-                        <label className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
-                            Periode
-                        </label>
-                        <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+                                Cari
+                            </label>
                             <input
-                                type="date"
-                                value={filterForm.data.from_date}
+                                id="ft-search"
+                                type="text"
+                                value={filterForm.data.search}
                                 onChange={(e) =>
-                                    filterForm.setData(
-                                        'from_date',
-                                        e.target.value,
-                                    )
+                                    filterForm.setData('search', e.target.value)
                                 }
-                                className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                                aria-label="Dari tanggal"
-                            />
-                            <span className="hidden text-xs text-slate-400 sm:inline">
-                                →
-                            </span>
-                            <input
-                                type="date"
-                                value={filterForm.data.to_date}
-                                onChange={(e) =>
-                                    filterForm.setData(
-                                        'to_date',
-                                        e.target.value,
-                                    )
-                                }
-                                className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                                aria-label="Sampai tanggal"
+                                placeholder="Cari kode, deskripsi..."
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
-                    </div>
 
-                    <div className="flex gap-2">
-                        <button
-                            type="submit"
-                            className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-                        >
-                            Filter
-                        </button>
-                        <button
-                            type="button"
-                            onClick={clearFilters}
-                            className="rounded-lg border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                        >
-                            Reset Filter
-                        </button>
-                    </div>
-                </form>
-
-                <section className="overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                    <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <h3 className="text-sm font-semibold text-slate-900">
-                                Daftar Transaksi
-                            </h3>
-                            <p className="text-xs text-slate-500">
-                                {buildPeriodLabel(filters)} ·{' '}
-                                {transactions.total} catatan
-                            </p>
-                        </div>
-                    </div>
-
-                    {transactions.data.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-                                <Wallet className="size-6" />
+                        <div className="grid min-w-40 gap-1.5">
+                            <label
+                                htmlFor="ft-type"
+                                className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
+                            >
+                                Tipe
+                            </label>
+                            <div className="relative">
+                                <select
+                                    id="ft-type"
+                                    value={filterForm.data.type}
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'type',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                >
+                                    <option value="">Semua</option>
+                                    <option value="income">Pemasukan</option>
+                                    <option value="expense">Pengeluaran</option>
+                                </select>
+                                <svg
+                                    className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-slate-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M19 9l-7 7-7-7"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                    />
+                                </svg>
                             </div>
-                            <h3 className="text-base font-semibold text-slate-900">
-                                Belum ada transaksi
-                            </h3>
-                            <p className="mt-1 text-sm text-slate-500">
-                                Transaksi akan muncul otomatis dari aktivitas
-                                servis & penjualan.
-                            </p>
                         </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-slate-200">
-                                <thead className="bg-slate-50">
-                                    <tr>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Tanggal
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Kode
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Deskripsi
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Kategori
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Metode
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Sumber
-                                        </th>
-                                        <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Tipe
-                                        </th>
-                                        <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Jumlah
-                                        </th>
-                                        <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
-                                            Aksi
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {transactions.data.map((transaction) => {
-                                        const isIncome =
-                                            transaction.type === 'income';
 
-                                        return (
-                                            <tr
-                                                key={transaction.id}
-                                                className="transition-colors hover:bg-slate-50/50"
-                                            >
-                                                <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
-                                                    {formatTanggal(
-                                                        transaction.transaction_date,
-                                                    )}
-                                                </td>
-                                                <td className="px-5 py-3.5 font-mono text-sm whitespace-nowrap text-slate-700 sm:px-6">
-                                                    {
-                                                        transaction.transaction_code
-                                                    }
-                                                </td>
-                                                <td className="max-w-xs truncate px-5 py-3.5 text-sm text-slate-900 sm:px-6">
-                                                    {transaction.description ??
-                                                        '—'}
-                                                </td>
-                                                <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
-                                                    {transaction.category
-                                                        ?.name ?? '—'}
-                                                </td>
-                                                <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
-                                                    {transaction.paymentMethod
-                                                        ?.name ?? '—'}
-                                                </td>
-                                                <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
-                                                    {transaction.related
-                                                        ?.service_code ? (
-                                                        <Link
-                                                            href={`/services/${transaction.related.id}`}
-                                                            className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
-                                                        >
-                                                            Servis{' '}
-                                                            {
-                                                                transaction
-                                                                    .related
-                                                                    .service_code
-                                                            }
-                                                        </Link>
-                                                    ) : transaction.related
-                                                          ?.sku ? (
-                                                        <Link
-                                                            href={`/laptops/${transaction.related.id}`}
-                                                            className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
-                                                        >
-                                                            Laptop{' '}
-                                                            {transaction.related
-                                                                .name ??
-                                                                transaction
-                                                                    .related
-                                                                    .sku}
-                                                        </Link>
-                                                    ) : (
-                                                        <span className="text-sm text-slate-400">
-                                                            —
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
-                                                    <span
-                                                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                                                            isIncome
-                                                                ? 'bg-emerald-50 text-emerald-700'
-                                                                : 'bg-rose-50 text-rose-700'
-                                                        }`}
+                        <div className="grid min-w-48 gap-1.5">
+                            <label
+                                htmlFor="ft-category"
+                                className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase"
+                            >
+                                Kategori
+                            </label>
+                            <div className="relative">
+                                <select
+                                    id="ft-category"
+                                    value={
+                                        filterForm.data.transaction_category_id
+                                    }
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'transaction_category_id',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                >
+                                    <option value="">Semua kategori</option>
+                                    {categories.map((c) => (
+                                        <option key={c.id} value={String(c.id)}>
+                                            {c.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <svg
+                                    className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-slate-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        d="M19 9l-7 7-7-7"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div className="grid w-full gap-1.5 sm:min-w-56">
+                            <label className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                                Periode
+                            </label>
+                            <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
+                                <input
+                                    type="date"
+                                    value={filterForm.data.from_date}
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'from_date',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    aria-label="Dari tanggal"
+                                />
+                                <span className="hidden text-xs text-slate-400 sm:inline">
+                                    →
+                                </span>
+                                <input
+                                    type="date"
+                                    value={filterForm.data.to_date}
+                                    onChange={(e) =>
+                                        filterForm.setData(
+                                            'to_date',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    aria-label="Sampai tanggal"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                            <Button type="submit" variant="primary" size="lg">
+                                Filter
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="lg"
+                                onClick={clearFilters}
+                            >
+                                Reset Filter
+                            </Button>
+                        </div>
+                    </form>
+                </Reveal>
+
+                <Reveal tone="admin" delay={80}>
+                    <section className="overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                        <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <h3 className="text-sm font-semibold text-slate-900">
+                                    Daftar Transaksi
+                                </h3>
+                                <p className="text-xs text-slate-500">
+                                    {buildPeriodLabel(filters)} ·{' '}
+                                    {transactions.total} catatan
+                                </p>
+                            </div>
+                        </div>
+
+                        {transactions.data.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-16 text-center">
+                                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                                    <Wallet className="size-6" />
+                                </div>
+                                <h3 className="text-base font-semibold text-slate-900">
+                                    Belum ada transaksi
+                                </h3>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Transaksi akan muncul otomatis dari
+                                    aktivitas servis & penjualan.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-slate-200">
+                                    <thead className="bg-slate-50">
+                                        <tr>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Tanggal
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Kode
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Deskripsi
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Kategori
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Metode
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Sumber
+                                            </th>
+                                            <th className="px-5 py-3 text-left text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Tipe
+                                            </th>
+                                            <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Jumlah
+                                            </th>
+                                            <th className="px-5 py-3 text-right text-[11px] font-semibold tracking-wider text-slate-500 uppercase sm:px-6">
+                                                Aksi
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {transactions.data.map(
+                                            (transaction) => {
+                                                const isIncome =
+                                                    transaction.type ===
+                                                    'income';
+
+                                                return (
+                                                    <tr
+                                                        key={transaction.id}
+                                                        className="transition-colors hover:bg-slate-50/50"
                                                     >
-                                                        {isIncome ? (
-                                                            <ArrowUpRight className="size-3" />
-                                                        ) : (
-                                                            <ArrowDownRight className="size-3" />
-                                                        )}
-                                                        {isIncome
-                                                            ? 'Pemasukan'
-                                                            : 'Pengeluaran'}
-                                                    </span>
-                                                </td>
-                                                <td
-                                                    className={`px-5 py-3.5 text-right text-sm font-bold whitespace-nowrap tabular-nums sm:px-6 ${
-                                                        isIncome
-                                                            ? 'text-emerald-700'
-                                                            : 'text-rose-700'
-                                                    }`}
-                                                >
-                                                    {isIncome ? '+' : '−'}{' '}
-                                                    {formatCurrency(
-                                                        Number(
-                                                            transaction.amount ??
-                                                                0,
-                                                        ),
-                                                    )}
-                                                </td>
-                                                <td className="px-5 py-3.5 text-right whitespace-nowrap sm:px-6">
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        <Link
-                                                            href={`/financial-transactions/${transaction.id}`}
-                                                            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                        <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
+                                                            {formatTanggal(
+                                                                transaction.transaction_date,
+                                                            )}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 font-mono text-sm whitespace-nowrap text-slate-700 sm:px-6">
+                                                            {
+                                                                transaction.transaction_code
+                                                            }
+                                                        </td>
+                                                        <td className="max-w-xs truncate px-5 py-3.5 text-sm text-slate-900 sm:px-6">
+                                                            {transaction.description ??
+                                                                '—'}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
+                                                            {transaction
+                                                                .category
+                                                                ?.name ?? '—'}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
+                                                            {transaction
+                                                                .paymentMethod
+                                                                ?.name ?? '—'}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
+                                                            {transaction.related
+                                                                ?.service_code ? (
+                                                                <Link
+                                                                    href={`/services/${transaction.related.id}`}
+                                                                    className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                                >
+                                                                    Servis{' '}
+                                                                    {
+                                                                        transaction
+                                                                            .related
+                                                                            .service_code
+                                                                    }
+                                                                </Link>
+                                                            ) : transaction
+                                                                  .related
+                                                                  ?.sku ? (
+                                                                <Link
+                                                                    href={`/laptops/${transaction.related.id}`}
+                                                                    className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                                >
+                                                                    Laptop{' '}
+                                                                    {transaction
+                                                                        .related
+                                                                        .name ??
+                                                                        transaction
+                                                                            .related
+                                                                            .sku}
+                                                                </Link>
+                                                            ) : (
+                                                                <span className="text-sm text-slate-400">
+                                                                    —
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
+                                                            <span
+                                                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                                                                    isIncome
+                                                                        ? 'bg-emerald-50 text-emerald-700'
+                                                                        : 'bg-rose-50 text-rose-700'
+                                                                }`}
+                                                            >
+                                                                {isIncome ? (
+                                                                    <ArrowUpRight className="size-3" />
+                                                                ) : (
+                                                                    <ArrowDownRight className="size-3" />
+                                                                )}
+                                                                {isIncome
+                                                                    ? 'Pemasukan'
+                                                                    : 'Pengeluaran'}
+                                                            </span>
+                                                        </td>
+                                                        <td
+                                                            className={`px-5 py-3.5 text-right text-sm font-bold whitespace-nowrap tabular-nums sm:px-6 ${
+                                                                isIncome
+                                                                    ? 'text-emerald-700'
+                                                                    : 'text-rose-700'
+                                                            }`}
                                                         >
-                                                            <Eye className="size-3" />
-                                                            Lihat
-                                                        </Link>
-                                                        <Link
-                                                            href={`/financial-transactions/${transaction.id}/edit`}
-                                                            className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
-                                                        >
-                                                            <Edit className="size-3" />
-                                                            Edit
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-
-                    {transactions.last_page > 1 && (
-                        <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                            <p className="text-xs text-slate-500">
-                                Menampilkan {transactions.from ?? 0}–
-                                {transactions.to ?? 0} dari {transactions.total}{' '}
-                                transaksi
-                            </p>
-                            <div className="flex flex-wrap items-center gap-1">
-                                {transactions.current_page > 1 && (
-                                    <Link
-                                        href={buildTransactionsHref(
-                                            transactions.current_page - 1,
-                                            filters,
+                                                            {isIncome
+                                                                ? '+'
+                                                                : '−'}{' '}
+                                                            {formatCurrency(
+                                                                Number(
+                                                                    transaction.amount ??
+                                                                        0,
+                                                                ),
+                                                            )}
+                                                        </td>
+                                                        <td className="px-5 py-3.5 text-right whitespace-nowrap sm:px-6">
+                                                            <div className="flex items-center justify-end gap-1">
+                                                                <Button
+                                                                    variant="default"
+                                                                    size="sm"
+                                                                    asChild
+                                                                >
+                                                                    <Link
+                                                                        href={`/financial-transactions/${transaction.id}`}
+                                                                    >
+                                                                        <Eye className="size-3" />
+                                                                        Lihat
+                                                                    </Link>
+                                                                </Button>
+                                                                <Button
+                                                                    variant="success"
+                                                                    size="sm"
+                                                                    asChild
+                                                                >
+                                                                    <Link
+                                                                        href={`/financial-transactions/${transaction.id}/edit`}
+                                                                    >
+                                                                        <Edit className="size-3" />
+                                                                        Edit
+                                                                    </Link>
+                                                                </Button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            },
                                         )}
-                                        className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                                    >
-                                        Sebelumnya
-                                    </Link>
-                                )}
-                                {Array.from(
-                                    new Set(
-                                        [
-                                            1,
-                                            transactions.current_page - 1,
-                                            transactions.current_page,
-                                            transactions.current_page + 1,
-                                            transactions.last_page,
-                                        ].filter(
-                                            (p) =>
-                                                p >= 1 &&
-                                                p <= transactions.last_page,
-                                        ),
-                                    ),
-                                ).map((page) =>
-                                    page === transactions.current_page ? (
-                                        <span
-                                            key={page}
-                                            className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white"
-                                        >
-                                            {page}
-                                        </span>
-                                    ) : (
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {transactions.last_page > 1 && (
+                            <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                                <p className="text-xs text-slate-500">
+                                    Menampilkan {transactions.from ?? 0}–
+                                    {transactions.to ?? 0} dari{' '}
+                                    {transactions.total} transaksi
+                                </p>
+                                <div className="flex flex-wrap items-center gap-1">
+                                    {transactions.current_page > 1 && (
                                         <Link
-                                            key={page}
                                             href={buildTransactionsHref(
-                                                page,
+                                                transactions.current_page - 1,
                                                 filters,
                                             )}
                                             className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                                         >
-                                            {page}
+                                            Sebelumnya
                                         </Link>
-                                    ),
-                                )}
-                                {transactions.current_page <
-                                    transactions.last_page && (
-                                    <Link
-                                        href={buildTransactionsHref(
-                                            transactions.current_page + 1,
-                                            filters,
-                                        )}
-                                        className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                                    >
-                                        Selanjutnya
-                                    </Link>
-                                )}
+                                    )}
+                                    {Array.from(
+                                        new Set(
+                                            [
+                                                1,
+                                                transactions.current_page - 1,
+                                                transactions.current_page,
+                                                transactions.current_page + 1,
+                                                transactions.last_page,
+                                            ].filter(
+                                                (p) =>
+                                                    p >= 1 &&
+                                                    p <= transactions.last_page,
+                                            ),
+                                        ),
+                                    ).map((page) =>
+                                        page === transactions.current_page ? (
+                                            <span
+                                                key={page}
+                                                className="inline-flex items-center rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white"
+                                            >
+                                                {page}
+                                            </span>
+                                        ) : (
+                                            <Link
+                                                key={page}
+                                                href={buildTransactionsHref(
+                                                    page,
+                                                    filters,
+                                                )}
+                                                className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                                            >
+                                                {page}
+                                            </Link>
+                                        ),
+                                    )}
+                                    {transactions.current_page <
+                                        transactions.last_page && (
+                                        <Link
+                                            href={buildTransactionsHref(
+                                                transactions.current_page + 1,
+                                                filters,
+                                            )}
+                                            className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                                        >
+                                            Selanjutnya
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </section>
+                        )}
+                    </section>
+                </Reveal>
             </div>
         </>
     );

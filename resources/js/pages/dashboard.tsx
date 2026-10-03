@@ -12,6 +12,8 @@ import {
     Wrench,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import Reveal from '@/components/shared/reveal';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard as dashboardRoute } from '@/routes';
 import type { Laptop as LaptopRecord, Service } from '@/types';
@@ -305,17 +307,19 @@ function BarChart({
                             >
                                 <div className="flex h-full w-full items-end justify-center gap-1">
                                     <div
-                                        className="w-3 rounded-t-sm bg-blue-600 transition-all group-hover:opacity-80 sm:w-4"
+                                        className="admin-bar w-3 rounded-t-sm bg-brand transition-opacity group-hover:opacity-80 sm:w-4"
                                         style={{
                                             height: `${sH}%`,
                                             minHeight: '2px',
+                                            animationDelay: `${i * 60}ms`,
                                         }}
                                     />
                                     <div
-                                        className="w-3 rounded-t-sm bg-emerald-500 transition-all group-hover:opacity-80 sm:w-4"
+                                        className="admin-bar w-3 rounded-t-sm bg-brand-green transition-opacity group-hover:opacity-80 sm:w-4"
                                         style={{
                                             height: `${svH}%`,
                                             minHeight: '2px',
+                                            animationDelay: `${i * 60 + 60}ms`,
                                         }}
                                     />
                                 </div>
@@ -377,286 +381,314 @@ export default function Dashboard({
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200/60 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                        >
+                        <Button type="button" variant="outline" size="sm">
                             <Calendar className="size-3.5" />
                             Bulan Ini
-                        </button>
-                        <button
-                            type="button"
-                            className="inline-flex items-center gap-2 rounded-lg border border-slate-200/60 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                        >
+                        </Button>
+                        <Button type="button" variant="outline" size="sm">
                             <Download className="size-3.5" />
                             Ekspor
-                        </button>
+                        </Button>
                     </div>
                 </header>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <KpiCard
-                        label="Laptop Tersedia"
-                        value={String(stats.total_laptops_available)}
-                        icon={Package}
-                        iconBg="bg-emerald-50"
-                        iconText="text-emerald-600"
-                        hint={`${stats.total_laptops_this_month} unit masuk bulan ini`}
-                        trend={{
-                            direction: 'up',
-                            label: `+${stats.total_laptops_this_month}`,
-                        }}
-                        sparkline={sales.slice(0, 6)}
-                        sparkColor="#10b981"
-                    />
-                    <KpiCard
-                        label="Terjual"
-                        value={String(stats.total_laptops_sold)}
-                        icon={ShoppingCart}
-                        iconBg="bg-blue-50"
-                        iconText="text-blue-600"
-                        hint="Total unit terjual"
-                        trend={{
-                            direction: 'up',
-                            label: `${stats.total_laptops_sold}`,
-                        }}
-                        sparkline={sales.slice(2, 8)}
-                        sparkColor="#3b82f6"
-                    />
-                    <KpiCard
-                        label="Servis Aktif"
-                        value={String(stats.total_active_services)}
-                        icon={Wrench}
-                        iconBg="bg-amber-50"
-                        iconText="text-amber-600"
-                        hint={`${stats.total_completed_services} selesai bulan ini`}
-                        trend={{
-                            direction: 'down',
-                            label: `${stats.total_completed_services}`,
-                        }}
-                        sparkline={service.slice(0, 6)}
-                        sparkColor="#f59e0b"
-                    />
-                    <KpiHeroCard
-                        label="Pendapatan Bulan Ini"
-                        value={formatCurrency(stats.total_income_this_month)}
-                        hint={`Pengeluaran ${formatCurrency(stats.total_expense_this_month)}`}
-                    />
+                    <Reveal tone="admin">
+                        <KpiCard
+                            label="Laptop Tersedia"
+                            value={String(stats.total_laptops_available)}
+                            icon={Package}
+                            iconBg="bg-emerald-50"
+                            iconText="text-emerald-600"
+                            hint={`${stats.total_laptops_this_month} unit masuk bulan ini`}
+                            trend={{
+                                direction: 'up',
+                                label: `+${stats.total_laptops_this_month}`,
+                            }}
+                            sparkline={sales.slice(0, 6)}
+                            sparkColor="#10b981"
+                        />
+                    </Reveal>
+                    <Reveal tone="admin" delay={70}>
+                        <KpiCard
+                            label="Terjual"
+                            value={String(stats.total_laptops_sold)}
+                            icon={ShoppingCart}
+                            iconBg="bg-blue-50"
+                            iconText="text-blue-600"
+                            hint="Total unit terjual"
+                            trend={{
+                                direction: 'up',
+                                label: `${stats.total_laptops_sold}`,
+                            }}
+                            sparkline={sales.slice(2, 8)}
+                            sparkColor="#3b82f6"
+                        />
+                    </Reveal>
+                    <Reveal tone="admin" delay={140}>
+                        <KpiCard
+                            label="Servis Aktif"
+                            value={String(stats.total_active_services)}
+                            icon={Wrench}
+                            iconBg="bg-amber-50"
+                            iconText="text-amber-600"
+                            hint={`${stats.total_completed_services} selesai bulan ini`}
+                            trend={{
+                                direction: 'down',
+                                label: `${stats.total_completed_services}`,
+                            }}
+                            sparkline={service.slice(0, 6)}
+                            sparkColor="#f59e0b"
+                        />
+                    </Reveal>
+                    <Reveal tone="admin" delay={210}>
+                        <KpiHeroCard
+                            label="Pendapatan Bulan Ini"
+                            value={formatCurrency(
+                                stats.total_income_this_month,
+                            )}
+                            hint={`Pengeluaran ${formatCurrency(stats.total_expense_this_month)}`}
+                        />
+                    </Reveal>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <section className="flex flex-col rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:col-span-2">
-                        <div className="mb-4 flex items-center justify-between">
-                            <div>
-                                <h3 className="text-base font-semibold text-slate-900">
-                                    Tren Penjualan & Servis
-                                </h3>
-                                <p className="text-xs text-slate-500">
-                                    Ilustrasi tren (belum data aktual)
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-4 text-xs">
-                                <div className="flex items-center gap-1.5">
-                                    <span className="h-2.5 w-2.5 rounded-sm bg-blue-600" />
-                                    <span className="font-medium text-slate-600">
-                                        Penjualan
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" />
-                                    <span className="font-medium text-slate-600">
-                                        Servis
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="min-h-[260px] flex-1">
-                            <BarChart data={{ sales, service }} height={260} />
-                        </div>
-                    </section>
-
-                    <section className="rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
-                                    <AlertTriangle className="size-3.5" />
-                                </span>
-                                Perlu Perhatian
-                            </h3>
-                            <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-700">
-                                {activeServices.length}
-                            </span>
-                        </div>
-                        <div className="space-y-2">
-                            {activeServices.length > 0 ? (
-                                activeServices.slice(0, 4).map((service) => {
-                                    const tone = statusSlugToTone(
-                                        service.status?.slug,
-                                    );
-                                    const t = TONE[tone];
-
-                                    return (
-                                        <Link
-                                            key={service.id}
-                                            href={`/services/${service.id}`}
-                                            className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-slate-50"
-                                        >
-                                            <span
-                                                className={`mt-1 h-2 w-2 flex-shrink-0 rounded-full ${t.dot}`}
-                                            />
-                                            <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold text-slate-900">
-                                                    {service.device_name ||
-                                                        service.service_code}
-                                                </p>
-                                                <p className="truncate text-xs text-slate-500">
-                                                    #{service.service_code} ·{' '}
-                                                    {service.customer?.name ??
-                                                        'Tanpa pelanggan'}
-                                                </p>
-                                            </div>
-                                            <span
-                                                className={`flex-shrink-0 text-[10px] font-semibold uppercase ${t.text}`}
-                                            >
-                                                {service.status?.name ?? '—'}
-                                            </span>
-                                        </Link>
-                                    );
-                                })
-                            ) : (
-                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 py-8 text-center">
-                                    <p className="text-sm font-medium text-slate-900">
-                                        Semua tertangani
-                                    </p>
+                    <Reveal tone="admin" className="lg:col-span-2">
+                        <section className="flex h-full flex-col rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="mb-4 flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-base font-semibold text-slate-900">
+                                        Tren Penjualan & Servis
+                                    </h3>
                                     <p className="text-xs text-slate-500">
-                                        Tidak ada servis aktif saat ini.
+                                        Ilustrasi tren (belum data aktual)
                                     </p>
                                 </div>
-                            )}
-                        </div>
-                    </section>
+                                <div className="flex items-center gap-4 text-xs">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-sm bg-brand" />
+                                        <span className="font-medium text-slate-600">
+                                            Penjualan
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-sm bg-brand-green" />
+                                        <span className="font-medium text-slate-600">
+                                            Servis
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="min-h-[260px] flex-1">
+                                <BarChart
+                                    data={{ sales, service }}
+                                    height={260}
+                                />
+                            </div>
+                        </section>
+                    </Reveal>
+
+                    <Reveal tone="admin" delay={80}>
+                        <section className="rounded-xl border border-slate-200/60 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="mb-4 flex items-center justify-between">
+                                <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
+                                        <AlertTriangle className="size-3.5" />
+                                    </span>
+                                    Perlu Perhatian
+                                </h3>
+                                <span className="rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-700">
+                                    {activeServices.length}
+                                </span>
+                            </div>
+                            <div className="space-y-2">
+                                {activeServices.length > 0 ? (
+                                    activeServices
+                                        .slice(0, 4)
+                                        .map((service) => {
+                                            const tone = statusSlugToTone(
+                                                service.status?.slug,
+                                            );
+                                            const t = TONE[tone];
+
+                                            return (
+                                                <Link
+                                                    key={service.id}
+                                                    href={`/services/${service.id}`}
+                                                    className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-slate-50"
+                                                >
+                                                    <span
+                                                        className={`mt-1 h-2 w-2 flex-shrink-0 rounded-full ${t.dot}`}
+                                                    />
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="truncate text-sm font-semibold text-slate-900">
+                                                            {service.device_name ||
+                                                                service.service_code}
+                                                        </p>
+                                                        <p className="truncate text-xs text-slate-500">
+                                                            #
+                                                            {
+                                                                service.service_code
+                                                            }{' '}
+                                                            ·{' '}
+                                                            {service.customer
+                                                                ?.name ??
+                                                                'Tanpa pelanggan'}
+                                                        </p>
+                                                    </div>
+                                                    <span
+                                                        className={`flex-shrink-0 text-[10px] font-semibold uppercase ${t.text}`}
+                                                    >
+                                                        {service.status?.name ??
+                                                            '—'}
+                                                    </span>
+                                                </Link>
+                                            );
+                                        })
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 py-8 text-center">
+                                        <p className="text-sm font-medium text-slate-900">
+                                            Semua tertangani
+                                        </p>
+                                        <p className="text-xs text-slate-500">
+                                            Tidak ada servis aktif saat ini.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    </Reveal>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                    <section className="overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-900">
-                                    Laptop Terbaru
-                                </h3>
-                                <p className="text-xs text-slate-500">
-                                    5 laptop terakhir masuk inventaris
-                                </p>
-                            </div>
-                            <Link
-                                href="/laptops"
-                                className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
-                            >
-                                Lihat semua →
-                            </Link>
-                        </div>
-                        <div className="divide-y divide-slate-100">
-                            {recent_laptops.length > 0 ? (
-                                recent_laptops.map((laptop) => {
-                                    const tone = statusSlugToTone(
-                                        laptop.status?.slug,
-                                    );
-
-                                    return (
-                                        <Link
-                                            key={laptop.id}
-                                            href={`/laptops/${laptop.id}`}
-                                            className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50/50"
-                                        >
-                                            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
-                                                <LaptopIcon className="size-4" />
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold text-slate-900">
-                                                    {laptop.name ?? laptop.sku}
-                                                </p>
-                                                <p className="truncate text-xs text-slate-500">
-                                                    {laptop.brand?.name} ·{' '}
-                                                    {laptop.model}
-                                                </p>
-                                            </div>
-                                            <StatusPill
-                                                label={
-                                                    laptop.status?.name ?? '—'
-                                                }
-                                                tone={tone}
-                                            />
-                                        </Link>
-                                    );
-                                })
-                            ) : (
-                                <div className="px-5 py-8 text-center text-sm text-slate-500">
-                                    Belum ada data laptop.
+                    <Reveal tone="admin">
+                        <section className="h-full overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-900">
+                                        Laptop Terbaru
+                                    </h3>
+                                    <p className="text-xs text-slate-500">
+                                        5 laptop terakhir masuk inventaris
+                                    </p>
                                 </div>
-                            )}
-                        </div>
-                    </section>
-
-                    <section className="overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-                        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-900">
-                                    Servis Terbaru
-                                </h3>
-                                <p className="text-xs text-slate-500">
-                                    5 servis terakhir masuk
-                                </p>
+                                <Link
+                                    href="/laptops"
+                                    className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                >
+                                    Lihat semua →
+                                </Link>
                             </div>
-                            <Link
-                                href="/services"
-                                className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
-                            >
-                                Lihat semua →
-                            </Link>
-                        </div>
-                        <div className="divide-y divide-slate-100">
-                            {recent_services.length > 0 ? (
-                                recent_services.map((service) => {
-                                    const tone = statusSlugToTone(
-                                        service.status?.slug,
-                                    );
+                            <div className="divide-y divide-slate-100">
+                                {recent_laptops.length > 0 ? (
+                                    recent_laptops.map((laptop) => {
+                                        const tone = statusSlugToTone(
+                                            laptop.status?.slug,
+                                        );
 
-                                    return (
-                                        <Link
-                                            key={service.id}
-                                            href={`/services/${service.id}`}
-                                            className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50/50"
-                                        >
-                                            <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
-                                                <Wrench className="size-4" />
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold text-slate-900">
-                                                    {service.device_name ||
-                                                        service.service_code}
-                                                </p>
-                                                <p className="truncate text-xs text-slate-500">
-                                                    #{service.service_code} ·{' '}
-                                                    {service.customer?.name ??
-                                                        'Tanpa pelanggan'}
-                                                </p>
-                                            </div>
-                                            <StatusPill
-                                                label={
-                                                    service.status?.name ?? '—'
-                                                }
-                                                tone={tone}
-                                            />
-                                        </Link>
-                                    );
-                                })
-                            ) : (
-                                <div className="px-5 py-8 text-center text-sm text-slate-500">
-                                    Belum ada data servis.
+                                        return (
+                                            <Link
+                                                key={laptop.id}
+                                                href={`/laptops/${laptop.id}`}
+                                                className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50/50"
+                                            >
+                                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                                                    <LaptopIcon className="size-4" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate text-sm font-semibold text-slate-900">
+                                                        {laptop.name ??
+                                                            laptop.sku}
+                                                    </p>
+                                                    <p className="truncate text-xs text-slate-500">
+                                                        {laptop.brand?.name} ·{' '}
+                                                        {laptop.model}
+                                                    </p>
+                                                </div>
+                                                <StatusPill
+                                                    label={
+                                                        laptop.status?.name ??
+                                                        '—'
+                                                    }
+                                                    tone={tone}
+                                                />
+                                            </Link>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="px-5 py-8 text-center text-sm text-slate-500">
+                                        Belum ada data laptop.
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    </Reveal>
+
+                    <Reveal tone="admin" delay={80}>
+                        <section className="h-full overflow-hidden rounded-xl border border-slate-200/60 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+                            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
+                                <div>
+                                    <h3 className="text-sm font-semibold text-slate-900">
+                                        Servis Terbaru
+                                    </h3>
+                                    <p className="text-xs text-slate-500">
+                                        5 servis terakhir masuk
+                                    </p>
                                 </div>
-                            )}
-                        </div>
-                    </section>
+                                <Link
+                                    href="/services"
+                                    className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                >
+                                    Lihat semua →
+                                </Link>
+                            </div>
+                            <div className="divide-y divide-slate-100">
+                                {recent_services.length > 0 ? (
+                                    recent_services.map((service) => {
+                                        const tone = statusSlugToTone(
+                                            service.status?.slug,
+                                        );
+
+                                        return (
+                                            <Link
+                                                key={service.id}
+                                                href={`/services/${service.id}`}
+                                                className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-50/50"
+                                            >
+                                                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                                                    <Wrench className="size-4" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="truncate text-sm font-semibold text-slate-900">
+                                                        {service.device_name ||
+                                                            service.service_code}
+                                                    </p>
+                                                    <p className="truncate text-xs text-slate-500">
+                                                        #{service.service_code}{' '}
+                                                        ·{' '}
+                                                        {service.customer
+                                                            ?.name ??
+                                                            'Tanpa pelanggan'}
+                                                    </p>
+                                                </div>
+                                                <StatusPill
+                                                    label={
+                                                        service.status?.name ??
+                                                        '—'
+                                                    }
+                                                    tone={tone}
+                                                />
+                                            </Link>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="px-5 py-8 text-center text-sm text-slate-500">
+                                        Belum ada data servis.
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    </Reveal>
                 </div>
             </div>
         </>

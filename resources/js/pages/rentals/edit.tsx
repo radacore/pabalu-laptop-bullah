@@ -323,7 +323,11 @@ function RentalUbah({ rental, customers, statuses }: Props) {
                     <Button asChild variant="outline">
                         <Link href={`/rentals/${rental.id}`}>Batal</Link>
                     </Button>
-                    <Button type="submit" disabled={form.processing}>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={form.processing}
+                    >
                         <Save className="size-4" />
                         Simpan
                     </Button>

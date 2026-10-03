@@ -174,7 +174,9 @@ const PelanggansEdit: HalamanComponent = ({ pelanggan }) => {
                     <Button asChild variant="outline">
                         <Link href={`/customers/${pelanggan.id}`}>Batal</Link>
                     </Button>
-                    <Button disabled={form.processing}>Simpan</Button>
+                    <Button variant="primary" disabled={form.processing}>
+                        Simpan
+                    </Button>
                 </div>
             </form>
         </>

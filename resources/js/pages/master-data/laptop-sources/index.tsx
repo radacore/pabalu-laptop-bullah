@@ -3,6 +3,7 @@ import { Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import HalamanHeader from '@/components/layout/page-header';
 import DeleteDialog from '@/components/shared/delete-dialog';
+import Reveal from '@/components/shared/reveal';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -76,144 +77,150 @@ export default function LaptopSourceIndex({
                         </Button>,
                     ]}
                 />
-                <Card className="overflow-hidden py-0">
-                    <div className="border-b px-4 py-4 sm:px-6">
-                        <div className="relative w-full sm:max-w-sm">
-                            <input
-                                type="search"
-                                placeholder="Cari sumber laptop..."
-                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 w-full rounded-md border bg-transparent px-3 py-2 pl-9 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
-                                value={q}
-                                onChange={(e) => hs(e.target.value)}
-                            />
-                            <svg
-                                className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                            >
-                                <circle cx="11" cy="11" r="8" />
-                                <path d="M21 21l-4.35-4.35" />
-                            </svg>
-                        </div>
-                    </div>
-                    <CardContent className="px-0">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead className="bg-muted/50 text-muted-foreground">
-                                    <tr>
-                                        <th className="px-4 py-3 text-left font-medium sm:px-6">
-                                            Nama
-                                        </th>
-                                        <th className="px-4 py-3 text-left font-medium sm:px-6">
-                                            Status
-                                        </th>
-                                        <th className="px-4 py-3 text-right font-medium sm:px-6">
-                                            Activity
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data.data.map((it: ItemData) => (
-                                        <tr key={it.id}>
-                                            <td className="px-4 py-3 sm:px-6">
-                                                {it.color && (
-                                                    <span
-                                                        className="inline-block size-3 rounded-full"
-                                                        style={{
-                                                            backgroundColor:
-                                                                it.color,
-                                                        }}
-                                                    />
-                                                )}
-                                                {it.name}
-                                            </td>
-                                            <td className="px-4 py-3 sm:px-6">
-                                                <StatusBadge
-                                                    status={
-                                                        it.is_active
-                                                            ? 'available'
-                                                            : 'error'
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="px-4 py-3 text-right sm:px-6">
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <Button
-                                                        variant="success"
-                                                        size="sm"
-                                                        asChild
-                                                    >
-                                                        <Link
-                                                            href={
-                                                                '/master-data/laptop-sources/' +
-                                                                it.id +
-                                                                '/edit'
-                                                            }
-                                                        >
-                                                            <Edit className="mr-1 size-4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            setDid(it.id)
-                                                        }
-                                                    >
-                                                        <Trash2 className="mr-1 size-4" />
-                                                        Hapus
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    {data.data.length === 0 && (
-                                        <tr>
-                                            <td
-                                                colSpan={5}
-                                                className="text-muted-foreground px-6 py-12 text-center"
-                                            >
-                                                Tidak data.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </CardContent>
-                    {data.last_page > 1 && (
-                        <div className="flex items-center justify-between border-t px-6 py-3">
-                            <p className="text-muted-foreground text-sm">
-                                Menampilkan {data.from ?? 0} to {data.to ?? 0}{' '}
-                                of {data.total}
-                            </p>
-                            <div className="flex gap-1">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={data.current_page <= 1}
-                                    onClick={() => gp(data.current_page - 1)}
+                <Reveal tone="admin">
+                    <Card className="overflow-hidden py-0">
+                        <div className="border-b px-4 py-4 sm:px-6">
+                            <div className="relative w-full sm:max-w-sm">
+                                <input
+                                    type="search"
+                                    placeholder="Cari sumber laptop..."
+                                    className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 w-full rounded-md border bg-transparent px-3 py-2 pl-9 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                                    value={q}
+                                    onChange={(e) => hs(e.target.value)}
+                                />
+                                <svg
+                                    className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
                                 >
-                                    Sebelumnya
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    disabled={
-                                        data.current_page >= data.last_page
-                                    }
-                                    onClick={() => gp(data.current_page + 1)}
-                                >
-                                    Selanjutnya
-                                </Button>
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="M21 21l-4.35-4.35" />
+                                </svg>
                             </div>
                         </div>
-                    )}
-                </Card>
+                        <CardContent className="px-0">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead className="bg-muted/50 text-muted-foreground">
+                                        <tr>
+                                            <th className="px-4 py-3 text-left font-medium sm:px-6">
+                                                Nama
+                                            </th>
+                                            <th className="px-4 py-3 text-left font-medium sm:px-6">
+                                                Status
+                                            </th>
+                                            <th className="px-4 py-3 text-right font-medium sm:px-6">
+                                                Activity
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.data.map((it: ItemData) => (
+                                            <tr key={it.id}>
+                                                <td className="px-4 py-3 sm:px-6">
+                                                    {it.color && (
+                                                        <span
+                                                            className="inline-block size-3 rounded-full"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    it.color,
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {it.name}
+                                                </td>
+                                                <td className="px-4 py-3 sm:px-6">
+                                                    <StatusBadge
+                                                        status={
+                                                            it.is_active
+                                                                ? 'available'
+                                                                : 'error'
+                                                        }
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-3 text-right sm:px-6">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <Button
+                                                            variant="success"
+                                                            size="sm"
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={
+                                                                    '/master-data/laptop-sources/' +
+                                                                    it.id +
+                                                                    '/edit'
+                                                                }
+                                                            >
+                                                                <Edit className="mr-1 size-4" />
+                                                                Edit
+                                                            </Link>
+                                                        </Button>
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                setDid(it.id)
+                                                            }
+                                                        >
+                                                            <Trash2 className="mr-1 size-4" />
+                                                            Hapus
+                                                        </Button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {data.data.length === 0 && (
+                                            <tr>
+                                                <td
+                                                    colSpan={5}
+                                                    className="text-muted-foreground px-6 py-12 text-center"
+                                                >
+                                                    Tidak data.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CardContent>
+                        {data.last_page > 1 && (
+                            <div className="flex items-center justify-between border-t px-6 py-3">
+                                <p className="text-muted-foreground text-sm">
+                                    Menampilkan {data.from ?? 0} to{' '}
+                                    {data.to ?? 0} of {data.total}
+                                </p>
+                                <div className="flex gap-1">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={data.current_page <= 1}
+                                        onClick={() =>
+                                            gp(data.current_page - 1)
+                                        }
+                                    >
+                                        Sebelumnya
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        disabled={
+                                            data.current_page >= data.last_page
+                                        }
+                                        onClick={() =>
+                                            gp(data.current_page + 1)
+                                        }
+                                    >
+                                        Selanjutnya
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </Card>
+                </Reveal>
             </div>
             <DeleteDialog
                 open={did !== null}

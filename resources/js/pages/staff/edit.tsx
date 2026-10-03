@@ -203,7 +203,9 @@ const StaffUbah: HalamanComponent = ({ staffUser }) => {
                     <Button asChild variant="outline">
                         <Link href="/staff">Batal</Link>
                     </Button>
-                    <Button disabled={form.processing}>Simpan</Button>
+                    <Button variant="primary" disabled={form.processing}>
+                        Simpan
+                    </Button>
                 </div>
             </form>
         </>

@@ -203,7 +203,11 @@ export default function FinancialTransactionForm({
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-                <Button type="submit" disabled={form.processing}>
+                <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={form.processing}
+                >
                     {submitLabel}
                 </Button>
                 <Button type="button" variant="outline" asChild>

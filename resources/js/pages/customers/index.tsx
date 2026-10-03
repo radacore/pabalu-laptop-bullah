@@ -3,6 +3,7 @@ import { Edit, Eye, Trash2, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import DeleteDialog from '@/components/shared/delete-dialog';
+import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import type { Customer as BaseCustomer, ModelUser } from '@/types';
@@ -149,242 +150,253 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                             Kelola profil pelanggan dan riwayat service
                         </p>
                     </div>
-                    <Link
-                        href="/customers/create"
-                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-                    >
-                        <UserPlus className="size-4" />
-                        Tambah Pelanggan
-                    </Link>
+                    <Button variant="primary" size="lg" asChild>
+                        <Link href="/customers/create">
+                            <UserPlus className="size-4" />
+                            Tambah Pelanggan
+                        </Link>
+                    </Button>
                 </div>
 
-                <section className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <div className="min-w-[300px] flex-1">
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Cari nama atau telepon..."
-                            className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        onClick={applyFilters}
-                        className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
-                    >
-                        Filter
-                    </button>
-                    <button
-                        type="button"
-                        onClick={clearFilters}
-                        className="rounded-lg border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                    >
-                        Reset Filter
-                    </button>
-                </section>
-
-                <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                    {customers.data.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <h3 className="text-base font-semibold text-slate-900">
-                                Tidak ada pelanggan
-                            </h3>
-                            <p className="mt-1 text-sm text-slate-500">
-                                Sesuaikan filter atau tambah pelanggan baru.
-                            </p>
+                <Reveal tone="admin">
+                    <section className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div className="min-w-[300px] flex-1">
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(event) =>
+                                    setSearch(event.target.value)
+                                }
+                                onKeyDown={handleKeyDown}
+                                placeholder="Cari nama atau telepon..."
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                            />
                         </div>
-                    ) : (
-                        <>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-slate-200">
-                                    <thead className="bg-slate-50">
-                                        <tr>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                                Nama &amp; Kontak
-                                            </th>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                                Alamat
-                                            </th>
-                                            <th className="px-6 py-4 text-center text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                                Total Service
-                                            </th>
-                                            <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                                Pelanggan Sejak
-                                            </th>
-                                            <th className="px-6 py-4 text-right text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                                Aksi
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100 bg-white">
-                                        {customers.data.map((customer) => (
-                                            <tr
-                                                key={customer.id}
-                                                className="transition-colors hover:bg-slate-50"
-                                            >
-                                                <td className="px-6 py-4 align-top">
-                                                    <div className="flex items-start gap-3">
-                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">
-                                                            {customerInitials(
-                                                                customer.name,
-                                                            )}
-                                                        </div>
-                                                        <div className="min-w-0">
-                                                            <Link
-                                                                href={`/customers/${customer.id}`}
-                                                                className="text-sm font-semibold text-slate-900 transition-colors hover:text-blue-600"
-                                                            >
-                                                                {customer.name}
-                                                            </Link>
-                                                            <div className="mt-0.5 text-sm text-slate-500">
-                                                                {customer.phone}
+                        <Button
+                            type="button"
+                            variant="primary"
+                            size="lg"
+                            onClick={applyFilters}
+                        >
+                            Filter
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="lg"
+                            onClick={clearFilters}
+                        >
+                            Reset Filter
+                        </Button>
+                    </section>
+                </Reveal>
+
+                <Reveal tone="admin" delay={80}>
+                    <section className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                        {customers.data.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-16 text-center">
+                                <h3 className="text-base font-semibold text-slate-900">
+                                    Tidak ada pelanggan
+                                </h3>
+                                <p className="mt-1 text-sm text-slate-500">
+                                    Sesuaikan filter atau tambah pelanggan baru.
+                                </p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full divide-y divide-slate-200">
+                                        <thead className="bg-slate-50">
+                                            <tr>
+                                                <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    Nama &amp; Kontak
+                                                </th>
+                                                <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    Alamat
+                                                </th>
+                                                <th className="px-6 py-4 text-center text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    Total Service
+                                                </th>
+                                                <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    Pelanggan Sejak
+                                                </th>
+                                                <th className="px-6 py-4 text-right text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                                    Aksi
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100 bg-white">
+                                            {customers.data.map((customer) => (
+                                                <tr
+                                                    key={customer.id}
+                                                    className="transition-colors hover:bg-slate-50"
+                                                >
+                                                    <td className="px-6 py-4 align-top">
+                                                        <div className="flex items-start gap-3">
+                                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">
+                                                                {customerInitials(
+                                                                    customer.name,
+                                                                )}
                                                             </div>
-                                                            {customer.user
-                                                                ?.email && (
-                                                                <div className="mt-0.5 truncate text-sm text-slate-500">
+                                                            <div className="min-w-0">
+                                                                <Link
+                                                                    href={`/customers/${customer.id}`}
+                                                                    className="text-sm font-semibold text-slate-900 transition-colors hover:text-blue-600"
+                                                                >
                                                                     {
-                                                                        customer
-                                                                            .user
-                                                                            .email
+                                                                        customer.name
+                                                                    }
+                                                                </Link>
+                                                                <div className="mt-0.5 text-sm text-slate-500">
+                                                                    {
+                                                                        customer.phone
                                                                     }
                                                                 </div>
+                                                                {customer.user
+                                                                    ?.email && (
+                                                                    <div className="mt-0.5 truncate text-sm text-slate-500">
+                                                                        {
+                                                                            customer
+                                                                                .user
+                                                                                .email
+                                                                        }
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 align-top">
+                                                        <p className="line-clamp-2 text-sm text-slate-600">
+                                                            {customer.address ??
+                                                                '-'}
+                                                        </p>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center align-top">
+                                                        <span className="inline-flex min-w-8 items-center justify-center rounded-full bg-slate-100 px-2.5 py-1 text-sm font-semibold text-slate-700">
+                                                            {
+                                                                customer.services_count
+                                                            }
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 align-top">
+                                                        <div className="text-sm text-slate-900">
+                                                            {formatDate(
+                                                                customer.created_at,
                                                             )}
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 align-top">
-                                                    <p className="line-clamp-2 text-sm text-slate-600">
-                                                        {customer.address ??
-                                                            '-'}
-                                                    </p>
-                                                </td>
-                                                <td className="px-6 py-4 text-center align-top">
-                                                    <span className="inline-flex min-w-8 items-center justify-center rounded-full bg-slate-100 px-2.5 py-1 text-sm font-semibold text-slate-700">
-                                                        {
-                                                            customer.services_count
-                                                        }
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 align-top">
-                                                    <div className="text-sm text-slate-900">
-                                                        {formatDate(
-                                                            customer.created_at,
-                                                        )}
-                                                    </div>
-                                                    <div className="text-sm text-slate-500">
-                                                        {relativeTime(
-                                                            customer.created_at,
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 text-right align-top whitespace-nowrap">
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        <Button
-                                                            asChild
-                                                            variant="default"
-                                                            size="sm"
-                                                        >
-                                                            <Link
-                                                                href={`/customers/${customer.id}`}
+                                                        <div className="text-sm text-slate-500">
+                                                            {relativeTime(
+                                                                customer.created_at,
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right align-top whitespace-nowrap">
+                                                        <div className="flex items-center justify-end gap-1">
+                                                            <Button
+                                                                asChild
+                                                                variant="default"
+                                                                size="sm"
                                                             >
-                                                                <Eye className="mr-1 size-4" />
-                                                                Lihat
-                                                            </Link>
-                                                        </Button>
-                                                        <Button
-                                                            asChild
-                                                            variant="success"
-                                                            size="sm"
-                                                        >
-                                                            <Link
-                                                                href={`/customers/${customer.id}/edit`}
+                                                                <Link
+                                                                    href={`/customers/${customer.id}`}
+                                                                >
+                                                                    <Eye className="mr-1 size-4" />
+                                                                    Lihat
+                                                                </Link>
+                                                            </Button>
+                                                            <Button
+                                                                asChild
+                                                                variant="success"
+                                                                size="sm"
                                                             >
-                                                                <Edit className="mr-1 size-4" />
-                                                                Edit
-                                                            </Link>
-                                                        </Button>
-                                                        <Button
-                                                            variant="destructive"
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                setCustomerToDelete(
-                                                                    customer,
-                                                                )
-                                                            }
-                                                        >
-                                                            <Trash2 className="mr-1 size-4" />
-                                                            Hapus
-                                                        </Button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {customers.last_page > 1 && (
-                                <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
-                                    <div className="text-sm text-slate-700">
-                                        Menampilkan{' '}
-                                        <span className="font-medium">
-                                            {customers.from ?? 0}
-                                        </span>
-                                        -
-                                        <span className="font-medium">
-                                            {customers.to ?? 0}
-                                        </span>{' '}
-                                        dari{' '}
-                                        <span className="font-medium">
-                                            {customers.total}
-                                        </span>{' '}
-                                        pelanggan
-                                    </div>
-                                    <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm">
-                                        <Link
-                                            href={
-                                                customers.current_page <= 1
-                                                    ? '#'
-                                                    : `/customers?page=${Math.max(1, customers.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}`
-                                            }
-                                            className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
-                                                customers.current_page <= 1
-                                                    ? 'cursor-not-allowed text-slate-300'
-                                                    : 'text-slate-500 hover:bg-slate-50'
-                                            }`}
-                                            preserveState
-                                        >
-                                            Sebelumnya
-                                        </Link>
-                                        <span className="relative inline-flex items-center border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700">
-                                            {customers.current_page} /{' '}
-                                            {customers.last_page}
-                                        </span>
-                                        <Link
-                                            href={
-                                                customers.current_page >=
-                                                customers.last_page
-                                                    ? '#'
-                                                    : `/customers?page=${Math.min(customers.last_page, customers.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}`
-                                            }
-                                            className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
-                                                customers.current_page >=
-                                                customers.last_page
-                                                    ? 'cursor-not-allowed text-slate-300'
-                                                    : 'text-slate-500 hover:bg-slate-50'
-                                            }`}
-                                            preserveState
-                                        >
-                                            Selanjutnya
-                                        </Link>
-                                    </nav>
+                                                                <Link
+                                                                    href={`/customers/${customer.id}/edit`}
+                                                                >
+                                                                    <Edit className="mr-1 size-4" />
+                                                                    Edit
+                                                                </Link>
+                                                            </Button>
+                                                            <Button
+                                                                variant="destructive"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    setCustomerToDelete(
+                                                                        customer,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <Trash2 className="mr-1 size-4" />
+                                                                Hapus
+                                                            </Button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            )}
-                        </>
-                    )}
-                </section>
+
+                                {customers.last_page > 1 && (
+                                    <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
+                                        <div className="text-sm text-slate-700">
+                                            Menampilkan{' '}
+                                            <span className="font-medium">
+                                                {customers.from ?? 0}
+                                            </span>
+                                            -
+                                            <span className="font-medium">
+                                                {customers.to ?? 0}
+                                            </span>{' '}
+                                            dari{' '}
+                                            <span className="font-medium">
+                                                {customers.total}
+                                            </span>{' '}
+                                            pelanggan
+                                        </div>
+                                        <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm">
+                                            <Link
+                                                href={
+                                                    customers.current_page <= 1
+                                                        ? '#'
+                                                        : `/customers?page=${Math.max(1, customers.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}`
+                                                }
+                                                className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
+                                                    customers.current_page <= 1
+                                                        ? 'cursor-not-allowed text-slate-300'
+                                                        : 'text-slate-500 hover:bg-slate-50'
+                                                }`}
+                                                preserveState
+                                            >
+                                                Sebelumnya
+                                            </Link>
+                                            <span className="relative inline-flex items-center border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700">
+                                                {customers.current_page} /{' '}
+                                                {customers.last_page}
+                                            </span>
+                                            <Link
+                                                href={
+                                                    customers.current_page >=
+                                                    customers.last_page
+                                                        ? '#'
+                                                        : `/customers?page=${Math.min(customers.last_page, customers.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}`
+                                                }
+                                                className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
+                                                    customers.current_page >=
+                                                    customers.last_page
+                                                        ? 'cursor-not-allowed text-slate-300'
+                                                        : 'text-slate-500 hover:bg-slate-50'
+                                                }`}
+                                                preserveState
+                                            >
+                                                Selanjutnya
+                                            </Link>
+                                        </nav>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </section>
+                </Reveal>
 
                 <DeleteDialog
                     open={customerToDelete !== null}

@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
+import Reveal from '@/components/shared/reveal';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import type { Customer, Laptop, Service } from '@/types';
@@ -40,37 +41,41 @@ function SearchIndex() {
                 </div>
 
                 {q === '' && (
-                    <Card>
-                        <CardContent className="py-16 text-center">
-                            <span className="material-symbols-outlined mx-auto text-[64px] text-outline">
-                                search
-                            </span>
-                            <h2 className="mt-4 text-base font-medium text-on-surface">
-                                Belum ada kata kunci
-                            </h2>
-                            <p className="mt-1 text-sm text-on-surface-variant">
-                                Gunakan kotak pencarian di navbar atas untuk
-                                mencari laptop, servis, atau pelanggan.
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <Reveal tone="admin">
+                        <Card>
+                            <CardContent className="py-16 text-center">
+                                <span className="material-symbols-outlined mx-auto text-[64px] text-outline">
+                                    search
+                                </span>
+                                <h2 className="mt-4 text-base font-medium text-on-surface">
+                                    Belum ada kata kunci
+                                </h2>
+                                <p className="mt-1 text-sm text-on-surface-variant">
+                                    Gunakan kotak pencarian di navbar atas untuk
+                                    mencari laptop, servis, atau pelanggan.
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </Reveal>
                 )}
 
                 {q !== '' && total === 0 && (
-                    <Card>
-                        <CardContent className="py-16 text-center">
-                            <span className="material-symbols-outlined mx-auto text-[64px] text-outline">
-                                search_off
-                            </span>
-                            <h2 className="mt-4 text-base font-medium text-on-surface">
-                                Tidak ada hasil
-                            </h2>
-                            <p className="mt-1 text-sm text-on-surface-variant">
-                                Coba kata kunci lain seperti nama pelanggan,
-                                nomor telepon, SKU, atau kode servis.
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <Reveal tone="admin">
+                        <Card>
+                            <CardContent className="py-16 text-center">
+                                <span className="material-symbols-outlined mx-auto text-[64px] text-outline">
+                                    search_off
+                                </span>
+                                <h2 className="mt-4 text-base font-medium text-on-surface">
+                                    Tidak ada hasil
+                                </h2>
+                                <p className="mt-1 text-sm text-on-surface-variant">
+                                    Coba kata kunci lain seperti nama pelanggan,
+                                    nomor telepon, SKU, atau kode servis.
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </Reveal>
                 )}
 
                 {laptops.length > 0 && (
@@ -204,20 +209,22 @@ function ResultSection({
     children: ReactNode;
 }) {
     return (
-        <Card className="overflow-hidden py-0">
-            <div className="flex items-center gap-2 border-b border-outline-variant bg-surface-container-low px-5 py-3">
-                <span className="material-symbols-outlined text-on-surface-variant">
-                    {icon}
-                </span>
-                <h2 className="text-sm font-bold tracking-wider text-on-surface uppercase">
-                    {title}
-                </h2>
-                <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[11px] font-bold text-on-secondary-container">
-                    {count}
-                </span>
-            </div>
-            <CardContent className="p-0">{children}</CardContent>
-        </Card>
+        <Reveal tone="admin">
+            <Card className="overflow-hidden py-0">
+                <div className="flex items-center gap-2 border-b border-outline-variant bg-surface-container-low px-5 py-3">
+                    <span className="material-symbols-outlined text-on-surface-variant">
+                        {icon}
+                    </span>
+                    <h2 className="text-sm font-bold tracking-wider text-on-surface uppercase">
+                        {title}
+                    </h2>
+                    <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[11px] font-bold text-on-secondary-container">
+                        {count}
+                    </span>
+                </div>
+                <CardContent className="p-0">{children}</CardContent>
+            </Card>
+        </Reveal>
     );
 }
 

@@ -373,7 +373,11 @@ function LaptopEdit({ laptop, brands, sources }: LaptopEditHalamanProps) {
                         <Button variant="outline" asChild>
                             <Link href={`/laptops/${laptop.id}`}>Batal</Link>
                         </Button>
-                        <Button type="submit" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={form.processing}
+                        >
                             <Save className="size-4" />
                             Simpan
                         </Button>

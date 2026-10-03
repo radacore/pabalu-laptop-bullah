@@ -327,12 +327,17 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                                             )}
                                                         </td>
                                                         <td className="px-4 py-3">
-                                                            <Link
-                                                                href={`/financial-transactions/${ft.id}`}
-                                                                className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                                                            <Button
+                                                                variant="default"
+                                                                size="sm"
+                                                                asChild
                                                             >
-                                                                Lihat
-                                                            </Link>
+                                                                <Link
+                                                                    href={`/financial-transactions/${ft.id}`}
+                                                                >
+                                                                    Lihat
+                                                                </Link>
+                                                            </Button>
                                                         </td>
                                                     </tr>
                                                 ),

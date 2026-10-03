@@ -18,6 +18,7 @@ import {
 } from '@phosphor-icons/react';
 import { useState } from 'react';
 import InputError from '@/components/shared/input-error';
+import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -162,584 +163,619 @@ export default function WebsiteSettings({ setting }: Props) {
             <Head title="Pengaturan Website" />
 
             <form onSubmit={submit} className="mx-auto max-w-7xl space-y-6 p-6">
-                <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
-                            Pengaturan Website
-                        </h2>
-                        <p className="mt-1 text-sm text-slate-500">
-                            Konfigurasi identitas, kontak, jam buka, dan tautan
-                            sosial yang ditampilkan di halaman publik.
-                        </p>
-                    </div>
-                </header>
-
-                <div className="grid gap-6 lg:grid-cols-2">
-                    {/* Identitas */}
-                    <SectionCard
-                        icon={Globe}
-                        title="Identitas"
-                        description="Nama, tagline, dan logo website."
-                    >
-                        <div className={inputGroup}>
-                            <Label htmlFor="website_name">
-                                Nama Website{' '}
-                                <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                id="website_name"
-                                className={fieldClass}
-                                value={form.data.website_name}
-                                onChange={(e) =>
-                                    form.setData('website_name', e.target.value)
-                                }
-                                required
-                                maxLength={120}
-                            />
-                            <InputError message={form.errors.website_name} />
+                <Reveal tone="admin">
+                    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                                Pengaturan Website
+                            </h2>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Konfigurasi identitas, kontak, jam buka, dan
+                                tautan sosial yang ditampilkan di halaman
+                                publik.
+                            </p>
                         </div>
+                    </header>
+                </Reveal>
 
-                        <div className={inputGroup}>
-                            <Label htmlFor="tagline">Tagline</Label>
-                            <Input
-                                id="tagline"
-                                className={fieldClass}
-                                value={form.data.tagline}
-                                onChange={(e) =>
-                                    form.setData('tagline', e.target.value)
-                                }
-                                placeholder="Solusi Terpercaya untuk Laptop Anda"
-                                maxLength={255}
-                            />
-                            <InputError message={form.errors.tagline} />
-                        </div>
+                <Reveal tone="admin" delay={80}>
+                    <div className="grid gap-6 lg:grid-cols-2">
+                        {/* Identitas */}
+                        <SectionCard
+                            icon={Globe}
+                            title="Identitas"
+                            description="Nama, tagline, dan logo website."
+                        >
+                            <div className={inputGroup}>
+                                <Label htmlFor="website_name">
+                                    Nama Website{' '}
+                                    <span className="text-red-500">*</span>
+                                </Label>
+                                <Input
+                                    id="website_name"
+                                    className={fieldClass}
+                                    value={form.data.website_name}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'website_name',
+                                            e.target.value,
+                                        )
+                                    }
+                                    required
+                                    maxLength={120}
+                                />
+                                <InputError
+                                    message={form.errors.website_name}
+                                />
+                            </div>
 
-                        <div className={inputGroup}>
-                            <Label>Logo</Label>
-                            <div className="flex items-start gap-4">
-                                <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                                    {logoPreview ? (
-                                        <img
-                                            src={logoPreview}
-                                            alt="Logo preview"
-                                            className="h-full w-full object-contain"
-                                        />
-                                    ) : (
-                                        <Image
-                                            className="h-8 w-8 text-slate-300"
-                                            weight="duotone"
-                                        />
-                                    )}
-                                </div>
-                                <div className="flex flex-1 flex-col gap-2">
-                                    <input
-                                        type="file"
-                                        accept="image/jpeg,image/jpg,image/png,image/webp"
-                                        onChange={handleLogoChange}
-                                        className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700"
-                                    />
-                                    <p className="text-xs text-slate-500">
-                                        JPG, PNG, atau WebP. Maks 2MB.
-                                    </p>
-                                    {logoPreview && (
-                                        <button
-                                            type="button"
-                                            onClick={handleRemoveLogo}
-                                            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700"
-                                        >
-                                            <Trash
-                                                className="h-3.5 w-3.5"
+                            <div className={inputGroup}>
+                                <Label htmlFor="tagline">Tagline</Label>
+                                <Input
+                                    id="tagline"
+                                    className={fieldClass}
+                                    value={form.data.tagline}
+                                    onChange={(e) =>
+                                        form.setData('tagline', e.target.value)
+                                    }
+                                    placeholder="Solusi Terpercaya untuk Laptop Anda"
+                                    maxLength={255}
+                                />
+                                <InputError message={form.errors.tagline} />
+                            </div>
+
+                            <div className={inputGroup}>
+                                <Label>Logo</Label>
+                                <div className="flex items-start gap-4">
+                                    <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                                        {logoPreview ? (
+                                            <img
+                                                src={logoPreview}
+                                                alt="Logo preview"
+                                                className="h-full w-full object-contain"
+                                            />
+                                        ) : (
+                                            <Image
+                                                className="h-8 w-8 text-slate-300"
                                                 weight="duotone"
                                             />
-                                            Hapus Logo
-                                        </button>
-                                    )}
+                                        )}
+                                    </div>
+                                    <div className="flex flex-1 flex-col gap-2">
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                                            onChange={handleLogoChange}
+                                            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-dark"
+                                        />
+                                        <p className="text-xs text-slate-500">
+                                            JPG, PNG, atau WebP. Maks 2MB.
+                                        </p>
+                                        {logoPreview && (
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveLogo}
+                                                className="inline-flex w-fit items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700"
+                                            >
+                                                <Trash
+                                                    className="h-3.5 w-3.5"
+                                                    weight="duotone"
+                                                />
+                                                Hapus Logo
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
+                                <InputError message={form.errors.logo} />
                             </div>
-                            <InputError message={form.errors.logo} />
-                        </div>
-                    </SectionCard>
+                        </SectionCard>
 
-                    {/* Kontak */}
-                    <SectionCard
-                        icon={Phone}
-                        title="Kontak"
-                        description="Alamat workshop, WhatsApp, telepon, dan email."
-                    >
-                        <div className={inputGroup}>
-                            <Label htmlFor="address">Alamat Workshop</Label>
-                            <textarea
-                                id="address"
-                                className={`${textareaClass} min-h-20`}
-                                value={form.data.address}
-                                onChange={(e) =>
-                                    form.setData('address', e.target.value)
-                                }
-                                rows={3}
-                                placeholder="Jl. Tekno Raya No. 123, Kota Modern"
-                                maxLength={1000}
-                            />
-                            <InputError message={form.errors.address} />
-                        </div>
-
-                        <div className={inputGroup}>
-                            <Label
-                                htmlFor="whatsapp_number"
-                                className="flex items-center gap-2"
-                            >
-                                <WhatsappLogo
-                                    className="h-4 w-4 text-green-600"
-                                    weight="duotone"
-                                />
-                                Nomor WhatsApp
-                            </Label>
-                            <Input
-                                id="whatsapp_number"
-                                className={fieldClass}
-                                value={form.data.whatsapp_number}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'whatsapp_number',
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="6281234567890"
-                                maxLength={32}
-                            />
-                            <p className="text-xs text-slate-500">
-                                Format internasional (awalan 62). Dipakai untuk
-                                tombol WhatsApp di halaman publik.
-                            </p>
-                            <InputError message={form.errors.whatsapp_number} />
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {/* Kontak */}
+                        <SectionCard
+                            icon={Phone}
+                            title="Kontak"
+                            description="Alamat workshop, WhatsApp, telepon, dan email."
+                        >
                             <div className={inputGroup}>
-                                <Label htmlFor="phone">No. Telepon</Label>
-                                <Input
-                                    id="phone"
-                                    className={fieldClass}
-                                    value={form.data.phone}
+                                <Label htmlFor="address">Alamat Workshop</Label>
+                                <textarea
+                                    id="address"
+                                    className={`${textareaClass} min-h-20`}
+                                    value={form.data.address}
                                     onChange={(e) =>
-                                        form.setData('phone', e.target.value)
+                                        form.setData('address', e.target.value)
                                     }
-                                    placeholder="(021) 555-0123"
+                                    rows={3}
+                                    placeholder="Jl. Tekno Raya No. 123, Kota Modern"
+                                    maxLength={1000}
+                                />
+                                <InputError message={form.errors.address} />
+                            </div>
+
+                            <div className={inputGroup}>
+                                <Label
+                                    htmlFor="whatsapp_number"
+                                    className="flex items-center gap-2"
+                                >
+                                    <WhatsappLogo
+                                        className="h-4 w-4 text-green-600"
+                                        weight="duotone"
+                                    />
+                                    Nomor WhatsApp
+                                </Label>
+                                <Input
+                                    id="whatsapp_number"
+                                    className={fieldClass}
+                                    value={form.data.whatsapp_number}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'whatsapp_number',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="6281234567890"
                                     maxLength={32}
                                 />
-                                <InputError message={form.errors.phone} />
-                            </div>
-
-                            <div className={inputGroup}>
-                                <Label
-                                    htmlFor="email"
-                                    className="flex items-center gap-2"
-                                >
-                                    <PaperPlaneTilt
-                                        className="h-4 w-4 text-slate-400"
-                                        weight="duotone"
-                                    />
-                                    Email
-                                </Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    className={fieldClass}
-                                    value={form.data.email}
-                                    onChange={(e) =>
-                                        form.setData('email', e.target.value)
-                                    }
-                                    placeholder="halo@contoh.id"
-                                    maxLength={255}
-                                />
-                                <InputError message={form.errors.email} />
-                            </div>
-                        </div>
-                    </SectionCard>
-
-                    {/* Jam Operasional */}
-                    <SectionCard
-                        icon={Clock}
-                        title="Jam Operasional"
-                        description="Teks bebas untuk ditampilkan di halaman kontak."
-                    >
-                        <div className={inputGroup}>
-                            <Label htmlFor="operational_hours_weekday">
-                                Hari Kerja
-                            </Label>
-                            <Input
-                                id="operational_hours_weekday"
-                                className={fieldClass}
-                                value={form.data.operational_hours_weekday}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'operational_hours_weekday',
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="Senin - Jumat: 09:00 - 18:00"
-                                maxLength={120}
-                            />
-                            <InputError
-                                message={form.errors.operational_hours_weekday}
-                            />
-                        </div>
-
-                        <div className={inputGroup}>
-                            <Label htmlFor="operational_hours_weekend">
-                                Akhir Pekan
-                            </Label>
-                            <Input
-                                id="operational_hours_weekend"
-                                className={fieldClass}
-                                value={form.data.operational_hours_weekend}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'operational_hours_weekend',
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="Sabtu: 10:00 - 16:00 (Minggu Tutup)"
-                                maxLength={120}
-                            />
-                            <InputError
-                                message={form.errors.operational_hours_weekend}
-                            />
-                        </div>
-                    </SectionCard>
-
-                    {/* Lokasi */}
-                    <SectionCard
-                        icon={MapPin}
-                        title="Lokasi (Google Maps)"
-                        description="Paste URL src dari iframe Google Maps."
-                    >
-                        <div className={inputGroup}>
-                            <Label htmlFor="google_maps_embed">Embed URL</Label>
-                            <textarea
-                                id="google_maps_embed"
-                                className={`${textareaClass} min-h-28 font-mono text-xs`}
-                                value={form.data.google_maps_embed}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'google_maps_embed',
-                                        e.target.value,
-                                    )
-                                }
-                                rows={4}
-                                placeholder="https://www.google.com/maps/embed?pb=..."
-                                maxLength={2000}
-                            />
-                            <p className="text-xs text-slate-500">
-                                Buka Google Maps → Share → Embed a map → salin
-                                URL di atribut{' '}
-                                <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px]">
-                                    src
-                                </code>{' '}
-                                dari tag{' '}
-                                <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px]">
-                                    &lt;iframe&gt;
-                                </code>
-                                .
-                            </p>
-                            <InputError
-                                message={form.errors.google_maps_embed}
-                            />
-                        </div>
-
-                        {form.data.google_maps_embed && (
-                            <div className="overflow-hidden rounded-lg border border-slate-200">
-                                <iframe
-                                    src={form.data.google_maps_embed}
-                                    className="h-56 w-full"
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    title="Preview Peta"
-                                />
-                            </div>
-                        )}
-                    </SectionCard>
-
-                    {/* Tautan Sosial */}
-                    <SectionCard
-                        icon={LinkIcon}
-                        title="Tautan Sosial"
-                        description="URL lengkap (opsional). Kosongkan untuk menyembunyikan."
-                    >
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className={inputGroup}>
-                                <Label
-                                    htmlFor="facebook_url"
-                                    className="flex items-center gap-2"
-                                >
-                                    <FacebookLogo
-                                        className="h-4 w-4 text-blue-600"
-                                        weight="duotone"
-                                    />
-                                    Facebook
-                                </Label>
-                                <Input
-                                    id="facebook_url"
-                                    type="url"
-                                    className={fieldClass}
-                                    value={form.data.facebook_url}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'facebook_url',
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://facebook.com/..."
-                                    maxLength={255}
-                                />
+                                <p className="text-xs text-slate-500">
+                                    Format internasional (awalan 62). Dipakai
+                                    untuk tombol WhatsApp di halaman publik.
+                                </p>
                                 <InputError
-                                    message={form.errors.facebook_url}
+                                    message={form.errors.whatsapp_number}
                                 />
                             </div>
-                            <div className={inputGroup}>
-                                <Label
-                                    htmlFor="instagram_url"
-                                    className="flex items-center gap-2"
-                                >
-                                    <InstagramLogo
-                                        className="h-4 w-4 text-pink-600"
-                                        weight="duotone"
-                                    />
-                                    Instagram
-                                </Label>
-                                <Input
-                                    id="instagram_url"
-                                    type="url"
-                                    className={fieldClass}
-                                    value={form.data.instagram_url}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'instagram_url',
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://instagram.com/..."
-                                    maxLength={255}
-                                />
-                                <InputError
-                                    message={form.errors.instagram_url}
-                                />
-                            </div>
-                            <div className={inputGroup}>
-                                <Label
-                                    htmlFor="youtube_url"
-                                    className="flex items-center gap-2"
-                                >
-                                    <YoutubeLogo
-                                        className="h-4 w-4 text-red-600"
-                                        weight="duotone"
-                                    />
-                                    YouTube
-                                </Label>
-                                <Input
-                                    id="youtube_url"
-                                    type="url"
-                                    className={fieldClass}
-                                    value={form.data.youtube_url}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'youtube_url',
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://youtube.com/@..."
-                                    maxLength={255}
-                                />
-                                <InputError message={form.errors.youtube_url} />
-                            </div>
-                            <div className={inputGroup}>
-                                <Label
-                                    htmlFor="tiktok_url"
-                                    className="flex items-center gap-2"
-                                >
-                                    <TiktokLogo
-                                        className="h-4 w-4 text-slate-900"
-                                        weight="duotone"
-                                    />
-                                    TikTok
-                                </Label>
-                                <Input
-                                    id="tiktok_url"
-                                    type="url"
-                                    className={fieldClass}
-                                    value={form.data.tiktok_url}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'tiktok_url',
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://tiktok.com/@..."
-                                    maxLength={255}
-                                />
-                                <InputError message={form.errors.tiktok_url} />
-                            </div>
-                        </div>
-                    </SectionCard>
 
-                    {/* Hero & SEO */}
-                    <SectionCard
-                        icon={Image}
-                        title="Gambar Hero & SEO"
-                        description="Gambar latar hero dan meta tag agar mudah terindeks Google."
-                        className="lg:col-span-2"
-                    >
-                        <div className={inputGroup}>
-                            <Label>Gambar Hero</Label>
-                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                                <div className="flex h-28 w-full flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-950 sm:w-64">
-                                    {heroPreview ? (
-                                        <img
-                                            src={heroPreview}
-                                            alt="Hero preview"
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <Image
-                                            className="h-8 w-8 text-slate-600"
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div className={inputGroup}>
+                                    <Label htmlFor="phone">No. Telepon</Label>
+                                    <Input
+                                        id="phone"
+                                        className={fieldClass}
+                                        value={form.data.phone}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'phone',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="(021) 555-0123"
+                                        maxLength={32}
+                                    />
+                                    <InputError message={form.errors.phone} />
+                                </div>
+
+                                <div className={inputGroup}>
+                                    <Label
+                                        htmlFor="email"
+                                        className="flex items-center gap-2"
+                                    >
+                                        <PaperPlaneTilt
+                                            className="h-4 w-4 text-slate-400"
                                             weight="duotone"
                                         />
-                                    )}
-                                </div>
-                                <div className="flex flex-1 flex-col gap-2">
-                                    <input
-                                        type="file"
-                                        accept="image/jpeg,image/jpg,image/png,image/webp"
-                                        onChange={handleHeroChange}
-                                        className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700"
+                                        Email
+                                    </Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        className={fieldClass}
+                                        value={form.data.email}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'email',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="halo@contoh.id"
+                                        maxLength={255}
                                     />
-                                    <p className="text-xs text-slate-500">
-                                        JPG, PNG, atau WebP landscape
-                                        (disarankan minimal 1600px). Maks 5MB.
-                                        Kosongkan untuk memakai gambar bawaan.
-                                    </p>
-                                    {heroPreview && (
-                                        <button
-                                            type="button"
-                                            onClick={handleRemoveHeroImage}
-                                            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700"
-                                        >
-                                            <Trash
-                                                className="h-3.5 w-3.5"
-                                                weight="duotone"
-                                            />
-                                            Hapus Gambar Hero
-                                        </button>
-                                    )}
+                                    <InputError message={form.errors.email} />
                                 </div>
                             </div>
-                            <InputError message={form.errors.hero_image} />
-                        </div>
+                        </SectionCard>
 
-                        <div className={inputGroup}>
-                            <Label htmlFor="meta_title">Judul SEO</Label>
-                            <Input
-                                id="meta_title"
-                                className={fieldClass}
-                                value={form.data.meta_title}
-                                onChange={(e) =>
-                                    form.setData('meta_title', e.target.value)
-                                }
-                                placeholder="Pabalu Laptop | Laptop Bekas & Servis Terpercaya"
-                                maxLength={160}
-                            />
-                            <p className="text-xs text-slate-500">
-                                Muncul sebagai judul di hasil pencarian Google (
-                                {form.data.meta_title.length}/160).
-                            </p>
-                            <InputError message={form.errors.meta_title} />
-                        </div>
+                        {/* Jam Operasional */}
+                        <SectionCard
+                            icon={Clock}
+                            title="Jam Operasional"
+                            description="Teks bebas untuk ditampilkan di halaman kontak."
+                        >
+                            <div className={inputGroup}>
+                                <Label htmlFor="operational_hours_weekday">
+                                    Hari Kerja
+                                </Label>
+                                <Input
+                                    id="operational_hours_weekday"
+                                    className={fieldClass}
+                                    value={form.data.operational_hours_weekday}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'operational_hours_weekday',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Senin - Jumat: 09:00 - 18:00"
+                                    maxLength={120}
+                                />
+                                <InputError
+                                    message={
+                                        form.errors.operational_hours_weekday
+                                    }
+                                />
+                            </div>
 
-                        <div className={inputGroup}>
-                            <Label htmlFor="meta_description">
-                                Deskripsi SEO
-                            </Label>
-                            <textarea
-                                id="meta_description"
-                                className={`${textareaClass} min-h-20`}
-                                value={form.data.meta_description}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'meta_description',
-                                        e.target.value,
-                                    )
-                                }
-                                rows={3}
-                                placeholder="Toko laptop bekas berkualitas dan jasa servis terpercaya…"
-                                maxLength={300}
-                            />
-                            <p className="text-xs text-slate-500">
-                                Ringkasan di bawah judul hasil pencarian (
-                                {form.data.meta_description.length}/300).
-                            </p>
-                            <InputError
-                                message={form.errors.meta_description}
-                            />
-                        </div>
+                            <div className={inputGroup}>
+                                <Label htmlFor="operational_hours_weekend">
+                                    Akhir Pekan
+                                </Label>
+                                <Input
+                                    id="operational_hours_weekend"
+                                    className={fieldClass}
+                                    value={form.data.operational_hours_weekend}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'operational_hours_weekend',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Sabtu: 10:00 - 16:00 (Minggu Tutup)"
+                                    maxLength={120}
+                                />
+                                <InputError
+                                    message={
+                                        form.errors.operational_hours_weekend
+                                    }
+                                />
+                            </div>
+                        </SectionCard>
 
-                        <div className={inputGroup}>
-                            <Label htmlFor="google_site_verification">
-                                Kode Verifikasi Google Search Console
-                            </Label>
-                            <Input
-                                id="google_site_verification"
-                                className={`${fieldClass} font-mono text-xs`}
-                                value={form.data.google_site_verification}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'google_site_verification',
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="AbC123XyZ…"
-                                maxLength={100}
-                            />
-                            <p className="text-xs text-slate-500">
-                                Tempel kode dari Search Console → Settings →
-                                Verification (hanya kodenya, tanpa tag HTML).
-                                Dipakai Google untuk memverifikasi situs ini.
-                            </p>
-                            <InputError
-                                message={form.errors.google_site_verification}
-                            />
-                        </div>
-                    </SectionCard>
+                        {/* Lokasi */}
+                        <SectionCard
+                            icon={MapPin}
+                            title="Lokasi (Google Maps)"
+                            description="Paste URL src dari iframe Google Maps."
+                        >
+                            <div className={inputGroup}>
+                                <Label htmlFor="google_maps_embed">
+                                    Embed URL
+                                </Label>
+                                <textarea
+                                    id="google_maps_embed"
+                                    className={`${textareaClass} min-h-28 font-mono text-xs`}
+                                    value={form.data.google_maps_embed}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'google_maps_embed',
+                                            e.target.value,
+                                        )
+                                    }
+                                    rows={4}
+                                    placeholder="https://www.google.com/maps/embed?pb=..."
+                                    maxLength={2000}
+                                />
+                                <p className="text-xs text-slate-500">
+                                    Buka Google Maps → Share → Embed a map →
+                                    salin URL di atribut{' '}
+                                    <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px]">
+                                        src
+                                    </code>{' '}
+                                    dari tag{' '}
+                                    <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[11px]">
+                                        &lt;iframe&gt;
+                                    </code>
+                                    .
+                                </p>
+                                <InputError
+                                    message={form.errors.google_maps_embed}
+                                />
+                            </div>
 
-                    {/* Footer */}
-                    <SectionCard
-                        icon={Globe}
-                        title="Footer"
-                        description="Deskripsi singkat di footer halaman publik."
-                        className="lg:col-span-2"
-                    >
-                        <div className={inputGroup}>
-                            <Label htmlFor="footer_description">
-                                Deskripsi Footer
-                            </Label>
-                            <textarea
-                                id="footer_description"
-                                className={`${textareaClass} min-h-24`}
-                                value={form.data.footer_description}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'footer_description',
-                                        e.target.value,
-                                    )
-                                }
-                                rows={3}
-                                placeholder="Pusat laptop bekas berkualitas dan jasa reparasi terpercaya..."
-                                maxLength={1000}
-                            />
-                            <InputError
-                                message={form.errors.footer_description}
-                            />
-                        </div>
-                    </SectionCard>
-                </div>
+                            {form.data.google_maps_embed && (
+                                <div className="overflow-hidden rounded-lg border border-slate-200">
+                                    <iframe
+                                        src={form.data.google_maps_embed}
+                                        className="h-56 w-full"
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                        title="Preview Peta"
+                                    />
+                                </div>
+                            )}
+                        </SectionCard>
+
+                        {/* Tautan Sosial */}
+                        <SectionCard
+                            icon={LinkIcon}
+                            title="Tautan Sosial"
+                            description="URL lengkap (opsional). Kosongkan untuk menyembunyikan."
+                        >
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div className={inputGroup}>
+                                    <Label
+                                        htmlFor="facebook_url"
+                                        className="flex items-center gap-2"
+                                    >
+                                        <FacebookLogo
+                                            className="h-4 w-4 text-blue-600"
+                                            weight="duotone"
+                                        />
+                                        Facebook
+                                    </Label>
+                                    <Input
+                                        id="facebook_url"
+                                        type="url"
+                                        className={fieldClass}
+                                        value={form.data.facebook_url}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'facebook_url',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="https://facebook.com/..."
+                                        maxLength={255}
+                                    />
+                                    <InputError
+                                        message={form.errors.facebook_url}
+                                    />
+                                </div>
+                                <div className={inputGroup}>
+                                    <Label
+                                        htmlFor="instagram_url"
+                                        className="flex items-center gap-2"
+                                    >
+                                        <InstagramLogo
+                                            className="h-4 w-4 text-pink-600"
+                                            weight="duotone"
+                                        />
+                                        Instagram
+                                    </Label>
+                                    <Input
+                                        id="instagram_url"
+                                        type="url"
+                                        className={fieldClass}
+                                        value={form.data.instagram_url}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'instagram_url',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="https://instagram.com/..."
+                                        maxLength={255}
+                                    />
+                                    <InputError
+                                        message={form.errors.instagram_url}
+                                    />
+                                </div>
+                                <div className={inputGroup}>
+                                    <Label
+                                        htmlFor="youtube_url"
+                                        className="flex items-center gap-2"
+                                    >
+                                        <YoutubeLogo
+                                            className="h-4 w-4 text-red-600"
+                                            weight="duotone"
+                                        />
+                                        YouTube
+                                    </Label>
+                                    <Input
+                                        id="youtube_url"
+                                        type="url"
+                                        className={fieldClass}
+                                        value={form.data.youtube_url}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'youtube_url',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="https://youtube.com/@..."
+                                        maxLength={255}
+                                    />
+                                    <InputError
+                                        message={form.errors.youtube_url}
+                                    />
+                                </div>
+                                <div className={inputGroup}>
+                                    <Label
+                                        htmlFor="tiktok_url"
+                                        className="flex items-center gap-2"
+                                    >
+                                        <TiktokLogo
+                                            className="h-4 w-4 text-slate-900"
+                                            weight="duotone"
+                                        />
+                                        TikTok
+                                    </Label>
+                                    <Input
+                                        id="tiktok_url"
+                                        type="url"
+                                        className={fieldClass}
+                                        value={form.data.tiktok_url}
+                                        onChange={(e) =>
+                                            form.setData(
+                                                'tiktok_url',
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="https://tiktok.com/@..."
+                                        maxLength={255}
+                                    />
+                                    <InputError
+                                        message={form.errors.tiktok_url}
+                                    />
+                                </div>
+                            </div>
+                        </SectionCard>
+
+                        {/* Hero & SEO */}
+                        <SectionCard
+                            icon={Image}
+                            title="Gambar Hero & SEO"
+                            description="Gambar latar hero dan meta tag agar mudah terindeks Google."
+                            className="lg:col-span-2"
+                        >
+                            <div className={inputGroup}>
+                                <Label>Gambar Hero</Label>
+                                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                                    <div className="flex h-28 w-full flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-950 sm:w-64">
+                                        {heroPreview ? (
+                                            <img
+                                                src={heroPreview}
+                                                alt="Hero preview"
+                                                className="h-full w-full object-cover"
+                                            />
+                                        ) : (
+                                            <Image
+                                                className="h-8 w-8 text-slate-600"
+                                                weight="duotone"
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="flex flex-1 flex-col gap-2">
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                                            onChange={handleHeroChange}
+                                            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-dark"
+                                        />
+                                        <p className="text-xs text-slate-500">
+                                            JPG, PNG, atau WebP landscape
+                                            (disarankan minimal 1600px). Maks
+                                            5MB. Kosongkan untuk memakai gambar
+                                            bawaan.
+                                        </p>
+                                        {heroPreview && (
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveHeroImage}
+                                                className="inline-flex w-fit items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700"
+                                            >
+                                                <Trash
+                                                    className="h-3.5 w-3.5"
+                                                    weight="duotone"
+                                                />
+                                                Hapus Gambar Hero
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <InputError message={form.errors.hero_image} />
+                            </div>
+
+                            <div className={inputGroup}>
+                                <Label htmlFor="meta_title">Judul SEO</Label>
+                                <Input
+                                    id="meta_title"
+                                    className={fieldClass}
+                                    value={form.data.meta_title}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'meta_title',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="Pabalu Laptop | Laptop Bekas & Servis Terpercaya"
+                                    maxLength={160}
+                                />
+                                <p className="text-xs text-slate-500">
+                                    Muncul sebagai judul di hasil pencarian
+                                    Google ({form.data.meta_title.length}/160).
+                                </p>
+                                <InputError message={form.errors.meta_title} />
+                            </div>
+
+                            <div className={inputGroup}>
+                                <Label htmlFor="meta_description">
+                                    Deskripsi SEO
+                                </Label>
+                                <textarea
+                                    id="meta_description"
+                                    className={`${textareaClass} min-h-20`}
+                                    value={form.data.meta_description}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'meta_description',
+                                            e.target.value,
+                                        )
+                                    }
+                                    rows={3}
+                                    placeholder="Toko laptop bekas berkualitas dan jasa servis terpercaya…"
+                                    maxLength={300}
+                                />
+                                <p className="text-xs text-slate-500">
+                                    Ringkasan di bawah judul hasil pencarian (
+                                    {form.data.meta_description.length}/300).
+                                </p>
+                                <InputError
+                                    message={form.errors.meta_description}
+                                />
+                            </div>
+
+                            <div className={inputGroup}>
+                                <Label htmlFor="google_site_verification">
+                                    Kode Verifikasi Google Search Console
+                                </Label>
+                                <Input
+                                    id="google_site_verification"
+                                    className={`${fieldClass} font-mono text-xs`}
+                                    value={form.data.google_site_verification}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'google_site_verification',
+                                            e.target.value,
+                                        )
+                                    }
+                                    placeholder="AbC123XyZ…"
+                                    maxLength={100}
+                                />
+                                <p className="text-xs text-slate-500">
+                                    Tempel kode dari Search Console → Settings →
+                                    Verification (hanya kodenya, tanpa tag
+                                    HTML). Dipakai Google untuk memverifikasi
+                                    situs ini.
+                                </p>
+                                <InputError
+                                    message={
+                                        form.errors.google_site_verification
+                                    }
+                                />
+                            </div>
+                        </SectionCard>
+
+                        {/* Footer */}
+                        <SectionCard
+                            icon={Globe}
+                            title="Footer"
+                            description="Deskripsi singkat di footer halaman publik."
+                            className="lg:col-span-2"
+                        >
+                            <div className={inputGroup}>
+                                <Label htmlFor="footer_description">
+                                    Deskripsi Footer
+                                </Label>
+                                <textarea
+                                    id="footer_description"
+                                    className={`${textareaClass} min-h-24`}
+                                    value={form.data.footer_description}
+                                    onChange={(e) =>
+                                        form.setData(
+                                            'footer_description',
+                                            e.target.value,
+                                        )
+                                    }
+                                    rows={3}
+                                    placeholder="Pusat laptop bekas berkualitas dan jasa reparasi terpercaya..."
+                                    maxLength={1000}
+                                />
+                                <InputError
+                                    message={form.errors.footer_description}
+                                />
+                            </div>
+                        </SectionCard>
+                    </div>
+                </Reveal>
 
                 {/* Action buttons */}
                 <div className="flex justify-end gap-3 border-t border-slate-100 pt-6">
@@ -753,8 +789,8 @@ export default function WebsiteSettings({ setting }: Props) {
                     <Button
                         type="submit"
                         disabled={form.processing}
+                        variant="primary"
                         size="lg"
-                        className="rounded-lg bg-blue-600 hover:bg-blue-700"
                     >
                         {form.processing ? (
                             <>

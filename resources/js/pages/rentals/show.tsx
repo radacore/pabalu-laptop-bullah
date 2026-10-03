@@ -112,7 +112,7 @@ function RentalLihat({ rental, statuses }: Props) {
                                 Kembali
                             </Link>
                         </Button>
-                        <Button asChild>
+                        <Button variant="primary" asChild>
                             <Link href={`/rentals/${rental.id}/edit`}>
                                 <Edit className="size-4" />
                                 Edit
@@ -337,6 +337,7 @@ function RentalLihat({ rental, statuses }: Props) {
                                     </div>
                                     <Button
                                         type="submit"
+                                        variant="primary"
                                         disabled={statusForm.processing}
                                     >
                                         Simpan Status

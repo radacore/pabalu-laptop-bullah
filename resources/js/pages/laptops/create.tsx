@@ -351,7 +351,11 @@ function LaptopBuat({ brands, sources }: LaptopBuatHalamanProps) {
                         <Button variant="outline" asChild>
                             <Link href="/laptops">Batal</Link>
                         </Button>
-                        <Button type="submit" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={form.processing}
+                        >
                             <Save className="size-4" />
                             Simpan Laptop
                         </Button>

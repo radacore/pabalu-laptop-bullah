@@ -100,7 +100,11 @@ const BrandsEdit = ({ brand }: BrandsEditProps) => {
                         <Button type="button" variant="outline" asChild>
                             <Link href="/master-data/brands">Batal</Link>
                         </Button>
-                        <Button type="submit" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={form.processing}
+                        >
                             <FloppyDisk className="mr-2 size-4" weight="bold" />
                             Perbarui
                         </Button>

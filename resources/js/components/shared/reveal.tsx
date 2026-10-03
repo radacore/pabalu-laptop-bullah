@@ -17,11 +17,16 @@ interface RevealProps {
      * filter/paginasi tidak fade-in ulang (terasa seperti refresh).
      */
     instant?: boolean;
+    /**
+     * Sistem visual: 'tc' (publik) atau 'admin' (panel admin).
+     * Menentukan class CSS yang dipakai.
+     */
+    tone?: 'tc' | 'admin';
 }
 
 /**
- * Bungkus section/kartu halaman publik agar fade+slide saat masuk
- * viewport. Sekali tampil, tetap tampil (tidak bolak-balik).
+ * Bungkus section/kartu agar fade+slide saat masuk viewport.
+ * Sekali tampil, tetap tampil (tidak bolak-balik).
  * Nonaktif otomatis bila user pakai prefers-reduced-motion (CSS).
  */
 export default function Reveal({
@@ -32,8 +37,10 @@ export default function Reveal({
     style,
     id,
     instant = false,
+    tone = 'tc',
 }: RevealProps) {
     const ref = useRef<HTMLDivElement>(null);
+    const revealClass = tone === 'admin' ? 'admin-reveal' : 'tc-reveal';
 
     useEffect(() => {
         if (instant) {
@@ -81,7 +88,7 @@ export default function Reveal({
         <div
             ref={ref}
             id={id}
-            className={cn('tc-reveal', className)}
+            className={cn(revealClass, className)}
             style={
                 { ...style, '--reveal-delay': `${delay}ms` } as CSSProperties
             }

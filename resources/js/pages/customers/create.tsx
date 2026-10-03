@@ -164,7 +164,9 @@ const PelanggansBuat: HalamanComponent = () => {
                     <Button asChild variant="outline">
                         <Link href="/customers">Batal</Link>
                     </Button>
-                    <Button disabled={form.processing}>Buat Pelanggan</Button>
+                    <Button variant="primary" disabled={form.processing}>
+                        Buat Pelanggan
+                    </Button>
                 </div>
             </form>
         </>

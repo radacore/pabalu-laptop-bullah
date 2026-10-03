@@ -193,7 +193,7 @@ export function AppSidebarHeader({
                     />
                     <button
                         type="submit"
-                        className="absolute top-1/2 right-2 inline-flex -translate-y-1/2 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md active:scale-[0.98]"
+                        className="absolute top-1/2 right-2 inline-flex -translate-y-1/2 items-center gap-2 rounded-lg bg-brand px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow-md active:scale-[0.98]"
                     >
                         <MagnifyingGlass className="h-4 w-4" weight="bold" />
                         Search

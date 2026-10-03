@@ -134,6 +134,13 @@
     /* Tertiary */
     --color-tertiary: var(--tertiary);
     --color-on-tertiary: var(--on-tertiary);
+    /* Brand — biru tua & hijau desaturasi untuk tombol admin.
+       --color-primary M3 bernilai hitam, jadi primary action
+       pakai token sendiri agar konsisten di semua halaman. */
+    --color-brand: #2e4b73;
+    --color-brand-dark: #233c5e;
+    --color-brand-green: #2e7d4f;
+    --color-brand-green-dark: #256641;
     --color-tertiary-container: var(--tertiary-container);
     --color-on-tertiary-container: var(--on-tertiary-container);
     --color-tertiary-fixed: var(--tertiary-fixed);
@@ -1183,5 +1190,61 @@
         opacity: 1;
         transform: none;
         transition: none;
+    }
+}
+
+/* ---- Entrance admin: dipakai di dalam AppSidebarLayout + Reveal tone=admin.
+ * Terpisah dari sistem tc-* (publik) agar tidak tercampur. */
+@keyframes admin-page-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+.admin-page-enter {
+    animation: admin-page-in 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.admin-reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+}
+.admin-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+/* Batang grafik tumbuh dari bawah saat section grafik muncul. */
+@keyframes admin-bar-grow {
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+.admin-bar {
+    transform-origin: bottom;
+    animation: admin-bar-grow 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: var(--bar-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+    .admin-page-enter {
+        animation: none;
+    }
+    .admin-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .admin-bar {
+        animation: none;
     }
 }

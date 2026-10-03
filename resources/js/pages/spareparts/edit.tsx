@@ -241,7 +241,11 @@ function SparepartUbah({ sparepart, types, conditions }: Props) {
                     <Button asChild variant="outline">
                         <Link href={`/spareparts/${sparepart.id}`}>Batal</Link>
                     </Button>
-                    <Button type="submit" disabled={form.processing}>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={form.processing}
+                    >
                         <Save className="size-4" />
                         Simpan
                     </Button>

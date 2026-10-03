@@ -258,7 +258,11 @@ function SparepartBuat({ types, conditions }: Props) {
                     <Button asChild variant="outline">
                         <Link href="/spareparts">Batal</Link>
                     </Button>
-                    <Button type="submit" disabled={form.processing}>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={form.processing}
+                    >
                         <Save className="size-4" />
                         Simpan Sparepart
                     </Button>

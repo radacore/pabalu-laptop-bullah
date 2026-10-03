@@ -178,7 +178,9 @@ const StaffBuat: HalamanComponent = () => {
                     <Button asChild variant="outline">
                         <Link href="/staff">Batal</Link>
                     </Button>
-                    <Button disabled={form.processing}>Buat Akun</Button>
+                    <Button variant="primary" disabled={form.processing}>
+                        Buat Akun
+                    </Button>
                 </div>
             </form>
         </>

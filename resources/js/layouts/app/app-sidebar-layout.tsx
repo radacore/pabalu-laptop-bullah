@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppSidebarHeader } from '@/components/layout/app-sidebar-header';
@@ -19,6 +20,10 @@ export default function AppSidebarLayout({
         setCollapsed(!collapsed);
     };
 
+    // Key per URL agar animasi .admin-page-enter terpicu ulang di setiap
+    // navigasi (tanpa ini React hanya reconcile dan animasi jalan sekali).
+    const { url } = usePage();
+
     return (
         <div className="min-h-screen bg-slate-50">
             <AppSidebarHeader
@@ -39,7 +44,9 @@ export default function AppSidebarLayout({
                             <Breadcrumbs items={breadcrumbs} />
                         </div>
                     )}
-                    {children}
+                    <div key={url} className="admin-page-enter">
+                        {children}
+                    </div>
                 </div>
             </main>
         </div>

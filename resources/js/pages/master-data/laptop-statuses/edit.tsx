@@ -137,7 +137,11 @@ const LaptopStatusesEdit = ({ laptopStatus }: LaptopStatusesEditProps) => {
                                 Batal
                             </Link>
                         </Button>
-                        <Button type="submit" disabled={form.processing}>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={form.processing}
+                        >
                             <FloppyDisk className="mr-2 size-4" weight="bold" />
                             Perbarui
                         </Button>
