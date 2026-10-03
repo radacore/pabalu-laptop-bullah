@@ -2,6 +2,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import InputError from '@/components/shared/input-error';
+import CustomerPicker from '@/components/shared/customer-picker';
+import type { CustomerMode } from '@/components/shared/customer-picker';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -22,7 +24,10 @@ interface Props {
 }
 
 type RentalForm = {
+    customer_mode: CustomerMode;
     customer_id: string;
+    customer_name: string;
+    customer_phone: string;
     laptop_id: string;
     rental_status_id: string;
     daily_rate: string;
@@ -61,7 +66,10 @@ function Field({
 
 function RentalBuat({ customers, laptops, statuses }: Props) {
     const form = useForm<RentalForm>({
+        customer_mode: 'existing',
         customer_id: '',
+        customer_name: '',
+        customer_phone: '',
         laptop_id: '',
         rental_status_id: '',
         daily_rate: '',
@@ -110,52 +118,51 @@ function RentalBuat({ customers, laptops, statuses }: Props) {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4">
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            <Field
-                                label="Pelanggan"
-                                error={form.errors.customer_id}
-                            >
-                                <select
-                                    value={form.data.customer_id}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'customer_id',
-                                            e.target.value,
-                                        )
-                                    }
-                                    className={`${inputClass} admin-select`}
-                                    required
-                                >
-                                    <option value="">Pilih pelanggan</option>
-                                    {customers.map((c) => (
-                                        <option key={c.id} value={c.id}>
-                                            {c.name} — {c.phone}
-                                        </option>
-                                    ))}
-                                </select>
-                            </Field>
-                            <Field label="Unit" error={form.errors.laptop_id}>
-                                <select
-                                    value={form.data.laptop_id}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'laptop_id',
-                                            e.target.value,
-                                        )
-                                    }
-                                    className={`${inputClass} admin-select`}
-                                    required
-                                >
-                                    <option value="">Pilih unit</option>
-                                    {laptops.map((l) => (
-                                        <option key={l.id} value={l.id}>
-                                            {l.brand?.name ?? ''} {l.model} (
-                                            {l.sku})
-                                        </option>
-                                    ))}
-                                </select>
-                            </Field>
+                        <div className="mb-1">
+                            <CustomerPicker
+                                customers={customers}
+                                mode={form.data.customer_mode}
+                                onModeChange={(mode) =>
+                                    form.setData('customer_mode', mode)
+                                }
+                                customerId={form.data.customer_id}
+                                onCustomerIdChange={(id) =>
+                                    form.setData('customer_id', id)
+                                }
+                                customerName={form.data.customer_name}
+                                onCustomerNameChange={(value) =>
+                                    form.setData('customer_name', value)
+                                }
+                                customerPhone={form.data.customer_phone}
+                                onCustomerPhoneChange={(value) =>
+                                    form.setData('customer_phone', value)
+                                }
+                                errors={{
+                                    customer_id: form.errors.customer_id,
+                                    customer_name: form.errors.customer_name,
+                                    customer_phone: form.errors.customer_phone,
+                                }}
+                                inputClass={inputClass}
+                            />
                         </div>
+                        <Field label="Unit" error={form.errors.laptop_id}>
+                            <select
+                                value={form.data.laptop_id}
+                                onChange={(e) =>
+                                    form.setData('laptop_id', e.target.value)
+                                }
+                                className={`${inputClass} admin-select`}
+                                required
+                            >
+                                <option value="">Pilih unit</option>
+                                {laptops.map((l) => (
+                                    <option key={l.id} value={l.id}>
+                                        {l.brand?.name ?? ''} {l.model} ({l.sku}
+                                        )
+                                    </option>
+                                ))}
+                            </select>
+                        </Field>
 
                         <div className="grid gap-4 sm:grid-cols-3">
                             <Field
