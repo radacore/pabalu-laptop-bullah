@@ -128,7 +128,7 @@ function SparepartUbah({ sparepart, types, conditions }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="">Pilih tipe</option>
                                     {types.map((t) => (
@@ -150,7 +150,7 @@ function SparepartUbah({ sparepart, types, conditions }: Props) {
                                             e.target.value as 'baru' | 'bekas',
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                     required
                                 >
                                     {conditions.map((c) => (

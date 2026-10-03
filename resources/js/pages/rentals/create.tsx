@@ -123,7 +123,7 @@ function RentalBuat({ customers, laptops, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                     required
                                 >
                                     <option value="">Pilih pelanggan</option>
@@ -143,7 +143,7 @@ function RentalBuat({ customers, laptops, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                     required
                                 >
                                     <option value="">Pilih unit</option>
@@ -202,7 +202,7 @@ function RentalBuat({ customers, laptops, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="">Otomatis (pertama)</option>
                                     {statuses.map((s) => (
@@ -255,7 +255,7 @@ function RentalBuat({ customers, laptops, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="unpaid">Belum bayar</option>
                                     <option value="partial">

@@ -158,7 +158,7 @@ const StaffUbah: HalamanComponent = ({ staffUser }) => {
                                     onChange={(event) =>
                                         form.setData('role', event.target.value)
                                     }
-                                    className="border-input rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none"
+                                    className="border-input admin-select rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs outline-none"
                                 >
                                     <option value="staff">
                                         Teknisi (staff)

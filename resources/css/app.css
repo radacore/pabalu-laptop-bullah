@@ -1193,6 +1193,36 @@
     }
 }
 
+/* ---- Admin form controls: ikon kanan yang konsisten ----
+ * Select form admin: chevron kustom di kanan dengan ruang cukup
+ * (panah bawaan browser mepet tepi / hilang bila appearance-none).
+ * Dipakai via class `admin-select` pada <select> form admin.
+ * Input tanggal: ikon kalender bawaan dipin ke kanan (bukan
+ * menempel di tengah setelah teks). */
+.admin-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem 1rem;
+    padding-right: 2.5rem;
+}
+input[type='date'],
+input[type='datetime-local'] {
+    position: relative;
+    padding-right: 2.5rem;
+}
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0.625rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    opacity: 0.55;
+    cursor: pointer;
+}
+
 /* ---- Entrance admin: dipakai di dalam AppSidebarLayout + Reveal tone=admin.
  * Terpisah dari sistem tc-* (publik) agar tidak tercampur. */
 @keyframes admin-page-in {

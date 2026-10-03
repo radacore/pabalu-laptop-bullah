@@ -141,7 +141,7 @@ function SparepartBuat({ types, conditions }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="">Pilih tipe</option>
                                     {types.map((t) => (
@@ -163,7 +163,7 @@ function SparepartBuat({ types, conditions }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                     required
                                 >
                                     {conditions.map((c) => (

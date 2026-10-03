@@ -293,7 +293,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        className={inputClass}
+                                        className={`${inputClass} admin-select`}
                                     >
                                         <option value="">
                                             Walk-in / tanpa pelanggan
@@ -340,7 +340,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className={inputClass}
+                                            className={`${inputClass} admin-select`}
                                         >
                                             <option value="">
                                                 Default (tunai)

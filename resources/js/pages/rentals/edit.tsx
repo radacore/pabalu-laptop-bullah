@@ -119,7 +119,7 @@ function RentalUbah({ rental, customers, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                     required
                                 >
                                     <option value="">Pilih pelanggan</option>
@@ -142,7 +142,7 @@ function RentalUbah({ rental, customers, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="">—</option>
                                     {statuses.map((s) => (
@@ -233,7 +233,7 @@ function RentalUbah({ rental, customers, statuses }: Props) {
                                             e.target.value,
                                         )
                                     }
-                                    className={inputClass}
+                                    className={`${inputClass} admin-select`}
                                 >
                                     <option value="unpaid">Belum bayar</option>
                                     <option value="partial">
