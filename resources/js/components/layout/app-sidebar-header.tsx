@@ -3,7 +3,6 @@ import {
     MagnifyingGlass,
     List,
     X,
-    Bell,
     CaretDown,
     UserCircle,
     Gear,
@@ -202,12 +201,6 @@ export function AppSidebarHeader({
 
                 {/* Right side */}
                 <div className="flex items-center gap-4">
-                    {/* Notifications */}
-                    <button className="relative rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900">
-                        <Bell className="h-5 w-5" weight="duotone" />
-                        <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
-                    </button>
-
                     {/* User menu */}
                     <div className="relative">
                         <button
