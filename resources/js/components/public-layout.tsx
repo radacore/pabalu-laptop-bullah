@@ -191,20 +191,6 @@ export function PublicHeader({
                         >
                             {website.website_name}
                         </span>
-                        <span
-                            className="hidden rounded-full border px-2 py-0.5 sm:inline"
-                            style={{
-                                fontSize: '0.625rem',
-                                fontWeight: 600,
-                                letterSpacing: '0.05em',
-                                background: '#F4F4F5',
-                                borderColor: '#E4E4E7',
-                                color: '#52525B',
-                            }}
-                            aria-hidden="true"
-                        >
-                            Refurbished
-                        </span>
                     </Link>
 
                     <nav
