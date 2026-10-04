@@ -6,6 +6,7 @@ import DeleteDialog from '@/components/shared/delete-dialog';
 import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency, formatTanggal } from '@/lib/format';
 import type { PaginatedResponse, SparepartSale } from '@/types';
 
 interface Props {
@@ -23,24 +24,6 @@ interface Props {
 type HalamanComponent = ((props: Props) => ReactNode) & {
     layout?: (page: ReactNode) => ReactNode;
 };
-
-function formatRupiah(value?: string | number | null) {
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-    }).format(Number(value ?? 0));
-}
-
-function formatTanggal(value?: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
-        new Date(value),
-    );
-}
 
 const PenjualanSparepartIndex: HalamanComponent = ({ sales, filters }) => {
     const [search, setSearch] = useState(filters.search ?? '');
@@ -88,7 +71,7 @@ const PenjualanSparepartIndex: HalamanComponent = ({ sales, filters }) => {
                                     }
                                 }}
                                 placeholder="Cari kode, produk, atau pelanggan..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <Button
@@ -181,10 +164,12 @@ const PenjualanSparepartIndex: HalamanComponent = ({ sales, filters }) => {
                                                 </td>
                                                 <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
                                                     {s.quantity} ×{' '}
-                                                    {formatRupiah(s.unit_price)}
+                                                    {formatCurrency(
+                                                        s.unit_price,
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 text-sm font-semibold whitespace-nowrap">
-                                                    {formatRupiah(
+                                                    {formatCurrency(
                                                         s.total_amount,
                                                     )}
                                                 </td>

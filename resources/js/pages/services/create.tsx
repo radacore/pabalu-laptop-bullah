@@ -71,7 +71,7 @@ const newPart = (): PartItem => ({
 });
 
 const inputClass =
-    'w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none text-sm text-slate-900 bg-white';
+    'w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand focus:border-brand focus:outline-none text-sm text-slate-900 bg-white';
 
 const selectClass = `${inputClass} admin-select`;
 

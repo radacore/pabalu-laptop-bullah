@@ -4,21 +4,12 @@ import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency } from '@/lib/format';
 import { dashboard } from '@/routes';
 import type { Laptop } from '@/types';
 
 interface LaptopShowHalamanProps {
     laptop: Laptop;
-}
-
-const currencyFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
-function formatCurrency(value: number | string | null | undefined) {
-    return currencyFormatter.format(Number(value ?? 0));
 }
 
 function detailValue(value: string | number | null | undefined) {

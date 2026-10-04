@@ -6,6 +6,7 @@ import DeleteDialog from '@/components/shared/delete-dialog';
 import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency } from '@/lib/format';
 import type { MasterData, PaginatedResponse, Sparepart } from '@/types';
 
 interface Props {
@@ -22,14 +23,6 @@ interface Props {
 type HalamanComponent = ((props: Props) => ReactNode) & {
     layout?: (page: ReactNode) => ReactNode;
 };
-
-function formatRupiah(value?: string | number | null) {
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-    }).format(Number(value ?? 0));
-}
 
 function HapusSparepartDialog({
     sparepart,
@@ -142,14 +135,14 @@ const SparepartsIndex: HalamanComponent = ({
                                 onChange={(e) => setSearch(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Cari nama, SKU, atau tipe..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <div className="relative w-52">
                             <select
                                 value={typeId}
                                 onChange={(e) => setTypeId(e.target.value)}
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua tipe</option>
                                 {types.map((t) => (
@@ -163,7 +156,7 @@ const SparepartsIndex: HalamanComponent = ({
                             <select
                                 value={condition}
                                 onChange={(e) => setCondition(e.target.value)}
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Baru &amp; bekas</option>
                                 {conditions.map((c) => (
@@ -240,7 +233,7 @@ const SparepartsIndex: HalamanComponent = ({
                                                             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                                                                 sp.condition ===
                                                                 'baru'
-                                                                    ? 'bg-blue-100 text-blue-800'
+                                                                    ? 'bg-brand-soft text-brand-dark'
                                                                     : 'bg-amber-100 text-amber-800'
                                                             }`}
                                                         >
@@ -259,7 +252,7 @@ const SparepartsIndex: HalamanComponent = ({
                                                         )}
                                                     </td>
                                                     <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
-                                                        {formatRupiah(
+                                                        {formatCurrency(
                                                             sp.selling_price,
                                                         )}
                                                     </td>
@@ -343,7 +336,7 @@ const SparepartsIndex: HalamanComponent = ({
                                             href={
                                                 spareparts.current_page <= 1
                                                     ? '#'
-                                                    : `/spareparts?page=${Math.max(1, spareparts.current_page - 1)}`
+                                                    : `/spareparts?page=${Math.max(1, spareparts.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${typeId !== 'all' ? `&sparepart_type_id=${typeId}` : ''}${condition !== 'all' ? `&condition=${condition}` : ''}`
                                             }
                                             className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                                 spareparts.current_page <= 1
@@ -363,7 +356,7 @@ const SparepartsIndex: HalamanComponent = ({
                                                 spareparts.current_page >=
                                                 spareparts.last_page
                                                     ? '#'
-                                                    : `/spareparts?page=${Math.min(spareparts.last_page, spareparts.current_page + 1)}`
+                                                    : `/spareparts?page=${Math.min(spareparts.last_page, spareparts.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${typeId !== 'all' ? `&sparepart_type_id=${typeId}` : ''}${condition !== 'all' ? `&condition=${condition}` : ''}`
                                             }
                                             className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                                 spareparts.current_page >=

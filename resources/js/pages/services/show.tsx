@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrencyOrDash, formatTanggalWaktu } from '@/lib/format';
 import type { User } from '@/types';
 
 type Customer = {
@@ -98,7 +99,7 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
 const statusColors: Record<string, string> = {
     diterima: 'bg-slate-100 text-slate-700 border-slate-200',
     'dicek-teknisi': 'bg-indigo-50 text-indigo-700 border-indigo-100',
-    'dalam-pengerjaan': 'bg-blue-50 text-blue-700 border-blue-100',
+    'dalam-pengerjaan': 'bg-brand-soft text-brand border-brand-soft',
     selesai: 'bg-emerald-50 text-emerald-700 border-emerald-100',
     diambil: 'bg-emerald-50 text-emerald-700 border-emerald-100',
     dibatalkan: 'bg-red-50 text-red-700 border-red-100',
@@ -135,7 +136,7 @@ function StatusPill({ status }: { status?: ServiceStatus | null }) {
     const colors: Record<string, string> = {
         diterima: 'bg-slate-100 text-slate-700 border-slate-200',
         'dicek-teknisi': 'bg-indigo-50 text-indigo-700 border-indigo-100',
-        'dalam-pengerjaan': 'bg-blue-50 text-blue-700 border-blue-100',
+        'dalam-pengerjaan': 'bg-brand-soft text-brand border-brand-soft',
         selesai: 'bg-emerald-50 text-emerald-700 border-emerald-100',
         diambil: 'bg-emerald-50 text-emerald-700 border-emerald-100',
         dibatalkan: 'bg-red-50 text-red-700 border-red-100',
@@ -149,31 +150,6 @@ function StatusPill({ status }: { status?: ServiceStatus | null }) {
             {status.name}
         </span>
     );
-}
-
-function formatTanggal(value?: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(value));
-}
-
-function formatCurrency(value?: number | string | null) {
-    const amount = Number(value ?? 0);
-
-    if (!amount) {
-        return '-';
-    }
-
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-    }).format(amount);
 }
 
 function serviceCode(service: ServiceData) {
@@ -358,7 +334,9 @@ const ServicesShow: HalamanComponent = ({
                                     ESTIMASI BIAYA
                                 </span>
                                 <span className="text-sm font-medium text-slate-900">
-                                    {formatCurrency(service.estimated_cost)}
+                                    {formatCurrencyOrDash(
+                                        service.estimated_cost,
+                                    )}
                                 </span>
                             </div>
                             <div>
@@ -366,7 +344,7 @@ const ServicesShow: HalamanComponent = ({
                                     BIAYA AKHIR
                                 </span>
                                 <span className="text-sm font-medium text-slate-900">
-                                    {formatCurrency(service.final_cost)}
+                                    {formatCurrencyOrDash(service.final_cost)}
                                 </span>
                             </div>
                             <div>
@@ -374,7 +352,7 @@ const ServicesShow: HalamanComponent = ({
                                     ESTIMASI SELESAI
                                 </span>
                                 <span className="text-sm font-medium text-slate-900">
-                                    {formatTanggal(
+                                    {formatTanggalWaktu(
                                         service.estimated_completion_date,
                                     )}
                                 </span>
@@ -384,7 +362,7 @@ const ServicesShow: HalamanComponent = ({
                                     DITERIMA
                                 </span>
                                 <span className="text-sm font-medium text-slate-900">
-                                    {formatTanggal(
+                                    {formatTanggalWaktu(
                                         service.received_at ??
                                             service.created_at,
                                     )}
@@ -434,7 +412,7 @@ const ServicesShow: HalamanComponent = ({
                                             key={update.id}
                                             className="relative pb-8 last:pb-0"
                                         >
-                                            <div className="absolute top-[6px] left-[-8px] z-10 h-4 w-4 rounded-full border-4 border-white bg-blue-600" />
+                                            <div className="absolute top-[6px] left-[-8px] z-10 h-4 w-4 rounded-full border-4 border-white bg-brand" />
                                             <div className="mb-1 flex items-center gap-3">
                                                 <StatusPill
                                                     status={
@@ -447,7 +425,7 @@ const ServicesShow: HalamanComponent = ({
                                                     }
                                                 />
                                                 <span className="text-xs font-medium text-slate-500">
-                                                    {formatTanggal(
+                                                    {formatTanggalWaktu(
                                                         update.created_at,
                                                     )}
                                                 </span>
@@ -498,7 +476,7 @@ const ServicesShow: HalamanComponent = ({
                                                         : e.target.value,
                                                 )
                                             }
-                                            className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                         >
                                             <option value="none" disabled>
                                                 Pilih status
@@ -548,7 +526,7 @@ const ServicesShow: HalamanComponent = ({
                                         }
                                         placeholder="Jelaskan perkembangan servis"
                                         rows={3}
-                                        className="block w-full resize-y rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        className="block w-full resize-y rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                     />
                                     {updateForm.errors.description && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -647,12 +625,12 @@ const ServicesShow: HalamanComponent = ({
                                                         {part.quantity ?? 0}
                                                     </td>
                                                     <td className="px-4 py-3 text-slate-500">
-                                                        {formatCurrency(
+                                                        {formatCurrencyOrDash(
                                                             part.selling_price,
                                                         )}
                                                     </td>
                                                     <td className="px-4 py-3 font-medium text-slate-900">
-                                                        {formatCurrency(
+                                                        {formatCurrencyOrDash(
                                                             Number(
                                                                 part.quantity ??
                                                                     0,
@@ -699,7 +677,7 @@ const ServicesShow: HalamanComponent = ({
                                                     : e.target.value,
                                             )
                                         }
-                                        className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                     >
                                         <option value="none">
                                             Part manual (tidak dari stok)
@@ -739,7 +717,7 @@ const ServicesShow: HalamanComponent = ({
                                             )
                                         }
                                         placeholder="Keyboard, SSD, Baterai"
-                                        className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                     />
                                     {partForm.errors.part_name && (
                                         <p className="mt-1 text-sm text-red-600">
@@ -765,7 +743,7 @@ const ServicesShow: HalamanComponent = ({
                                                         : e.target.value,
                                                 )
                                             }
-                                            className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                         >
                                             <option value="none">
                                                 Pilih tipe
@@ -815,7 +793,7 @@ const ServicesShow: HalamanComponent = ({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                         />
                                         {partForm.errors.quantity && (
                                             <p className="mt-1 text-sm text-red-600">
@@ -837,7 +815,7 @@ const ServicesShow: HalamanComponent = ({
                                                 )
                                             }
                                             placeholder="Rp 0"
-                                            className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            className="block w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-brand focus:ring-2 focus:ring-brand focus:outline-none"
                                         />
                                         {partForm.errors.unit_price && (
                                             <p className="mt-1 text-sm text-red-600">

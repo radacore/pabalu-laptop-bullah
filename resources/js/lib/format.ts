@@ -16,6 +16,53 @@ export function formatCurrency(value: number | string | null | undefined) {
 }
 
 /**
+ * Seperti formatCurrency, tapi tampilkan '-' untuk nilai kosong/nol.
+ * Dipakai di tabel yang menganggap 0 = belum ada data.
+ */
+export function formatCurrencyOrDash(
+    value: number | string | null | undefined,
+) {
+    const amount = Number(value ?? 0);
+
+    if (!amount) {
+        return '-';
+    }
+
+    return currencyFormatter.format(amount);
+}
+
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'medium',
+});
+
+const datetimeFormatter = new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+});
+
+/**
+ * Format tanggal gaya admin: "3 Okt 2026". '-' bila kosong.
+ */
+export function formatTanggal(value: string | null | undefined) {
+    if (!value) {
+        return '-';
+    }
+
+    return dateFormatter.format(new Date(value));
+}
+
+/**
+ * Format tanggal + jam gaya admin. '-' bila kosong.
+ */
+export function formatTanggalWaktu(value: string | null | undefined) {
+    if (!value) {
+        return '-';
+    }
+
+    return datetimeFormatter.format(new Date(value));
+}
+
+/**
  * Short price format untuk card compact: "Rp 19,9jt", "Rp 850rb".
  */
 export function formatShortPrice(value: number | string | null | undefined) {

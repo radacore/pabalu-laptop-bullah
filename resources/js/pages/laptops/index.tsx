@@ -7,6 +7,7 @@ import Reveal from '@/components/shared/reveal';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency } from '@/lib/format';
 import { dashboard } from '@/routes';
 import type {
     Brand,
@@ -32,16 +33,6 @@ interface LaptopsIndexHalamanProps {
 type HalamanComponent = ((props: LaptopsIndexHalamanProps) => ReactNode) & {
     layout?: (page: ReactNode) => ReactNode;
 };
-
-const currencyFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
-function formatCurrency(value: number | string | null | undefined) {
-    return currencyFormatter.format(Number(value ?? 0));
-}
 
 function buildLaptopsUrl(
     page: number,
@@ -162,7 +153,7 @@ const LaptopsIndex: HalamanComponent = ({
                                 }
                                 onKeyDown={handleKeyDown}
                                 placeholder="Cari nama, merek, model, atau SKU..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <div className="relative w-56">
@@ -171,7 +162,7 @@ const LaptopsIndex: HalamanComponent = ({
                                 onChange={(event) =>
                                     setBrandId(event.target.value)
                                 }
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua merek</option>
                                 {brands.map((brand) => (
@@ -205,7 +196,7 @@ const LaptopsIndex: HalamanComponent = ({
                                 onChange={(event) =>
                                     setStatusId(event.target.value)
                                 }
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua status</option>
                                 {statuses.map((status) => (
@@ -239,7 +230,7 @@ const LaptopsIndex: HalamanComponent = ({
                                 onChange={(event) =>
                                     setSourceId(event.target.value)
                                 }
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua sumber</option>
                                 {sources.map((source) => (
@@ -341,7 +332,7 @@ const LaptopsIndex: HalamanComponent = ({
                                                     <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                                         <Link
                                                             href={`/laptops/${laptop.id}`}
-                                                            className="text-blue-600 hover:text-blue-700"
+                                                            className="text-brand hover:text-brand-dark"
                                                         >
                                                             {laptop.sku}
                                                         </Link>

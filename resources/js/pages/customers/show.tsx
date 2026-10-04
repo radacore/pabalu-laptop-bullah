@@ -10,6 +10,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrencyOrDash, formatTanggal } from '@/lib/format';
 
 type ServiceStatus = {
     id: number | string;
@@ -51,9 +52,9 @@ const statusTone: Record<string, string> = {
     diterima:
         'border-status-pending/30 bg-status-pending/10 text-amber-700 dark:text-amber-300',
     'dicek-teknisi':
-        'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
+        'border-status-progress/30 bg-status-progress/10 text-brand dark:text-brand-soft',
     'dalam-pengerjaan':
-        'border-status-progress/30 bg-status-progress/10 text-blue-700 dark:text-blue-300',
+        'border-status-progress/30 bg-status-progress/10 text-brand dark:text-brand-soft',
     selesai:
         'border-status-completed/30 bg-status-completed/10 text-violet-700 dark:text-violet-300',
     diambil:
@@ -105,30 +106,6 @@ function DetailRow({ label, value }: { label: string; value?: ReactNode }) {
             <dd className="text-foreground text-sm">{value || '-'}</dd>
         </div>
     );
-}
-
-function formatTanggal(value?: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
-        new Date(value),
-    );
-}
-
-function formatCurrency(value?: number | string | null) {
-    const amount = Number(value ?? 0);
-
-    if (!amount) {
-        return '-';
-    }
-
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-    }).format(amount);
 }
 
 function serviceCode(service: Service) {
@@ -257,7 +234,7 @@ const PelanggansShow: HalamanComponent = ({ pelanggan }) => {
                                                         )}
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        {formatCurrency(
+                                                        {formatCurrencyOrDash(
                                                             service.final_cost ??
                                                                 service.estimated_cost,
                                                         )}

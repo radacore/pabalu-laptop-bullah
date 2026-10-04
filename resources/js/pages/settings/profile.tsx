@@ -17,15 +17,15 @@ export default function Profile() {
 
     return (
         <>
-            <Head title="Profile settings" />
+            <Head title="Pengaturan profil" />
 
-            <h1 className="sr-only">Profile settings</h1>
+            <h1 className="sr-only">Pengaturan profil</h1>
 
             <div className="space-y-6">
                 <Heading
                     variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
+                    title="Profil"
+                    description="Perbarui nama dan alamat email Anda"
                 />
 
                 <Form
@@ -82,7 +82,7 @@ export default function Profile() {
                                     disabled={processing}
                                     data-test="update-profile-button"
                                 >
-                                    Save
+                                    Simpan
                                 </Button>
                             </div>
                         </>

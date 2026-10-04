@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency, formatTanggalWaktu } from '@/lib/format';
 import type { Customer, Laptop, Rental, RentalStatus } from '@/types';
 
 interface Props {
@@ -25,27 +26,6 @@ interface Props {
     customers: Customer[];
     statuses: RentalStatus[];
     laptops: Laptop[];
-}
-
-const currencyFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
-function formatCurrency(value: number | string | null | undefined) {
-    return currencyFormatter.format(Number(value ?? 0));
-}
-
-function formatTanggal(value?: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    }).format(new Date(value));
 }
 
 function DetailRow({
@@ -142,15 +122,17 @@ function RentalLihat({ rental, statuses }: Props) {
                                 />
                                 <DetailRow
                                     label="Mulai Sewa"
-                                    value={formatTanggal(rental.rented_at)}
+                                    value={formatTanggalWaktu(rental.rented_at)}
                                 />
                                 <DetailRow
                                     label="Jatuh Tempo"
-                                    value={formatTanggal(rental.due_at)}
+                                    value={formatTanggalWaktu(rental.due_at)}
                                 />
                                 <DetailRow
                                     label="Dikembalikan"
-                                    value={formatTanggal(rental.returned_at)}
+                                    value={formatTanggalWaktu(
+                                        rental.returned_at,
+                                    )}
                                 />
                                 <DetailRow
                                     label="Tarif / Hari"

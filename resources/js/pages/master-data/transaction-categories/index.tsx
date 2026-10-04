@@ -81,7 +81,7 @@ const TransactionCategoriesIndex = ({
                                         applySearch(event.target.value)
                                     }
                                     placeholder="Cari kategori transaksi..."
-                                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    className="block w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pr-4 pl-9 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none"
                                 />
                             </div>
                         </div>

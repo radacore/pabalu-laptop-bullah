@@ -40,7 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const fieldClass = 'h-10 rounded-lg border-slate-200';
 const textareaClass =
-    'w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20';
+    'w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-all outline-none placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/20';
 
 const inputGroup = 'space-y-2';
 
@@ -63,7 +63,7 @@ function SectionCard({
         >
             <div className="border-b border-slate-100 px-6 py-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-soft text-brand">
                         <Icon className="h-4.5 w-4.5" weight="duotone" />
                     </div>
                     <div>
@@ -496,7 +496,7 @@ export default function WebsiteSettings({ setting }: Props) {
                                         className="flex items-center gap-2"
                                     >
                                         <FacebookLogo
-                                            className="h-4 w-4 text-blue-600"
+                                            className="h-4 w-4 text-brand"
                                             weight="duotone"
                                         />
                                         Facebook

@@ -8,26 +8,11 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { formatCurrency, formatTanggal } from '@/lib/format';
 import type { FinancialTransaction } from '@/types';
 
 interface Props {
     transaction: FinancialTransaction;
-}
-
-const rupiahFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
-function formatCurrency(value: number) {
-    return rupiahFormatter.format(value);
-}
-
-function formatTanggal(value: string) {
-    return new Intl.DateTimeFormat('id-ID', {
-        dateStyle: 'medium',
-    }).format(new Date(value));
 }
 
 function TransactionTipeBadge({

@@ -106,7 +106,7 @@ function MasterDataIndex({ groups, totals }: MasterDataIndexProps) {
                                         {group.description}
                                     </p>
                                 </div>
-                                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                                <span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
                                     {group.items.length} master
                                 </span>
                             </div>
@@ -119,10 +119,10 @@ function MasterDataIndex({ groups, totals }: MasterDataIndexProps) {
                                         <Link
                                             key={item.key}
                                             href={item.href}
-                                            className="group relative rounded-lg border border-slate-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-sm"
+                                            className="group relative rounded-lg border border-slate-200 bg-white p-4 transition-all hover:border-brand hover:shadow-sm"
                                         >
                                             <div className="flex items-start gap-3">
-                                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-600 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
+                                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-600 transition-colors group-hover:bg-brand-soft group-hover:text-brand">
                                                     <Icon
                                                         className="h-5 w-5"
                                                         weight="duotone"

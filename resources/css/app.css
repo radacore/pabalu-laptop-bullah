@@ -139,6 +139,7 @@
        pakai token sendiri agar konsisten di semua halaman. */
     --color-brand: #2e4b73;
     --color-brand-dark: #233c5e;
+    --color-brand-soft: #e8edf4;
     --color-brand-green: #2e7d4f;
     --color-brand-green-dark: #256641;
     --color-tertiary-container: var(--tertiary-container);

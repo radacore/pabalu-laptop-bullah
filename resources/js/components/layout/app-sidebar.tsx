@@ -89,7 +89,7 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                     collapsed ? 'justify-center' : 'gap-3 px-5'
                 }`}
             >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-brand-dark text-white shadow-sm">
                     <Laptop className="h-5 w-5" weight="fill" />
                 </div>
                 {!collapsed && (
@@ -121,14 +121,14 @@ export function AppSidebar({ collapsed = false }: AppSidebarProps) {
                                             : 'gap-3 px-3 py-2.5'
                                     } ${
                                         active
-                                            ? 'bg-blue-50 text-blue-700'
+                                            ? 'bg-brand-soft text-brand'
                                             : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                     }`}
                                 >
                                     <Icon
                                         className={`h-[20px] w-[20px] shrink-0 transition-colors ${
                                             active
-                                                ? 'text-blue-600'
+                                                ? 'text-brand'
                                                 : 'text-slate-400 group-hover:text-slate-600'
                                         }`}
                                         weight={active ? 'fill' : 'duotone'}

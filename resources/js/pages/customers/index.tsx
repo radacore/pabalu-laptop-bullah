@@ -6,6 +6,7 @@ import DeleteDialog from '@/components/shared/delete-dialog';
 import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatTanggal } from '@/lib/format';
 import type { Customer as BaseCustomer, ModelUser } from '@/types';
 
 type Customer = BaseCustomer & {
@@ -41,16 +42,6 @@ function customerInitials(name: string) {
         .slice(0, 2)
         .join('')
         .toUpperCase();
-}
-
-function formatDate(value: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
-        new Date(value),
-    );
 }
 
 function relativeTime(value: string | null) {
@@ -169,7 +160,7 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                 }
                                 onKeyDown={handleKeyDown}
                                 placeholder="Cari nama atau telepon..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <Button
@@ -241,7 +232,7 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                                             <div className="min-w-0">
                                                                 <Link
                                                                     href={`/customers/${customer.id}`}
-                                                                    className="text-sm font-semibold text-slate-900 transition-colors hover:text-blue-600"
+                                                                    className="text-sm font-semibold text-slate-900 transition-colors hover:text-brand"
                                                                 >
                                                                     {
                                                                         customer.name
@@ -280,7 +271,7 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
                                                     </td>
                                                     <td className="px-6 py-4 align-top">
                                                         <div className="text-sm text-slate-900">
-                                                            {formatDate(
+                                                            {formatTanggal(
                                                                 customer.created_at,
                                                             )}
                                                         </div>

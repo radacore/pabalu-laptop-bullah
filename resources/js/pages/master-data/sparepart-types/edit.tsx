@@ -15,7 +15,7 @@ interface SparepartTypesEditProps {
 }
 
 const textareaClass =
-    'min-h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500';
+    'min-h-24 w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 transition-colors placeholder-slate-400 focus:border-brand focus:bg-white focus:outline-none focus:ring-1 focus:ring-brand';
 
 const SparepartTypesEdit = ({ sparepartType }: SparepartTypesEditProps) => {
     const form = useForm({

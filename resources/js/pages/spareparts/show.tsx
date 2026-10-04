@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency } from '@/lib/format';
 import type {
     Customer,
     MasterData,
@@ -41,14 +42,6 @@ interface Props {
     conditions: string[];
     customers: Customer[];
     payment_methods: PaymentMethod[];
-}
-
-function formatRupiah(value?: string | number | null) {
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-    }).format(Number(value ?? 0));
 }
 
 function Field({
@@ -158,7 +151,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                             <span
                                 className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                                     sparepart.condition === 'baru'
-                                        ? 'bg-blue-100 text-blue-800'
+                                        ? 'bg-brand-soft text-brand-dark'
                                         : 'bg-amber-100 text-amber-800'
                                 }`}
                             >
@@ -169,7 +162,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                         </div>
                         <p className="text-muted-foreground text-sm">
                             {sparepart.sku} · Stok: {sparepart.stock} ·{' '}
-                            {formatRupiah(sparepart.selling_price)}
+                            {formatCurrency(sparepart.selling_price)}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-3">
@@ -423,7 +416,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                                                 </p>
                                             </div>
                                             <p className="font-semibold">
-                                                {formatRupiah(s.total_amount)}
+                                                {formatCurrency(s.total_amount)}
                                             </p>
                                         </li>
                                     ))}
@@ -452,7 +445,7 @@ function SparepartLihat({ sparepart, customers, payment_methods }: Props) {
                                                 {t.transaction_code}
                                             </p>
                                             <p className="font-semibold">
-                                                {formatRupiah(t.amount)}
+                                                {formatCurrency(t.amount)}
                                             </p>
                                         </li>
                                     ))}

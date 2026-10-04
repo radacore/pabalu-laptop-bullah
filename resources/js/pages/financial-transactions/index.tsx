@@ -12,6 +12,7 @@ import type { ReactNode } from 'react';
 import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency, formatTanggal } from '@/lib/format';
 import { index as financialTransactionsIndex } from '@/routes/financial-transactions';
 import type {
     FinancialTransaction,
@@ -55,30 +56,14 @@ type HalamanComponent = ((props: Props) => ReactNode) & {
     layout?: (page: ReactNode) => ReactNode;
 };
 
-const rupiahFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
 const compactRupiahFormatter = new Intl.NumberFormat('id-ID', {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 1,
 });
 
-function formatCurrency(value: number) {
-    return rupiahFormatter.format(Number(value ?? 0));
-}
-
 function formatCompact(value: number) {
     return compactRupiahFormatter.format(Number(value ?? 0));
-}
-
-function formatTanggal(value: string) {
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
-        new Date(value),
-    );
 }
 
 function buildTransactionsHref(page: number, filters: Props['filters']) {
@@ -573,7 +558,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                     filterForm.setData('search', e.target.value)
                                 }
                                 placeholder="Cari kode, deskripsi..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none"
                             />
                         </div>
 
@@ -594,7 +579,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                             e.target.value,
                                         )
                                     }
-                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none"
                                 >
                                     <option value="">Semua</option>
                                     <option value="income">Pemasukan</option>
@@ -635,7 +620,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                             e.target.value,
                                         )
                                     }
-                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    className="block w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-2 pr-9 text-sm text-slate-900 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none"
                                 >
                                     <option value="">Semua kategori</option>
                                     {categories.map((c) => (
@@ -674,7 +659,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                             e.target.value,
                                         )
                                     }
-                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none"
                                     aria-label="Dari tanggal"
                                 />
                                 <span className="hidden text-xs text-slate-400 sm:inline">
@@ -689,7 +674,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                             e.target.value,
                                         )
                                     }
-                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                    className="block w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none"
                                     aria-label="Sampai tanggal"
                                 />
                             </div>
@@ -813,7 +798,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                                                 ?.service_code ? (
                                                                 <Link
                                                                     href={`/services/${transaction.related.id}`}
-                                                                    className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                                    className="text-sm font-medium text-brand hover:text-brand-dark hover:underline"
                                                                 >
                                                                     Servis{' '}
                                                                     {
@@ -827,7 +812,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                                                   ?.sku ? (
                                                                 <Link
                                                                     href={`/laptops/${transaction.related.id}`}
-                                                                    className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                                                    className="text-sm font-medium text-brand hover:text-brand-dark hover:underline"
                                                                 >
                                                                     Laptop{' '}
                                                                     {transaction

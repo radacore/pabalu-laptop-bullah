@@ -48,7 +48,7 @@ function MobileSidebar({
             <div className="mb-6 flex items-center justify-between">
                 {!collapsed && (
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-dark text-white shadow-sm">
                             <span className="material-symbols-outlined text-[22px]">
                                 laptop_mac
                             </span>
@@ -64,7 +64,7 @@ function MobileSidebar({
                     </div>
                 )}
                 {collapsed && (
-                    <div className="mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-sm">
+                    <div className="mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-dark text-white shadow-sm">
                         <span className="material-symbols-outlined text-[22px]">
                             laptop_mac
                         </span>
@@ -92,14 +92,14 @@ function MobileSidebar({
                                         : 'gap-3 px-3 py-2.5'
                                 } ${
                                     active
-                                        ? 'bg-blue-50 text-blue-700 shadow-sm'
+                                        ? 'bg-brand-soft text-brand shadow-sm'
                                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                             >
                                 <span
                                     className={`material-symbols-outlined text-[20px] ${
                                         active
-                                            ? 'fill text-blue-600'
+                                            ? 'fill text-brand'
                                             : 'text-slate-400'
                                     }`}
                                 >
@@ -186,7 +186,7 @@ export function AppSidebarHeader({
                     <input
                         name="q"
                         defaultValue={currentQuery}
-                        className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pr-28 pl-12 text-[14px] text-slate-900 transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pr-28 pl-12 text-[14px] text-slate-900 transition-all placeholder:text-slate-400 focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/20 focus:outline-none"
                         placeholder="Cari inventaris, tiket, pelanggan..."
                         type="text"
                     />
@@ -215,7 +215,7 @@ export function AppSidebarHeader({
                                     Admin
                                 </span>
                             </div>
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-sm font-bold text-white shadow-sm">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-brand to-brand-dark text-sm font-bold text-white shadow-sm">
                                 {auth.user.name.charAt(0).toUpperCase()}
                             </div>
                             <CaretDown

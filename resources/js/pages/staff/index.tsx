@@ -103,7 +103,7 @@ const StaffIndex: HalamanComponent = ({ users, filters }) => {
                                 }
                                 onKeyDown={handleKeyDown}
                                 placeholder="Cari nama atau email..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <Button
@@ -196,7 +196,7 @@ const StaffIndex: HalamanComponent = ({ users, filters }) => {
                                                                 staffUser.role ===
                                                                 'admin'
                                                                     ? 'bg-purple-100 text-purple-700'
-                                                                    : 'bg-blue-100 text-blue-700'
+                                                                    : 'bg-brand-soft text-brand'
                                                             }`}
                                                         >
                                                             {staffUser.role ===

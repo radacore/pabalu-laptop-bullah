@@ -1,9 +1,9 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
-import InputError from '@/components/shared/input-error';
 import CustomerPicker from '@/components/shared/customer-picker';
 import type { CustomerMode } from '@/components/shared/customer-picker';
+import InputError from '@/components/shared/input-error';
 import { Button } from '@/components/ui/button';
 import {
     Card,

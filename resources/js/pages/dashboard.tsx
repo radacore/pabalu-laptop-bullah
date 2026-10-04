@@ -15,6 +15,7 @@ import type { ReactNode } from 'react';
 import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatCurrency } from '@/lib/format';
 import { dashboard as dashboardRoute } from '@/routes';
 import type { Laptop as LaptopRecord, Service } from '@/types';
 
@@ -32,21 +33,11 @@ interface DashboardPageProps {
     recent_services: Service[];
 }
 
-const rupiahFormatter = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-});
-
 const compactRupiahFormatter = new Intl.NumberFormat('id-ID', {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 1,
 });
-
-function formatCurrency(value: number | string | null | undefined) {
-    return rupiahFormatter.format(Number(value ?? 0));
-}
 
 function formatCompact(value: number) {
     return compactRupiahFormatter.format(Number(value ?? 0));
@@ -93,7 +84,7 @@ const TONE: Record<
     },
     amber: { dot: 'bg-amber-500', bg: 'bg-amber-50', text: 'text-amber-700' },
     rose: { dot: 'bg-rose-500', bg: 'bg-rose-50', text: 'text-rose-700' },
-    blue: { dot: 'bg-blue-500', bg: 'bg-blue-50', text: 'text-blue-700' },
+    blue: { dot: 'bg-brand-soft0', bg: 'bg-brand-soft', text: 'text-brand' },
     slate: { dot: 'bg-slate-400', bg: 'bg-slate-100', text: 'text-slate-600' },
 };
 
@@ -414,8 +405,8 @@ export default function Dashboard({
                             label="Terjual"
                             value={String(stats.total_laptops_sold)}
                             icon={ShoppingCart}
-                            iconBg="bg-blue-50"
-                            iconText="text-blue-600"
+                            iconBg="bg-brand-soft"
+                            iconText="text-brand"
                             hint="Total unit terjual"
                             trend={{
                                 direction: 'up',
@@ -574,7 +565,7 @@ export default function Dashboard({
                                 </div>
                                 <Link
                                     href="/laptops"
-                                    className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                    className="text-xs font-semibold text-brand transition-colors hover:text-brand-dark"
                                 >
                                     Lihat semua →
                                 </Link>
@@ -637,7 +628,7 @@ export default function Dashboard({
                                 </div>
                                 <Link
                                     href="/services"
-                                    className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                                    className="text-xs font-semibold text-brand transition-colors hover:text-brand-dark"
                                 >
                                     Lihat semua →
                                 </Link>

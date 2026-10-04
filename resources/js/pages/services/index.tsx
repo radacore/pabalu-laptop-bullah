@@ -7,6 +7,7 @@ import Reveal from '@/components/shared/reveal';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { formatTanggal } from '@/lib/format';
 import type { Customer, ModelUser, Service, ServiceStatus } from '@/types';
 
 type ServiceListItem = Service & {
@@ -39,16 +40,6 @@ interface Props {
 type HalamanComponent = ((props: Props) => ReactNode) & {
     layout?: (page: ReactNode) => ReactNode;
 };
-
-function formatTanggal(value?: string | null) {
-    if (!value) {
-        return '-';
-    }
-
-    return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).format(
-        new Date(value),
-    );
-}
 
 function serviceCode(service: ServiceListItem) {
     return service.service_code ?? service.code ?? `SRV-${service.id}`;
@@ -139,7 +130,7 @@ const ServicesIndex: HalamanComponent = ({
                             Servis
                         </h2>
                         <p className="mt-1.5 text-sm text-slate-500">
-                            Manage service requests &amp; repairs
+                            Kelola tiket dan perbaikan servis
                         </p>
                     </div>
                     <Button variant="primary" size="lg" asChild>
@@ -156,14 +147,14 @@ const ServicesIndex: HalamanComponent = ({
                                 onChange={(e) => setSearch(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Cari kode service, pelanggan, atau perangkat..."
-                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 leading-5 placeholder-slate-400 transition-colors focus:border-brand focus:bg-white focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             />
                         </div>
                         <div className="relative w-56">
                             <select
                                 value={statusId}
                                 onChange={(e) => setStatusId(e.target.value)}
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua status</option>
                                 {statuses.map((s) => (
@@ -192,7 +183,7 @@ const ServicesIndex: HalamanComponent = ({
                             <select
                                 value={technicianId}
                                 onChange={(e) => setTeknisiId(e.target.value)}
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none sm:text-sm"
+                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
                             >
                                 <option value="all">Semua teknisi</option>
                                 {technicians.map((t) => (
@@ -306,7 +297,7 @@ const ServicesIndex: HalamanComponent = ({
                                                     <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                                         <Link
                                                             href={`/services/${service.id}`}
-                                                            className="text-blue-600 hover:text-blue-700"
+                                                            className="text-brand hover:text-brand-dark"
                                                         >
                                                             {serviceCode(
                                                                 service,
