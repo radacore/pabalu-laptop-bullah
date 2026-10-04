@@ -441,6 +441,24 @@ function TestimonialsBand({ testimonials }: { testimonials: Testimonial[] }) {
 }
 
 function ServicesCTA({ website }: { website: WebsiteSetting }) {
+    // URL share biasa (tanpa /embed) ditolak iframe oleh Google
+    // (X-Frame-Options) — tempel output=embed agar tetap tampil.
+    const mapSrc = (() => {
+        const raw = website.google_maps_embed?.trim();
+
+        if (!raw) {
+            return null;
+        }
+
+        if (raw.includes('/embed')) {
+            return raw;
+        }
+
+        return raw.includes('?')
+            ? `${raw}&output=embed`
+            : `${raw}?output=embed`;
+    })();
+
     return (
         <section
             id="services"
@@ -486,7 +504,7 @@ function ServicesCTA({ website }: { website: WebsiteSetting }) {
                             </li>
                         ))}
                     </ul>
-                    <div className="mt-6 flex flex-wrap gap-3">
+                    <div className="mt-auto flex flex-wrap gap-3 pt-6">
                         {website.whatsapp_number && (
                             <a
                                 href={`https://wa.me/${website.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Halo, saya mau tanya soal servis laptop.')}`}
@@ -529,49 +547,18 @@ function ServicesCTA({ website }: { website: WebsiteSetting }) {
                         servis. Kami buka sesuai jam operasional.
                     </p>
 
-                    <div className="mt-5 space-y-3 text-sm text-white/85">
-                        {website.address && (
-                            <div className="flex items-start gap-3">
-                                <MapPin
-                                    className="mt-0.5 h-4 w-4 shrink-0"
-                                    weight="bold"
-                                />
-                                <span>{website.address}</span>
-                            </div>
-                        )}
-                        {(website.phone ?? website.whatsapp_number) && (
-                            <div className="flex items-center gap-3">
-                                <ChatCircle
-                                    className="h-4 w-4 shrink-0"
-                                    weight="bold"
-                                />
-                                <a
-                                    href={`tel:${(website.phone ?? website.whatsapp_number ?? '').replace(/[^0-9+]/g, '')}`}
-                                    className="hover:underline"
-                                >
-                                    {website.phone ?? website.whatsapp_number}
-                                </a>
-                            </div>
-                        )}
-                        {website.operational_hours_weekday && (
-                            <div className="text-white/70">
-                                <p>{website.operational_hours_weekday}</p>
-                                {website.operational_hours_weekend && (
-                                    <p>{website.operational_hours_weekend}</p>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="mt-auto pt-6">
-                        <Link
-                            href="/shop"
-                            className="tc-btn w-full bg-white"
-                            style={{ color: 'var(--color-tc-ink)' }}
-                        >
-                            Lihat katalog online
-                        </Link>
-                    </div>
+                    {mapSrc && (
+                        <div className="mt-5 min-h-[260px] flex-1 overflow-hidden rounded-[14px] border border-white/10">
+                            <iframe
+                                src={mapSrc}
+                                title="Lokasi toko Pabalu Laptop"
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                allowFullScreen
+                                className="block h-full min-h-[260px] w-full border-0"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
