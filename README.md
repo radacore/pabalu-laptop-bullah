@@ -243,28 +243,31 @@ Proteksi route menggunakan middleware `EnsureUserHasRole`.
 
 ### Backend
 
-- PHP `^8.3`.
-- Laravel `^13.7`.
-- Laravel Fortify `^1.37.2`.
-- MySQL untuk development lokal dan production.
-- Pest PHP `^4.7`.
+- PHP `^8.3` (CI menguji 8.3, 8.4, 8.5; lokal memakai 8.4).
+- Laravel `^13.7` — routing, Eloquent ORM, validasi Form Request, policy otorisasi, cache database.
+- Laravel Fortify `^1.37.2` — autentikasi (login, reset password, 2FA opsional). Registrasi publik dimatikan; akun dibuat via seeder atau modul Staff.
+- MySQL/MariaDB untuk development lokal dan production (test memakai SQLite in-memory via `phpunit.xml`).
+- Intervention Image `^4.3` (driver GD) — semua foto upload dikonversi ke WebP (kualitas 82, lebar maks 1920px, EXIF dibuang) lewat `App\Services\WebpImage`.
+- Laravel Wayfinder (`laravel/wayfinder` + `@laravel/vite-plugin-wayfinder`) — helper route dan form Inertia yang type-safe, digenerate otomatis ke `resources/js/{actions,routes,wayfinder}` (gitignored, jangan edit manual).
+- Pest PHP `^4.7` + `pest-plugin-laravel` — test fitur dan unit (209 passed).
+- Laravel Pint — format standar kode PHP (`composer lint`).
+- Playwright `@1.61` — test end-to-end browser (`tests/*.spec.js`).
 
 ### Frontend
 
-- Inertia React `^3.0.0`.
-- React `^19.2.0`.
-- TypeScript `^5.7.2`.
-- Tailwind CSS `^4.0.0`.
-- shadcn/ui untuk komponen admin.
-- lucide-react untuk ikon aplikasi.
-- Material Symbols Outlined untuk ikon sidebar.
+- Inertia.js React `^3.0.0` + React `^19.2.0` — SPA tanpa API terpisah; server me-render prop, React Compiler aktif via `babel-plugin-react-compiler`.
+- TypeScript `^5.7.2` (`tsc --noEmit` wajib hijau).
+- Tailwind CSS `^4.0.0` via plugin Vite (tanpa `tailwind.config.js`; token di `@theme` dalam `resources/css/app.css`).
+- shadcn/ui (`new-york`, ikon lucide) — khusus panel admin; halaman publik memakai design system sendiri (token `tc-*`).
+- Ikon: `lucide-react` (admin), `@phosphor-icons/react` (publik), Material Symbols (sidebar admin).
+- Vite `^8.0.0` — dev HMR dan production build (`public/build`, gitignored).
+- Prettier (indent 4, quote tunggal, 80 kolom) + ESLint flat config — `npm run format`, `npm run lint`.
 
 ### Tooling
 
-- Vite.
-- Laravel Wayfinder untuk route helper frontend.
-- Composer.
-- NPM.
+- Composer (dependensi PHP) + NPM (dependensi JS — pakai npm, bukan pnpm).
+- GitHub Actions: `lint.yml` (Pint + Prettier + ESLint) dan `tests.yml` (Pest matriks PHP 8.3–8.5).
+- `start-all.sh` / `composer dev` — menjalankan Laravel server + queue listener + Pail + Vite sekaligus untuk development lokal.
 
 ## Struktur Modul Penting
 
@@ -534,3 +537,200 @@ Aplikasi sudah mencakup alur utama toko laptop dan servis:
 6. Admin input transaksi keuangan.
 7. Dashboard dan grafik membaca data operasional.
 8. Customer dapat melihat homepage, detail laptop, dan tracking servis publik.
+
+## Deploy Native ke VPS (Ubuntu 24.04)
+
+Panduan ini untuk menjalankan aplikasi langsung di VPS tanpa Docker: Nginx + PHP-FPM + MySQL + Node untuk build. Asumsi domain sudah mengarah ke IP VPS (mis. `toko.example.com`) dan login sebagai user dengan `sudo`.
+
+### 1. Siapkan server dan dependensi sistem
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git unzip curl software-properties-common
+
+# PHP 8.3 + ekstensi yang dibutuhkan Laravel & konversi WebP (gd)
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt update
+sudo apt install -y php8.3 php8.3-fpm php8.3-cli php8.3-mysqlnd \
+  php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip php8.3-gd \
+  php8.3-bcmath php8.3-intl php8.3-exif php8.3-opcache
+
+# Composer
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+rm composer-setup.php
+
+# Node.js 22 LTS (untuk build frontend) + Nginx + MySQL + Certbot
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs nginx mysql-server certbot python3-certbot-nginx
+node -v  # pastikan v22.x
+```
+
+### 2. Buat database dan user MySQL
+
+Jangan pakai `root` untuk aplikasi. Buat database + user khusus:
+
+```sql
+CREATE DATABASE db_pabalu_laptop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'pabalu'@'localhost' IDENTIFIED BY 'GANTI-DENGAN-PASSWORD-KUAT';
+GRANT ALL PRIVILEGES ON db_pabalu_laptop.* TO 'pabalu'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+### 3. Clone dan install aplikasi
+
+```bash
+sudo mkdir -p /var/www/pabalu-laptop
+sudo chown $USER:$USER /var/www/pabalu-laptop
+cd /var/www/pabalu-laptop
+git clone https://github.com/radacore/pabalu-laptop-bullah.git .
+
+composer install --no-dev --optimize-autoloader
+npm ci
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Konfigurasi `.env` produksi
+
+Wajib diubah dari default (jangan sampai lolos `APP_DEBUG=true` ke publik):
+
+```env
+APP_NAME="Pabalu Laptop"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://toko.example.com
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_pabalu_laptop
+DB_USERNAME=pabalu
+DB_PASSWORD=GANTI-DENGAN-PASSWORD-KUAT
+
+SESSION_DRIVER=database
+SESSION_SECURE_COOKIE=true
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+
+# SMTP asli agar email reset password terkirim
+MAIL_MAILER=smtp
+MAIL_HOST=mail.example.com
+MAIL_PORT=587
+MAIL_USERNAME=noreply@example.com
+MAIL_PASSWORD=GANTI-DENGAN-PASSWORD-SMTP
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="noreply@example.com"
+MAIL_FROM_NAME="Pabalu Laptop"
+```
+
+Lalu finalisasi Laravel:
+
+```bash
+php artisan migrate --force
+php artisan storage:link
+npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+sudo chown -R www-data:www-data storage bootstrap/cache public/build
+sudo chmod -R 775 storage bootstrap/cache
+```
+
+### 5. Seed awal (PENTING — baca dulu)
+
+**JANGAN** menjalankan `migrate --seed` / `db:seed` penuh di produksi: `DatabaseSeeder` ikut menjalankan `BusinessDataSeeder` (15 customer fiktif, 16 laptop, 11 servis, 21 transaksi keuangan palsu) dan `TestimonialSeeder` (review palsu) yang akan mengotori data asli. Jalankan seeder aman saja, satu per satu:
+
+```bash
+php artisan db:seed --class=Database\\Seeders\\MasterDataSeeder --force
+php artisan db:seed --class=Database\\Seeders\\UserSeeder --force
+php artisan db:seed --class=Database\\Seeders\\WebsiteSettingSeeder --force
+```
+
+Seeder membuat dua akun dengan password default `password`:
+
+- `admin@pabalu.com` (admin)
+- `teknisi@pabalu.com` (staff)
+
+**Segera setelah bisa login: ganti password keduanya** (atau buat akun baru via menu Staff lalu nonaktifkan akun seeder). Semua orang yang membaca repo ini tahu password default tersebut.
+
+### 6. Konfigurasi Nginx + HTTPS
+
+`/etc/nginx/sites-available/pabalu-laptop`:
+
+```nginx
+server {
+    listen 80;
+    server_name toko.example.com;
+    root /var/www/pabalu-laptop/public;
+
+    index index.php;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_noreturn on; }
+    location = /robots.txt  { access_log off; log_noreturn on; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+Aktifkan + HTTPS gratis:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/pabalu-laptop /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d toko.example.com
+```
+
+### 7. Queue, scheduler, dan backup
+
+- **Queue**: kode aplikasi saat ini tidak me-dispatch job apa pun, jadi worker queue **tidak wajib**. Kalau nanti ada notifikasi/job, jalankan via Supervisor (`php artisan queue:work --sleep=3 --tries=3`).
+- **Scheduler**: `routes/console.php` belum punya jadwal apa pun, cron scheduler opsional. Yang **wajib** justru backup database — belum ada fitur backup di aplikasi. Minimal cron harian:
+
+```bash
+# /etc/cron.d/pabalu-backup — dump tiap jam 02:00, simpan 7 hari terakhir
+0 2 * * * root /usr/bin/mysqldump -u pabalu -p'GANTI-DENGAN-PASSWORD-KUAT' db_pabalu_laptop | gzip > /var/backups/pabalu/db-$(date +\%F).sql.gz && find /var/backups/pabalu -name 'db-*.sql.gz' -mtime +7 -delete
+```
+
+Simpan salinan backup di luar VPS (rsync/S3) — satu-satunya data toko ada di database ini. Backup juga folder `storage/app/public` (foto WebP upload) karena tidak ikut dump database:
+
+```bash
+0 2 * * * root tar -czf /var/backups/pabalu/files-$(date +\%F).tar.gz -C /var/www/pabalu-laptop/storage/app public && find /var/backups/pabalu -name 'files-*.tar.gz' -mtime +7 -delete
+```
+
+### 8. Update aplikasi berikutnya
+
+```bash
+cd /var/www/pabalu-laptop
+git pull origin main
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+php artisan migrate --force
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+sudo chown -R www-data:www-data storage bootstrap/cache public/build
+```
+
+### 9. Troubleshooting produksi
+
+| Gejala | Penyebab umum | Perintah cek |
+|---|---|---|
+| Halaman putih / 500 | permission `storage` atau cache basi | `sudo chown -R www-data:www-data storage bootstrap/cache`, `php artisan config:clear`, cek `storage/logs/laravel.log` |
+| Aset CSS/JS tidak termuat | belum `npm run build` / manifest hilang | `npm run build`, pastikan `public/build/manifest.json` ada |
+| Foto upload 404 | symlink storage hilang | `php artisan storage:link` |
+| Error `Vite manifest not found` | lupa build setelah pull | `npm ci && npm run build` |
+| Session selalu logout | `APP_URL` http/https tidak konsisten atau cookie | samakan `APP_URL` dengan domain https + `SESSION_SECURE_COOKIE=true` |
+| Migrasi gagal di tengah | DB user tanpa hak DDL | pastikan GRANT ALL pada database aplikasi |
