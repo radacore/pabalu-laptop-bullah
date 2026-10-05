@@ -121,7 +121,7 @@ export default function SparepartCatalog({
             sort: overrides?.sort ?? sort,
         };
         router.get(
-            '/spareparts',
+            '/sparepart',
             {
                 search: next.search || undefined,
                 types: next.types.length > 0 ? next.types : undefined,
@@ -163,7 +163,7 @@ export default function SparepartCatalog({
         setMaxPrice(filter_options.max_price);
         setSort('newest');
         router.get(
-            '/spareparts',
+            '/sparepart',
             {},
             {
                 preserveState: true,
