@@ -121,9 +121,8 @@ export default function Welcome() {
                                     color: '#E4E4E7',
                                 }}
                             >
-                                Setiap unit diperiksa menyeluruh oleh teknisi
-                                sebelum dijual. Datang, cek fisik langsung, bawa
-                                pulang.
+                                {website.tagline ||
+                                    'Setiap unit diperiksa menyeluruh oleh teknisi sebelum dijual. Datang, cek fisik langsung, bawa pulang.'}
                             </p>
                         </div>
                     </div>
