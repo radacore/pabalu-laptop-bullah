@@ -637,22 +637,29 @@ sudo chown -R www-data:www-data storage bootstrap/cache public/build
 sudo chmod -R 775 storage bootstrap/cache
 ```
 
-### 5. Seed awal (PENTING — baca dulu)
+### 5. Seed awal (aman untuk produksi)
 
-**JANGAN** menjalankan `migrate --seed` / `db:seed` penuh di produksi: `DatabaseSeeder` ikut menjalankan `BusinessDataSeeder` (15 customer fiktif, 16 laptop, 11 servis, 21 transaksi keuangan palsu) dan `TestimonialSeeder` (review palsu) yang akan mengotori data asli. Jalankan seeder aman saja, satu per satu:
+`DatabaseSeeder` hanya menjalankan seeder dasar yang aman untuk produksi (`MasterDataSeeder`, `UserSeeder`, `WebsiteSettingSeeder`). Data demo/fiktif (`BusinessDataSeeder`, `TestimonialSeeder`) otomatis dilewati saat `APP_ENV=production`, jadi perintah ini aman:
 
 ```bash
-php artisan db:seed --class=Database\\Seeders\\MasterDataSeeder --force
-php artisan db:seed --class=Database\\Seeders\\UserSeeder --force
-php artisan db:seed --class=Database\\Seeders\\WebsiteSettingSeeder --force
+php artisan migrate --force --seed
 ```
 
-Seeder membuat dua akun dengan password default `password`:
+Password awal akun seeder diatur lewat env `SEED_ADMIN_PASSWORD` (lihat `.env.example`):
 
-- `admin@pabalu.com` (admin)
-- `teknisi@pabalu.com` (staff)
+- Bila `SEED_ADMIN_PASSWORD` diisi → dipakai sebagai password awal `admin@pabalu.com` (admin) dan `teknisi@pabalu.com` (staff).
+- Bila kosong dan `APP_ENV=production` → seeder membuat password acak 16 karakter dan mencetaknya sekali ke console. Catat, lalu ganti setelah login pertama.
+- Bila kosong dan non-production → default `password` (untuk development dan test).
 
-**Segera setelah bisa login: ganti password keduanya** (atau buat akun baru via menu Staff lalu nonaktifkan akun seeder). Semua orang yang membaca repo ini tahu password default tersebut.
+PENTING: karena nilai dibaca saat seeder berjalan, set `SEED_ADMIN_PASSWORD` di `.env` **sebelum** `php artisan config:cache` (langkah 4). Menjalankan seeder ulang tidak me-reset password yang sudah diganti — password hanya di-set saat akun baru dibuat.
+
+Butuh data contoh di server staging/dev? Jalankan eksplisit (jangan di produksi):
+
+```bash
+php artisan db:seed --class=DemoSeeder --force
+```
+
+**Segera setelah bisa login: ganti password kedua akun** (atau buat akun baru via menu Staff lalu nonaktifkan akun seeder). Tanpa `SEED_ADMIN_PASSWORD`, semua orang yang membaca repo ini tahu password default non-production.
 
 ### 6. Konfigurasi Nginx + HTTPS
 
@@ -734,3 +741,100 @@ sudo chown -R www-data:www-data storage bootstrap/cache public/build
 | Error `Vite manifest not found` | lupa build setelah pull | `npm ci && npm run build` |
 | Session selalu logout | `APP_URL` http/https tidak konsisten atau cookie | samakan `APP_URL` dengan domain https + `SESSION_SECURE_COOKIE=true` |
 | Migrasi gagal di tengah | DB user tanpa hak DDL | pastikan GRANT ALL pada database aplikasi |
+
+### 10. Dua aplikasi (dua toko) dalam satu VPS
+
+Satu repo ini bisa menjalankan **dua toko terpisah** (dua domain, data terisolasi) di satu VPS — tanpa mengubah kode. Semua pembeda toko (nama, logo, kontak, katalog) hidup di database masing-masing, bukan di kode. Polanya: dua clone, dua database, dua Nginx block.
+
+```text
+/var/www/
+├── pabalu-a/          # clone 1 → https://toko-a.com (DB db_pabalu_a)
+└── pabalu-b/          # clone 2 → https://toko-b.com (DB db_pabalu_b)
+```
+
+#### 10.1. Database kedua
+
+```sql
+CREATE DATABASE db_pabalu_b CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'pabalu_b'@'localhost' IDENTIFIED BY 'GANTI-DENGAN-PASSWORD-KUAT-B';
+GRANT ALL PRIVILEGES ON db_pabalu_b.* TO 'pabalu_b'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+#### 10.2. Clone dan konfigurasi app kedua
+
+```bash
+sudo mkdir -p /var/www/pabalu-b
+sudo chown $USER:$USER /var/www/pabalu-b
+cd /var/www/pabalu-b
+git clone https://github.com/radacore/pabalu-laptop-bullah.git .
+composer install --no-dev --optimize-autoloader
+npm ci
+cp .env.example .env
+php artisan key:generate   # APP_KEY wajib beda dari app pertama
+```
+
+Isi `.env` app kedua — yang wajib beda dari app pertama:
+
+```env
+APP_URL=https://toko-b.com
+DB_DATABASE=db_pabalu_b
+DB_USERNAME=pabalu_b
+DB_PASSWORD=GANTI-DENGAN-PASSWORD-KUAT-B
+SEED_ADMIN_PASSWORD=GANTI-DENGAN-PASSWORD-ADMIN-B
+```
+
+Lalu finalisasi (urutan penting — seed **sebelum** `config:cache` agar `SEED_ADMIN_PASSWORD` terbaca):
+
+```bash
+php artisan migrate --force --seed
+php artisan storage:link
+npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+sudo chown -R www-data:www-data storage bootstrap/cache public/build
+sudo chmod -R 775 storage bootstrap/cache
+```
+
+#### 10.3. Nginx + HTTPS untuk domain kedua
+
+Duplikat `/etc/nginx/sites-available/pabalu-laptop` menjadi `pabalu-b`, ganti `server_name` dan `root`:
+
+```nginx
+server {
+    listen 80;
+    server_name toko-b.com;
+    root /var/www/pabalu-b/public;
+    # ... isi sama seperti app pertama
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/pabalu-b /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d toko-b.com
+```
+
+#### 10.4. Update manual per app
+
+Setiap ada perubahan kode, ulangi di **tiap** direktori (tidak otomatis menular):
+
+```bash
+cd /var/www/pabalu-a   # lalu ulangi yang sama di /var/www/pabalu-b
+git pull origin main
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+php artisan migrate --force
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+sudo chown -R www-data:www-data storage bootstrap/cache public/build
+sudo systemctl reload php8.3-fpm   # wajib — tanpa ini OPcache masih menyajikan kode lama
+```
+
+#### 10.5. Batasan dan kebutuhan resource
+
+- Session dan cache memakai driver `database` → otomatis terpisah karena databasenya beda. Aman.
+- Jangan lupa `php artisan storage:link` di app kedua, kalau tidak logo/foto 404.
+- Backup cron (langkah 7) harus diduplikat per database dan per folder `storage/app/public`.
+- RAM minimal 2 GB, nyaman 4 GB untuk dua Laravel + MySQL + PHP-FPM dalam satu VPS.
+- `node_modules` boleh dihapus setelah `npm run build` untuk hemat ±200 MB per app (`npm ci` lagi saat build berikutnya).
