@@ -7,7 +7,6 @@ import {
     ArrowRight,
     BatteryFull,
     CaretRight,
-    ChatCircle,
     Cpu,
     HardDrive,
     Laptop as LaptopIcon,
@@ -18,10 +17,8 @@ import type { ComponentType } from 'react';
 import { useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
 import Reveal from '@/components/shared/reveal';
-import { formatShortPrice, formatSoldCount } from '@/lib/format';
-import { mockCommerce, originalPrice } from '@/lib/mock-commerce';
+import { formatShortPrice } from '@/lib/format';
 import type { Laptop as LaptopType, MasterData, WebsiteSetting } from '@/types';
-import { StarGlyph } from './laptop-catalog';
 
 type LaptopPhoto = NonNullable<LaptopType['photos']>[number];
 
@@ -87,10 +84,8 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
     const selectedImage =
         images[Math.min(selectedPhotoIndex, images.length - 1)];
     const spec = laptop.specification;
-    const commerce = mockCommerce(laptop.id);
-    const orig = originalPrice(laptop.selling_price, commerce.discountPct);
     const waText = encodeURIComponent(
-        `Halo, saya tertarik dengan ${laptop.name ?? laptop.sku}. Apakah masih tersedia?`,
+        `Halo, saya tertarik dengan ${laptopDisplayName(laptop)} (${formatShortPrice(laptop.selling_price)}). Apakah masih tersedia? Link: ${typeof window !== 'undefined' ? window.location.href : ''}`,
     );
     const waNumber = (website.whatsapp_number ?? '6281234567890').replace(
         /[^0-9]/g,
@@ -231,26 +226,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                             {laptopDisplayName(laptop)}
                         </h1>
 
-                        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 tc-caption">
-                            <span
-                                className="tc-stars"
-                                role="img"
-                                aria-label={`${commerce.rating.toFixed(1)} dari 5 bintang`}
-                            >
-                                <StarGlyph className="h-4 w-4" />
-                            </span>
-                            <span
-                                className="font-semibold"
-                                style={{ color: 'var(--color-tc-ink)' }}
-                            >
-                                {commerce.rating.toFixed(1)}
-                            </span>
-                            <span>
-                                · Terjual {formatSoldCount(commerce.soldCount)}
-                            </span>
-                            <span>· {commerce.location}</span>
-                        </p>
-
                         <div className="mt-5 flex flex-wrap items-baseline gap-3">
                             <p
                                 className="tc-price"
@@ -258,28 +233,17 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                             >
                                 {formatShortPrice(laptop.selling_price)}
                             </p>
-                            {orig && (
-                                <p
-                                    className="tc-caption"
-                                    style={{
-                                        textDecoration: 'line-through',
-                                        fontSize: '0.9375rem',
-                                    }}
-                                >
-                                    {formatShortPrice(orig)}
-                                </p>
-                            )}
-                            {commerce.discountPct > 0 && (
-                                <span className="tc-badge tc-badge--promo">
-                                    Hemat {commerce.discountPct}%
-                                </span>
-                            )}
                         </div>
 
-                        <p className="mt-5 max-w-xl tc-body">
-                            Unit sudah dicek fungsi utama, dibersihkan, dan siap
-                            dikonsultasikan sebelum pembelian.
-                        </p>
+                        {(laptop.description ?? spec?.other_specifications) ? (
+                            <p
+                                className="mt-5 max-w-xl tc-body"
+                                style={{ whiteSpace: 'pre-line' }}
+                            >
+                                {laptop.description ??
+                                    spec?.other_specifications}
+                            </p>
+                        ) : null}
 
                         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                             <a
@@ -290,15 +254,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                             >
                                 Beli sekarang
                                 <ArrowRight className="h-4 w-4" weight="bold" />
-                            </a>
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="tc-btn tc-btn--secondary flex-1"
-                            >
-                                <ChatCircle className="h-4 w-4" weight="bold" />
-                                Tanya via WhatsApp
                             </a>
                         </div>
 
@@ -460,7 +415,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
 
 function RelatedCard({ laptop }: { laptop: LaptopType }) {
     const image = laptopPhoto(laptop);
-    const commerce = mockCommerce(laptop.id);
 
     return (
         <Link
@@ -497,10 +451,6 @@ function RelatedCard({ laptop }: { laptop: LaptopType }) {
                 </h3>
                 <p className="mt-1 tc-price">
                     {formatShortPrice(laptop.selling_price)}
-                </p>
-                <p className="mt-0.5 tc-caption">
-                    {commerce.rating.toFixed(1)} · Terjual{' '}
-                    {formatSoldCount(commerce.soldCount)}
                 </p>
             </div>
         </Link>
