@@ -4,7 +4,6 @@ import { Link } from '@inertiajs/react';
 import {
     ArrowRight,
     CaretRight,
-    ChatCircle,
     Cpu,
     ShieldCheck,
 } from '@phosphor-icons/react';
@@ -37,7 +36,7 @@ export default function SparepartDetail({
     const [selectedIndex, setSelectedIndex] = useState(0);
     const selected = images[Math.min(selectedIndex, images.length - 1)];
     const waText = encodeURIComponent(
-        `Halo, saya tertarik dengan sparepart ${sparepart.name}. Apakah masih tersedia?`,
+        `Halo, saya tertarik dengan sparepart ${sparepart.name} (${formatShortPrice(sparepart.selling_price)}). Apakah masih tersedia? Link: ${typeof window !== 'undefined' ? window.location.href : ''}`,
     );
     const waNumber = (website.whatsapp_number ?? '6281234567890').replace(
         /[^0-9]/g,
@@ -196,15 +195,6 @@ export default function SparepartDetail({
                             >
                                 Beli sekarang
                                 <ArrowRight className="h-4 w-4" weight="bold" />
-                            </a>
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="tc-btn tc-btn--secondary flex-1"
-                            >
-                                <ChatCircle className="h-4 w-4" weight="bold" />
-                                Tanya via WhatsApp
                             </a>
                         </div>
 
