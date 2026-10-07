@@ -47,10 +47,11 @@ test.describe('Admin Sidebar & Header Integration', () => {
         await firstNavItem.hover();
         await page.waitForTimeout(200);
 
+        const expectedPath = await firstNavItem.getAttribute('href');
         await firstNavItem.click();
         await page.waitForLoadState('networkidle');
 
-        expect(page.url()).toContain('localhost:8000');
+        expect(new URL(page.url()).pathname).toBe(expectedPath);
     });
 
     test('responsive behavior on mobile', async ({ page }) => {

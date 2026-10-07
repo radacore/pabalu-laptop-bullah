@@ -12,7 +12,7 @@ export default defineConfig({
     // menutupi bug (test-nya sendiri deterministik).
     retries: 1,
     use: {
-        baseURL: 'http://localhost:8000',
+        baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:8000',
         screenshot: 'only-on-failure',
         trace: 'retain-on-failure',
         viewport: { width: 1366, height: 768 },
