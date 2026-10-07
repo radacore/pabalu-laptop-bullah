@@ -5,15 +5,10 @@
 import { Link } from '@inertiajs/react';
 import {
     ArrowRight,
-    BatteryFull,
     CaretRight,
-    Cpu,
-    HardDrive,
     Laptop as LaptopIcon,
-    Monitor,
     ShieldCheck,
 } from '@phosphor-icons/react';
-import type { ComponentType } from 'react';
 import { useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
 import Reveal from '@/components/shared/reveal';
@@ -53,19 +48,21 @@ function brandName(brand: MasterData | null | undefined, fallback: string) {
 }
 
 function laptopDisplayName(laptop: LaptopType) {
+    // Publik hanya tampil model/series — tanpa merek.
+    const model = laptop.model?.trim();
+
+    if (model) {
+        return model;
+    }
+
     const name = laptop.name?.trim();
 
     if (name) {
         return name;
     }
 
-    return `${brandName(laptop.brand, '')} ${laptop.model}`.trim();
+    return `${brandName(laptop.brand, '')} ${laptop.model}`.trim() || laptop.sku;
 }
-
-type SpecIcon = ComponentType<{
-    className?: string;
-    weight?: 'duotone' | 'fill' | 'bold' | 'regular';
-}>;
 
 export default function LaptopDetail({ laptop, related, website }: Props) {
     const galleryImages: GalleryImage[] = (laptop.photos ?? [])
@@ -97,18 +94,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
         `Halo, saya tertarik menyewa ${laptop.name ?? laptop.sku}. Apakah masih tersedia?`,
     );
     const sewaLink = `https://wa.me/${waNumber}?text=${sewaText}`;
-
-    const specs: Array<{ icon: SpecIcon; label: string; value: string }> = [
-        { icon: Cpu, label: 'Processor', value: spec?.processor ?? '-' },
-        { icon: HardDrive, label: 'RAM', value: spec?.ram ?? '-' },
-        { icon: HardDrive, label: 'Storage', value: spec?.storage ?? '-' },
-        { icon: Monitor, label: 'Layar', value: spec?.display ?? '-' },
-        {
-            icon: BatteryFull,
-            label: 'Baterai',
-            value: spec?.battery ?? 'Original',
-        },
-    ];
 
     return (
         <PublicPage
@@ -146,7 +131,7 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                         aria-hidden="true"
                     />
                     <span style={{ color: 'var(--color-tc-ink)' }}>
-                        {brandName(laptop.brand, laptop.model)}
+                        {laptop.model}
                     </span>
                 </nav>
             </div>
@@ -297,50 +282,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                 </div>
             </section>
 
-            <Reveal>
-                <section className="border-t border-tc-rule bg-tc-surface">
-                    <div className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                        <h2 className="tc-h2">Spesifikasi</h2>
-                        <dl className="mt-6">
-                            {specs.map((item) => {
-                                const Icon = item.icon;
-
-                                return (
-                                    <div
-                                        key={item.label}
-                                        className="flex items-center gap-3 border-b border-tc-rule py-4"
-                                    >
-                                        <span
-                                            className="shrink-0"
-                                            style={{
-                                                color: 'var(--color-tc-secondary)',
-                                            }}
-                                            aria-hidden="true"
-                                        >
-                                            <Icon
-                                                className="h-4 w-4"
-                                                weight="duotone"
-                                            />
-                                        </span>
-                                        <dt className="tc-caption">
-                                            {item.label}
-                                        </dt>
-                                        <dd
-                                            className="ml-auto text-right tc-body font-medium tabular-nums"
-                                            style={{
-                                                color: 'var(--color-tc-ink)',
-                                            }}
-                                        >
-                                            {item.value}
-                                        </dd>
-                                    </div>
-                                );
-                            })}
-                        </dl>
-                    </div>
-                </section>
-            </Reveal>
-
             {laptop.description || spec?.other_specifications ? (
                 <Reveal>
                     <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
@@ -445,7 +386,6 @@ function RelatedCard({ laptop }: { laptop: LaptopType }) {
                 )}
             </div>
             <div className="flex flex-1 flex-col gap-1 pt-3">
-                <p className="tc-caption">{brandName(laptop.brand, '')}</p>
                 <h3 className="line-clamp-2 min-h-[2.7em] tc-product-title">
                     {laptopDisplayName(laptop)}
                 </h3>
