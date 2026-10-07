@@ -3,16 +3,10 @@
 import { Link } from '@inertiajs/react';
 import {
     ArrowRight,
-    BatteryFull,
     CaretRight,
-    ChatCircle,
-    Cpu,
-    HardDrive,
     Laptop as LaptopIcon,
-    Monitor,
     ShieldCheck,
 } from '@phosphor-icons/react';
-import type { ComponentType } from 'react';
 import { useState } from 'react';
 import { PublicPage } from '@/components/public-layout';
 import Reveal from '@/components/shared/reveal';
@@ -52,19 +46,21 @@ function brandName(brand: MasterData | null | undefined, fallback: string) {
 }
 
 function laptopDisplayName(laptop: LaptopType) {
+    // Publik hanya tampil model/series — tanpa merek.
+    const model = laptop.model?.trim();
+
+    if (model) {
+        return model;
+    }
+
     const name = laptop.name?.trim();
 
     if (name) {
         return name;
     }
 
-    return `${brandName(laptop.brand, '')} ${laptop.model}`.trim();
+    return `${brandName(laptop.brand, '')} ${laptop.model}`.trim() || laptop.sku;
 }
-
-type SpecIcon = ComponentType<{
-    className?: string;
-    weight?: 'duotone' | 'fill' | 'bold' | 'regular';
-}>;
 
 export default function RentalDetail({ laptop, related, website }: Props) {
     const galleryImages: GalleryImage[] = (laptop.photos ?? [])
@@ -83,25 +79,13 @@ export default function RentalDetail({ laptop, related, website }: Props) {
         images[Math.min(selectedPhotoIndex, images.length - 1)];
     const spec = laptop.specification;
     const waText = encodeURIComponent(
-        `Halo, saya tertarik menyewa ${laptopDisplayName(laptop)}. Apakah masih tersedia?`,
+        `Halo, saya tertarik menyewa ${laptopDisplayName(laptop)} (${formatShortPrice(laptop.daily_rate)}/hari). Apakah masih tersedia? Link: ${typeof window !== 'undefined' ? window.location.href : ''}`,
     );
     const waNumber = (website.whatsapp_number ?? '6281234567890').replace(
         /[^0-9]/g,
         '',
     );
     const waLink = `https://wa.me/${waNumber}?text=${waText}`;
-
-    const specs: Array<{ icon: SpecIcon; label: string; value: string }> = [
-        { icon: Cpu, label: 'Processor', value: spec?.processor ?? '-' },
-        { icon: HardDrive, label: 'RAM', value: spec?.ram ?? '-' },
-        { icon: HardDrive, label: 'Storage', value: spec?.storage ?? '-' },
-        { icon: Monitor, label: 'Layar', value: spec?.display ?? '-' },
-        {
-            icon: BatteryFull,
-            label: 'Baterai',
-            value: spec?.battery ?? 'Original',
-        },
-    ];
 
     return (
         <PublicPage
@@ -139,7 +123,7 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                         aria-hidden="true"
                     />
                     <span style={{ color: 'var(--color-tc-ink)' }}>
-                        {brandName(laptop.brand, laptop.model)}
+                        {laptop.model}
                     </span>
                 </nav>
             </div>
@@ -212,9 +196,6 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                     </div>
 
                     <div>
-                        {laptop.brand?.name && (
-                            <p className="tc-eyebrow">{laptop.brand.name}</p>
-                        )}
                         <h1 className="mt-2 tc-h1">
                             {laptopDisplayName(laptop)}
                         </h1>
@@ -236,11 +217,15 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                             </p>
                         </div>
 
-                        <p className="mt-5 max-w-xl tc-body">
-                            Unit sewa terkurasi untuk kebutuhan sementara.
-                            Deposit dikembalikan penuh saat unit kembali dalam
-                            kondisi baik.
-                        </p>
+                        {(laptop.description ?? spec?.other_specifications) ? (
+                            <p
+                                className="mt-5 max-w-xl tc-body"
+                                style={{ whiteSpace: 'pre-line' }}
+                            >
+                                {laptop.description ??
+                                    spec?.other_specifications}
+                            </p>
+                        ) : null}
 
                         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                             <a
@@ -251,15 +236,6 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                             >
                                 Sewa sekarang
                                 <ArrowRight className="h-4 w-4" weight="bold" />
-                            </a>
-                            <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="tc-btn tc-btn--secondary flex-1"
-                            >
-                                <ChatCircle className="h-4 w-4" weight="bold" />
-                                Tanya via WhatsApp
                             </a>
                         </div>
 
@@ -284,50 +260,6 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                     </div>
                 </div>
             </section>
-
-            <Reveal>
-                <section className="border-t border-tc-rule bg-tc-surface">
-                    <div className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                        <h2 className="tc-h2">Spesifikasi</h2>
-                        <dl className="mt-6">
-                            {specs.map((item) => {
-                                const Icon = item.icon;
-
-                                return (
-                                    <div
-                                        key={item.label}
-                                        className="flex items-center gap-3 border-b border-tc-rule py-4"
-                                    >
-                                        <span
-                                            className="shrink-0"
-                                            style={{
-                                                color: 'var(--color-tc-secondary)',
-                                            }}
-                                            aria-hidden="true"
-                                        >
-                                            <Icon
-                                                className="h-4 w-4"
-                                                weight="duotone"
-                                            />
-                                        </span>
-                                        <dt className="tc-caption">
-                                            {item.label}
-                                        </dt>
-                                        <dd
-                                            className="ml-auto text-right tc-body font-medium tabular-nums"
-                                            style={{
-                                                color: 'var(--color-tc-ink)',
-                                            }}
-                                        >
-                                            {item.value}
-                                        </dd>
-                                    </div>
-                                );
-                            })}
-                        </dl>
-                    </div>
-                </section>
-            </Reveal>
 
             {laptop.description || spec?.other_specifications ? (
                 <Reveal>
@@ -431,7 +363,6 @@ function RelatedRentalCard({ laptop }: { laptop: LaptopType }) {
                 )}
             </div>
             <div className="flex flex-1 flex-col gap-1 pt-3">
-                <p className="tc-caption">{brandName(laptop.brand, '')}</p>
                 <h3 className="line-clamp-2 min-h-[2.7em] tc-product-title">
                     {laptopDisplayName(laptop)}
                 </h3>
