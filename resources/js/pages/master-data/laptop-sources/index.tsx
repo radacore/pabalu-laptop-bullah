@@ -67,15 +67,15 @@ export default function LaptopSourceIndex({
     return (
         <>
             <Head title="Sumber Laptop" />
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
                 <HalamanHeader
                     title="Sumber Laptop"
-                    description="Manage laptop sources"
+                    description="Kelola sumber laptop"
                     actions={[
                         <Button key="c" asChild>
                             <Link href="/master-data/laptop-sources/create">
                                 <Plus className="mr-2 size-4" />
-                                Add
+                                Tambah
                             </Link>
                         </Button>,
                     ]}
