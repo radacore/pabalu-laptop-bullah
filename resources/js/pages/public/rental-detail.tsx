@@ -261,26 +261,6 @@ export default function RentalDetail({ laptop, related, website }: Props) {
                 </div>
             </section>
 
-            {laptop.description || spec?.other_specifications ? (
-                <Reveal>
-                    <section className="mx-auto max-w-[880px] px-4 py-10 md:px-6 md:py-14">
-                        <h2 className="tc-h2">Detail unit</h2>
-                        <div className="mt-5 space-y-4 tc-body">
-                            {laptop.description ? (
-                                <p className="whitespace-pre-line">
-                                    {laptop.description}
-                                </p>
-                            ) : null}
-                            {spec?.other_specifications ? (
-                                <p className="whitespace-pre-line">
-                                    {spec.other_specifications}
-                                </p>
-                            ) : null}
-                        </div>
-                    </section>
-                </Reveal>
-            ) : null}
-
             {related.length > 0 ? (
                 <Reveal>
                     <section className="border-t border-tc-rule bg-tc-surface">
