@@ -377,7 +377,7 @@ export function PublicFooter({ website }: { website: WebsiteSetting }) {
                     <TrustBadge
                         Icon={ShieldCheck}
                         title="Garansi toko"
-                        desc="Setiap unit bergaransi resmi"
+                        desc="Setiap unit bergaransi"
                     />
                     <TrustBadge
                         Icon={Truck}

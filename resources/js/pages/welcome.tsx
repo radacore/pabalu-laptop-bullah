@@ -143,7 +143,7 @@ export default function Welcome() {
                                 type="search"
                                 value={heroSearch}
                                 onChange={(e) => setHeroSearch(e.target.value)}
-                                placeholder="Cari MacBook, ThinkPad, ROG…"
+                                placeholder="Cari Laptop anda"
                                 aria-label="Cari laptop"
                             />
                             <button
