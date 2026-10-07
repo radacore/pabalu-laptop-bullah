@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['sale_code', 'customer_id', 'sparepart_id', 'quantity', 'unit_price', 'total_amount', 'payment_method_id', 'sold_at', 'note', 'created_by'])]
+#[Fillable(['sale_code', 'customer_id', 'sparepart_id', 'quantity', 'unit_price', 'unit_cost', 'total_amount', 'payment_method_id', 'sold_at', 'note', 'created_by'])]
 class SparepartSale extends Model
 {
     use HasFactory;
@@ -25,6 +25,7 @@ class SparepartSale extends Model
         return [
             'quantity' => 'integer',
             'unit_price' => 'decimal:2',
+            'unit_cost' => 'decimal:2',
             'total_amount' => 'decimal:2',
             'sold_at' => 'date',
         ];

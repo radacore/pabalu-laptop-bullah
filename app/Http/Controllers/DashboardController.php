@@ -6,7 +6,9 @@ use App\Models\FinancialTransaction;
 use App\Models\Laptop;
 use App\Models\LaptopStatus;
 use App\Models\Service;
+use App\Models\ServicePart;
 use App\Models\ServiceStatus;
+use App\Models\SparepartSale;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,7 +52,38 @@ class DashboardController extends Controller
                 // kembali menjadi __PHP_Incomplete_Class dan dashboard crash
                 // (recent_services.filter is not a function). Test suite
                 // tidak menangkap ini karena memakai array store.
+                $incomeMonth = (float) FinancialTransaction::query()
+                    ->where('type', 'income')
+                    ->whereBetween('transaction_date', [$monthStart->toDateString(), $monthEnd->toDateString()])
+                    ->sum('amount');
+
+                // Estimasi laba kotor = pemasukan − HPP bulan berjalan.
+                // HPP: modal sparepart terjual (snapshot unit_cost) + modal
+                // laptop terjual + modal part servis (dipakai & dijual).
+                // Jasa servis tidak punya HPP (margin penuh).
+                $cogsSpareparts = (float) SparepartSale::query()
+                    ->whereBetween('sold_at', [$monthStart->toDateString(), $monthEnd->toDateString()])
+                    ->selectRaw('COALESCE(SUM(COALESCE(unit_cost, 0) * quantity), 0) as cost')
+                    ->value('cost');
+
+                $cogsLaptops = $terjualId
+                    ? (float) Laptop::query()
+                        ->where('laptop_status_id', $terjualId)
+                        ->whereBetween('sold_at', [$monthStart, $monthEnd])
+                        ->sum('cost_price')
+                    : 0;
+
+                $cogsServiceParts = (float) ServicePart::query()
+                    ->whereHas('service', fn ($q) => $q
+                        ->when($finishedIds !== [], fn ($qq) => $qq->whereIn('service_status_id', $finishedIds))
+                        ->whereBetween('completed_at', [$monthStart, $monthEnd]))
+                    ->selectRaw('COALESCE(SUM(cost_price * quantity), 0) as cost')
+                    ->value('cost');
+
+                $grossProfit = $incomeMonth - $cogsSpareparts - $cogsLaptops - $cogsServiceParts;
+
                 return [
+
                     'stats' => [
                         'total_laptops_available' => $tersediaId
                             ? Laptop::query()->where('laptop_status_id', $tersediaId)->count()
@@ -68,14 +101,12 @@ class DashboardController extends Controller
                             ->when($finishedIds !== [], fn ($q) => $q->whereIn('service_status_id', $finishedIds))
                             ->whereBetween('completed_at', [$monthStart, $monthEnd])
                             ->count(),
-                        'total_income_this_month' => FinancialTransaction::query()
-                            ->where('type', 'income')
-                            ->whereBetween('transaction_date', [$monthStart->toDateString(), $monthEnd->toDateString()])
-                            ->sum('amount'),
+                        'total_income_this_month' => $incomeMonth,
                         'total_expense_this_month' => FinancialTransaction::query()
                             ->where('type', 'expense')
                             ->whereBetween('transaction_date', [$monthStart->toDateString(), $monthEnd->toDateString()])
                             ->sum('amount'),
+                        'total_gross_profit_this_month' => $grossProfit,
                     ],
                     'recent_laptops' => Laptop::query()->with(['source', 'status', 'brand'])->latest()->limit(5)->get()->toArray(),
                     'recent_services' => Service::query()->with(['customer', 'status'])->latest()->limit(5)->get()->toArray(),

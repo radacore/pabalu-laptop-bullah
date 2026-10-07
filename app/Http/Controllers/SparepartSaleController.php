@@ -74,6 +74,8 @@ class SparepartSaleController extends Controller
                 'sparepart_id' => $sparepart->id,
                 'quantity' => $data['quantity'],
                 'unit_price' => $unitPrice,
+                // Kunci modal saat transaksi untuk laba kotor yang akurat.
+                'unit_cost' => $sparepart->cost_price,
                 'total_amount' => $unitPrice * (int) $data['quantity'],
                 'payment_method_id' => $data['payment_method_id'] ?? PaymentMethod::defaultId(),
                 'sold_at' => $data['sold_at'] ?? now(),

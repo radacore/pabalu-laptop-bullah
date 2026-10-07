@@ -28,6 +28,7 @@ interface DashboardPageProps {
         total_completed_services: number;
         total_income_this_month: number;
         total_expense_this_month: number;
+        total_gross_profit_this_month: number;
     };
     recent_laptops: LaptopRecord[];
     recent_services: Service[];
@@ -221,10 +222,12 @@ function KpiHeroCard({
     label,
     value,
     hint,
+    extra,
 }: {
     label: string;
     value: string;
     hint: string;
+    extra?: string;
 }) {
     const isPositive = !value.startsWith('-');
 
@@ -255,6 +258,11 @@ function KpiHeroCard({
                 />
                 <span>{hint}</span>
             </div>
+            {extra && (
+                <p className="relative mt-1.5 text-xs font-semibold text-white/90">
+                    {extra}
+                </p>
+            )}
         </div>
     );
 }
@@ -442,6 +450,7 @@ export default function Dashboard({
                                 stats.total_income_this_month,
                             )}
                             hint={`Pengeluaran ${formatCurrency(stats.total_expense_this_month)}`}
+                            extra={`Estimasi laba kotor ${formatCurrency(stats.total_gross_profit_this_month)}`}
                         />
                     </Reveal>
                 </div>

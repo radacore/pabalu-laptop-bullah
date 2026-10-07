@@ -3,8 +3,12 @@
 use App\Models\Customer;
 use App\Models\Laptop;
 use App\Models\LaptopStatus;
+use App\Models\PaymentMethod;
 use App\Models\Service;
 use App\Models\ServiceStatus;
+use App\Models\Sparepart;
+use App\Models\SparepartSale;
+use App\Models\TransactionCategory;
 use App\Models\User;
 
 test('guests are redirected to the login page', function () {
@@ -99,4 +103,42 @@ test('trend shows real sales and completed services per month', function () {
     expect((int) end($trend['service']))->toBe(1);
     expect(array_sum($trend['sales']))->toBe(1);
     expect(array_sum($trend['service']))->toBe(1);
+});
+
+test('dashboard gross profit equals income minus locked-in costs', function () {
+    $user = User::factory()->create(['role' => 'admin']);
+
+    TransactionCategory::query()->firstOrCreate(
+        ['type' => 'income', 'slug' => 'penjualan-sparepart'],
+        ['name' => 'Penjualan Sparepart', 'is_active' => true, 'sort_order' => 0],
+    );
+    PaymentMethod::query()->firstOrCreate(
+        ['slug' => 'cash'],
+        ['name' => 'Tunai', 'is_active' => true, 'sort_order' => 0],
+    );
+
+    // Skenario nyata: modal 200rb, jual 300rb → laba 100rb.
+    $sparepart = Sparepart::query()->create([
+        'sku' => fake()->unique()->bothify('SPR-########-####'),
+        'name' => 'Baterai Laba',
+        'condition' => 'baru',
+        'stock' => 5,
+        'cost_price' => 200000,
+        'selling_price' => 300000,
+        'is_active' => true,
+        'created_by' => $user->id,
+    ]);
+
+    $this->actingAs($user)->post(route('sparepart-sales.store'), [
+        'sparepart_id' => $sparepart->id,
+        'quantity' => 1,
+    ])->assertSessionHasNoErrors();
+
+    // Modal dikunci saat transaksi.
+    expect((float) SparepartSale::query()->latest()->firstOrFail()->unit_cost)->toBe(200000.0);
+
+    $stats = $this->actingAs($user)->get(route('dashboard'))->viewData('page')['props']['stats'];
+
+    expect((int) $stats['total_income_this_month'])->toBe(300000);
+    expect((int) $stats['total_gross_profit_this_month'])->toBe(100000);
 });
