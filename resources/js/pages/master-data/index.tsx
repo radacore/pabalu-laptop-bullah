@@ -15,6 +15,7 @@ import {
 } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
 import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
 
 interface MasterDataItem {
     key: string;
@@ -155,7 +156,12 @@ function MasterDataIndex({ groups, totals }: MasterDataIndexProps) {
 }
 
 MasterDataIndex.layout = (page: ReactNode) => (
-    <AppLayout breadcrumbs={[{ title: 'Data Master', href: '/master-data' }]}>
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Data Master', href: '/master-data' },
+        ]}
+    >
         {page}
     </AppLayout>
 );
