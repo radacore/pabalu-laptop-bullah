@@ -14,6 +14,7 @@ use App\Models\ServiceStatus;
 use App\Models\Sparepart;
 use App\Models\SparepartType;
 use App\Models\TransactionCategory;
+use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -138,7 +139,9 @@ class ServiceController extends Controller
      */
     public function trackLanding(): Response
     {
-        return Inertia::render('services/tracking');
+        return Inertia::render('services/tracking', [
+            'seo' => Seo::serviceTrackLanding(),
+        ]);
     }
 
     /**
@@ -164,12 +167,14 @@ class ServiceController extends Controller
             return Inertia::render('services/tracking', [
                 'error' => 'Tiket servis dengan kode tersebut tidak ditemukan. Periksa kembali ID Anda.',
                 'tracking_code' => $trackingCode,
+                'seo' => Seo::serviceTrackLanding(),
             ]);
         }
 
         return Inertia::render('services/tracking', [
             'service' => (new PublicServiceTrackingResource($service))->resolve(),
             'tracking_code' => $trackingCode,
+            'seo' => Seo::trackingResult('Tiket '.$service->service_code),
         ]);
     }
 

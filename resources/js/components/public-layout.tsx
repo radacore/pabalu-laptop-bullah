@@ -684,6 +684,10 @@ export function FloatingWa({ website }: { website: WebsiteSetting }) {
 
 /* ─── Page wrapper ─── */
 
+type PageSeo = {
+    title?: string;
+};
+
 export function PublicPage({
     website,
     title,
@@ -697,7 +701,11 @@ export function PublicPage({
 }) {
     // Key per URL agar animasi .tc-page-enter terpicu ulang di setiap
     // navigasi (tanpa ini React hanya reconcile dan animasi jalan sekali).
-    const { url } = usePage();
+    // seo.title (prop server dari App\Support\Seo) dipakai untuk <Head>
+    // agar document.title hasil hidrasi sama persis dengan <title> yang
+    // di-render blade — tidak ada flicker judul.
+    const { url, props } = usePage<{ seo?: PageSeo }>();
+    const headTitle = props.seo?.title ?? title;
 
     return (
         <>
@@ -706,7 +714,7 @@ export function PublicPage({
                 className="min-h-screen overflow-x-clip bg-tc-paper text-tc-ink"
                 style={{ fontFamily: 'var(--font-tc-body)' }}
             >
-                <Head title={title} />
+                <Head title={headTitle} />
                 <main key={url} className="tc-page-enter">
                     {children}
                 </main>

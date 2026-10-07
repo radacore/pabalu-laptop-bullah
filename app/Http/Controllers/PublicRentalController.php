@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Laptop;
 use App\Models\LaptopStatus;
 use App\Models\Rental;
+use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -83,6 +84,7 @@ class PublicRentalController extends Controller
                 'sort' => $request->string('sort')->toString() ?: 'newest',
             ],
             'filter_options' => $filterOptions,
+            'seo' => Seo::rentalCatalog(),
         ]);
     }
 
@@ -126,6 +128,7 @@ class PublicRentalController extends Controller
         return Inertia::render('public/rental-detail', [
             'laptop' => $laptop,
             'related' => $related,
+            'seo' => Seo::rentalDetail($laptop),
         ]);
     }
 
@@ -134,7 +137,9 @@ class PublicRentalController extends Controller
      */
     public function trackLanding(): Response
     {
-        return Inertia::render('rentals/tracking');
+        return Inertia::render('rentals/tracking', [
+            'seo' => Seo::rentalTrackLanding(),
+        ]);
     }
 
     /**
@@ -151,12 +156,14 @@ class PublicRentalController extends Controller
             return Inertia::render('rentals/tracking', [
                 'error' => 'Tiket sewa dengan kode tersebut tidak ditemukan. Periksa kembali kode Anda.',
                 'tracking_code' => $trackingCode,
+                'seo' => Seo::rentalTrackLanding(),
             ]);
         }
 
         return Inertia::render('rentals/tracking', [
             'rental' => (new PublicRentalTrackingResource($rental))->resolve(),
             'tracking_code' => $trackingCode,
+            'seo' => Seo::trackingResult('Sewa '.$rental->rental_code),
         ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Laptop;
 use App\Models\LaptopSpecification;
 use App\Models\LaptopStatus;
 use App\Models\Testimonial;
+use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -50,6 +51,7 @@ class HomeController extends Controller
             'laptops' => $laptops,
             'brands' => $brands,
             'testimonials' => $testimonials,
+            'seo' => Seo::home(),
         ]);
     }
 
@@ -130,6 +132,7 @@ class HomeController extends Controller
                 'sort' => $request->string('sort')->toString() ?: 'newest',
             ],
             'filter_options' => $filterOptions,
+            'seo' => Seo::laptopCatalog(),
         ]);
     }
 
@@ -177,6 +180,7 @@ class HomeController extends Controller
         return Inertia::render('public/laptop-detail', [
             'laptop' => $laptop,
             'related' => $related,
+            'seo' => Seo::laptopDetail($laptop),
         ]);
     }
 }

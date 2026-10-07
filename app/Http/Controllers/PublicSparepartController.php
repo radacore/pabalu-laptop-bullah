@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sparepart;
 use App\Models\SparepartType;
+use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -82,6 +83,7 @@ class PublicSparepartController extends Controller
                 'sort' => $request->string('sort')->toString() ?: 'newest',
             ],
             'filter_options' => $filterOptions,
+            'seo' => Seo::sparepartCatalog(),
         ]);
     }
 
@@ -116,6 +118,7 @@ class PublicSparepartController extends Controller
         return Inertia::render('public/sparepart-detail', [
             'sparepart' => $model,
             'related' => $related,
+            'seo' => Seo::sparepartDetail($model),
         ]);
     }
 }

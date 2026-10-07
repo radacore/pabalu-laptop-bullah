@@ -599,6 +599,9 @@ APP_NAME="Pabalu Laptop"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://toko.example.com
+APP_LOCALE=id
+APP_FALLBACK_LOCALE=id
+APP_FAKER_LOCALE=id_ID
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -622,6 +625,10 @@ MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="noreply@example.com"
 MAIL_FROM_NAME="Pabalu Laptop"
 ```
+
+`APP_LOCALE=id` wajib karena seluruh konten berbahasa Indonesia — nilainya
+di-render sebagai `<html lang="id">` dan `og:locale`, sinyal bahasa yang
+dibaca Google saat mengindeks halaman publik.
 
 Lalu finalisasi Laravel:
 
