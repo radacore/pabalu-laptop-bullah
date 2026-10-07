@@ -34,6 +34,9 @@ yarn-error.log
 
 # Defensive rules for files that should never be committed
 /*.png
+/*.docx
+/*.webp
+/screenshots
 /build_output.txt
 /test-*.js
 /verify_login.js
