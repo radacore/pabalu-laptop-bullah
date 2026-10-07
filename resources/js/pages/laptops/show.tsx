@@ -1,38 +1,81 @@
-import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Edit, ImageIcon } from 'lucide-react';
+import { Head, Link, router } from '@inertiajs/react';
+import { ArrowLeft, Edit, ImageIcon, ImagePlus, Trash2 } from 'lucide-react';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+import DeleteDialog from '@/components/shared/delete-dialog';
+import InputError from '@/components/shared/input-error';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { formatCurrency } from '@/lib/format';
 import { dashboard } from '@/routes';
-import type { Laptop } from '@/types';
+import type { Laptop, LaptopPhoto } from '@/types';
 
 interface LaptopShowHalamanProps {
     laptop: Laptop;
 }
 
-function detailValue(value: string | number | null | undefined) {
-    return value === null || value === undefined || value === '' ? '-' : value;
-}
-
 function LaptopShow({ laptop }: LaptopShowHalamanProps) {
-    const specification = laptop.specification;
+    const [photoFile, setPhotoFile] = useState<File | null>(null);
+    const [photoCaption, setPhotoCaption] = useState('');
+    const [photoErrors, setPhotoErrors] = useState<{
+        photo?: string;
+        caption?: string;
+    }>({});
+    const [photoToDelete, setPhotoToDelete] = useState<LaptopPhoto | null>(
+        null,
+    );
     const margin =
         Number(laptop.selling_price ?? 0) -
         Number(laptop.cost_price ?? 0) -
         Number(laptop.repair_cost ?? 0);
-    const specificationRows = [
-        ['Prosesor', specification?.processor],
-        ['RAM', specification?.ram],
-        ['Storage', specification?.storage],
-        ['GPU/Grafis', specification?.graphics],
-        ['Layar', specification?.display],
-        ['Sistem Operasi', specification?.operating_system],
-        ['Baterai', specification?.battery],
-        ['Kondisi', specification?.condition],
-    ];
     const photos = laptop.photos ?? [];
+
+    function submitPhoto(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        if (!photoFile) {
+            return;
+        }
+
+        router.post(
+            `/laptops/${laptop.id}/photos`,
+            { photo: photoFile, caption: photoCaption || undefined },
+            {
+                forceFormData: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setPhotoFile(null);
+                    setPhotoCaption('');
+                    setPhotoErrors({});
+                },
+                onError: (errors) =>
+                    setPhotoErrors({
+                        photo: errors.photo,
+                        caption: errors.caption,
+                    }),
+            },
+        );
+    }
+
+    function confirmDeletePhoto() {
+        if (!photoToDelete) {
+            return;
+        }
+
+        router.delete(
+            `/laptops/${laptop.id}/photos/${photoToDelete.id}`,
+            {
+                preserveScroll: true,
+                onFinish: () => {
+                    setPhotoToDelete(null);
+                },
+            },
+        );
+    }
 
     return (
         <>
@@ -70,30 +113,7 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                     </div>
                 </header>
 
-                <section className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-                    <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
-                        <CardHeader>
-                            <CardTitle>Spesifikasi</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <dl className="divide-y rounded-lg border">
-                                {specificationRows.map(([label, value]) => (
-                                    <div
-                                        key={label}
-                                        className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4"
-                                    >
-                                        <dt className="text-muted-foreground text-sm font-medium">
-                                            {label}
-                                        </dt>
-                                        <dd className="text-sm sm:col-span-2">
-                                            {detailValue(value)}
-                                        </dd>
-                                    </div>
-                                ))}
-                            </dl>
-                        </CardContent>
-                    </Card>
-
+                <section className="grid gap-4">
                     <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
                         <CardHeader>
                             <CardTitle>Harga & Status</CardTitle>
@@ -153,45 +173,102 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                     </Card>
                 </section>
 
-                {photos.length > 0 && (
-                    <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
-                        <CardHeader>
-                            <CardTitle>Foto</CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                            {photos.map((photo) => (
-                                <figure
-                                    key={photo.id}
-                                    className="bg-muted/30 overflow-hidden rounded-xl border"
-                                >
-                                    <img
-                                        src={photo.file_path}
-                                        alt={
-                                            photo.caption ??
-                                            laptop.name ??
-                                            undefined
-                                        }
-                                        className="aspect-video w-full object-cover"
-                                    />
-                                    {photo.caption && (
-                                        <figcaption className="text-muted-foreground px-3 py-2 text-sm">
-                                            {photo.caption}
-                                        </figcaption>
-                                    )}
-                                </figure>
-                            ))}
-                        </CardContent>
-                    </Card>
-                )}
+                <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
+                    <CardHeader>
+                        <CardTitle>Foto Laptop</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid gap-4">
+                        {photos.length === 0 ? (
+                            <p className="text-muted-foreground flex items-center gap-3 text-sm">
+                                <ImageIcon className="size-5" />
+                                Belum ada foto untuk laptop ini.
+                            </p>
+                        ) : (
+                            <div className="grid grid-cols-3 gap-3">
+                                {photos.map((photo) => (
+                                    <div
+                                        key={photo.id}
+                                        className="group relative overflow-hidden rounded-lg border"
+                                    >
+                                        <img
+                                            src={`/storage/${photo.file_path}`}
+                                            alt={
+                                                photo.caption ??
+                                                laptop.model
+                                            }
+                                            className="aspect-square w-full object-cover"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setPhotoToDelete(photo)
+                                            }
+                                            className="absolute top-1 right-1 hidden rounded-md bg-red-600 p-1.5 text-white group-hover:block"
+                                            aria-label="Hapus foto"
+                                        >
+                                            <Trash2 className="size-3.5" />
+                                        </button>
+                                        {photo.caption && (
+                                            <p className="text-muted-foreground px-2 py-1.5 text-xs">
+                                                {photo.caption}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <form
+                            onSubmit={submitPhoto}
+                            className="grid gap-3 rounded-lg border border-dashed p-4"
+                        >
+                            <div className="grid gap-2">
+                                <Label>Upload foto</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                                    onChange={(e) => {
+                                        setPhotoFile(
+                                            e.target.files?.[0] ?? null,
+                                        );
+                                        setPhotoErrors({});
+                                    }}
+                                />
+                                <InputError message={photoErrors.photo} />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Caption (opsional)</Label>
+                                <Input
+                                    value={photoCaption}
+                                    onChange={(e) =>
+                                        setPhotoCaption(e.target.value)
+                                    }
+                                    placeholder="Tampak depan"
+                                />
+                                <InputError message={photoErrors.caption} />
+                            </div>
+                            <Button
+                                type="submit"
+                                variant="outline"
+                                disabled={!photoFile}
+                            >
+                                <ImagePlus className="size-4" />
+                                Unggah Foto
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
 
-                {photos.length === 0 && (
-                    <Card className="border-sidebar-border/70 dark:border-sidebar-border border-dashed shadow-sm">
-                        <CardContent className="text-muted-foreground flex items-center gap-3 p-6 text-sm">
-                            <ImageIcon className="size-5" />
-                            Belum ada foto untuk laptop ini.
-                        </CardContent>
-                    </Card>
-                )}
+                <DeleteDialog
+                    open={photoToDelete !== null}
+                    onOpenChange={(open) => {
+                        if (!open) {
+                            setPhotoToDelete(null);
+                        }
+                    }}
+                    onKonfirmasi={confirmDeletePhoto}
+                    title="Hapus foto?"
+                    description="Foto akan dihapus permanen dari laptop ini."
+                />
 
                 {(laptop.description || laptop.internal_note) && (
                     <section className="grid gap-4 lg:grid-cols-2">
