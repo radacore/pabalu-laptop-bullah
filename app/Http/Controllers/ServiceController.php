@@ -440,13 +440,16 @@ class ServiceController extends Controller
      * Kategori expense 'pembelian-sparepart' — slug 'sparepart' hanya ada
      * sebagai income di seeder, jadi jangan dipakai di sini. Bila cost
      * dikosongkan (0), expense yang telanjur ada dihapus agar tidak fiktif.
+     * Part yang terhubung stok inventori TIDAK dibuatkan expense: modalnya
+     * sudah tercatat saat pembelian stok (anti double-expense). Bila part
+     * yang tadinya manual lalu dihubungkan ke stok, expense lama dibersihkan.
      * Morph ke ServicePart supaya ter-cleanup otomatis saat part dihapus.
      */
     private function syncPartPurchaseExpense(Service $service, ServicePart $part, float $cost, int $quantity): void
     {
         $code = 'EXP-'.$service->service_code.'-'.$part->id;
 
-        if ($cost <= 0) {
+        if ($part->sparepart_id || $cost <= 0) {
             FinancialTransaction::query()
                 ->where('transaction_code', $code)
                 ->forceDelete();

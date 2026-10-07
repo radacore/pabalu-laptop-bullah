@@ -166,7 +166,8 @@ test('deleting a service restores inventory stock and cleans its journals', func
         'created_by' => $staff->id,
     ]);
 
-    // Part dari inventori + cost → stok berkurang 2, expense tercatat.
+    // Part dari inventori + cost → stok berkurang 2, TANPA expense ganda
+    // (modal sudah tercatat saat pembelian stok).
     $this->actingAs($admin)->post(route('services.parts.store', $service), [
         'part_name' => $sparepart->name,
         'quantity' => 2,
@@ -179,9 +180,8 @@ test('deleting a service restores inventory stock and cleans its journals', func
 
     $part = $service->parts()->latest()->firstOrFail();
 
-    $this->assertDatabaseHas('financial_transactions', [
+    $this->assertDatabaseMissing('financial_transactions', [
         'transaction_code' => 'EXP-'.$service->service_code.'-'.$part->id,
-        'amount' => 100000,
     ]);
 
     $this->actingAs($admin)
@@ -190,6 +190,37 @@ test('deleting a service restores inventory stock and cleans its journals', func
 
     expect($sparepart->fresh()->stock)->toBe(10);
     $this->assertSoftDeleted('services', ['id' => $service->id]);
+    $this->assertDatabaseMissing('financial_transactions', [
+        'transaction_code' => 'EXP-'.$service->service_code.'-'.$part->id,
+    ]);
+});
+
+test('stock-linked part via service form creates no purchase expense', function () {
+    wave2IncomeDeps();
+    $admin = User::factory()->create(['role' => 'admin']);
+    $sparepart = wave2Sparepart($admin->id);
+    $service = wave2Service($admin->id);
+
+    // Part manual dulu (ada expense), lalu dihubungkan ke stok
+    // (expense lama harus dibersihkan, bukan ditumpuk).
+    $this->actingAs($admin)
+        ->put(route('services.update', $service), [
+            'service_status_id' => $service->service_status_id,
+            'parts' => [[
+                'kind' => 'used',
+                'part_name' => $sparepart->name,
+                'quantity' => 1,
+                'cost_price' => 50000,
+                'selling_price' => 200000,
+                'sparepart_id' => $sparepart->id,
+            ]],
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($sparepart->fresh()->stock)->toBe(9);
+
+    $part = $service->parts()->latest()->firstOrFail();
+
     $this->assertDatabaseMissing('financial_transactions', [
         'transaction_code' => 'EXP-'.$service->service_code.'-'.$part->id,
     ]);

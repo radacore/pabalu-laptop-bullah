@@ -68,7 +68,9 @@ class ServicePartController extends Controller
             $costPrice = (float) ($validated['cost_price'] ?? 0);
             $quantity = (int) ($validated['quantity'] ?? 1);
 
-            if ($costPrice > 0) {
+            // Part terhubung stok tidak dibuatkan expense: modalnya sudah
+            // tercatat saat pembelian stok (anti double-expense).
+            if ($costPrice > 0 && ! $sparepartId) {
                 // Kategori expense pembelian sparepart — slug 'pembelian-sparepart'.
                 // (Slug 'sparepart' hanya ada sebagai income di seeder, jadi
                 // query expense di sini dulu selalu skip diam-diam.)
