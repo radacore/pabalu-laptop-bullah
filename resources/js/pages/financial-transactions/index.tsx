@@ -102,41 +102,6 @@ function buildPeriodLabel(filters: Props['filters']) {
     return 'Semua Periode';
 }
 
-function exportVisibleTransactions(transactions: FinancialTransaction[]) {
-    const headers = [
-        'Tanggal',
-        'Kode',
-        'Deskripsi',
-        'Kategori',
-        'Metode Pembayaran',
-        'Tipe',
-        'Jumlah',
-    ];
-    const rows = transactions.map((t) => [
-        t.transaction_date,
-        t.transaction_code,
-        t.description ?? '',
-        t.category?.name ?? '',
-        t.payment_method?.name ?? '',
-        t.type,
-        String(Number(t.amount ?? 0)),
-    ]);
-    const csv = [headers, ...rows]
-        .map((row) =>
-            row
-                .map((cell) => `"${String(cell).replaceAll('"', '""')}"`)
-                .join(','),
-        )
-        .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'financial-transactions.csv';
-    link.click();
-    URL.revokeObjectURL(url);
-}
-
 function RelatedSourceBadge({
     transaction,
 }: {
@@ -517,6 +482,77 @@ const FinancialTransactionsIndex: HalamanComponent = ({
         router.get('/financial-transactions');
     }
 
+    function toISODate(date: Date): string {
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+
+        return `${date.getFullYear()}-${m}-${d}`;
+    }
+
+    // Preset cepat: Senin–Minggu berjalan untuk "Minggu ini".
+    function applyPreset(kind: 'today' | 'week' | 'month') {
+        const now = new Date();
+        let from = new Date(now);
+
+        if (kind === 'week') {
+            from.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+        } else if (kind === 'month') {
+            from = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+
+        const fromDate = toISODate(from);
+        const toDate = toISODate(now);
+
+        filterForm.setData({
+            ...filterForm.data,
+            from_date: fromDate,
+            to_date: toDate,
+        });
+        router.get(
+            '/financial-transactions',
+            {
+                search: filterForm.data.search || undefined,
+                type: filterForm.data.type || undefined,
+                transaction_category_id:
+                    filterForm.data.transaction_category_id || undefined,
+                from_date: fromDate,
+                to_date: toDate,
+            },
+            { preserveState: true, replace: true },
+        );
+    }
+
+    // Ekspor via backend agar SELURUH hasil filter terunduh
+    // (bukan hanya 10 baris halaman aktif).
+    function exportCsv() {
+        const params = new URLSearchParams();
+
+        if (filters.search) {
+            params.set('search', filters.search);
+        }
+
+        if (filters.type) {
+            params.set('type', filters.type);
+        }
+
+        if (filters.transaction_category_id) {
+            params.set(
+                'transaction_category_id',
+                filters.transaction_category_id,
+            );
+        }
+
+        if (filters.from_date) {
+            params.set('from_date', filters.from_date);
+        }
+
+        if (filters.to_date) {
+            params.set('to_date', filters.to_date);
+        }
+
+        window.location.href = `/financial-transactions/export/csv?${params.toString()}`;
+    }
+
     return (
         <>
             <Head title="Keuangan" />
@@ -537,9 +573,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() =>
-                                exportVisibleTransactions(transactions.data)
-                            }
+                            onClick={exportCsv}
                         >
                             <Download className="size-3.5" />
                             Ekspor CSV
@@ -732,6 +766,24 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                             <label className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
                                 Periode
                             </label>
+                            <div className="flex gap-1.5">
+                                {(
+                                    [
+                                        ['today', 'Hari ini'],
+                                        ['week', 'Minggu ini'],
+                                        ['month', 'Bulan ini'],
+                                    ] as const
+                                ).map(([kind, label]) => (
+                                    <button
+                                        key={kind}
+                                        type="button"
+                                        onClick={() => applyPreset(kind)}
+                                        className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand"
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
                             <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center">
                                 <input
                                     type="date"

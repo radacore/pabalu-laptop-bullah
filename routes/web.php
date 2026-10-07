@@ -113,7 +113,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Staff Management (akun tim internal admin/staff)
     Route::resource('staff', StaffController::class)->only(['index', 'create', 'store', 'edit', 'update']);
 
-    // Financial Transactions
+    // Financial Transactions — export CSV didaftarkan SEBELUM resource
+    // agar tidak ditangkap route show.
+    Route::get('financial-transactions/export/csv', [FinancialTransactionController::class, 'export'])->name('financial-transactions.export');
     Route::resource('financial-transactions', FinancialTransactionController::class);
 
     // Website Settings (singleton)

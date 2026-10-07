@@ -271,3 +271,49 @@ test('auto transaction cannot be updated or deleted manually', function () {
         'amount' => 500000,
     ]);
 });
+
+test('export downloads all filtered rows as csv ignoring pagination', function () {
+    $user = User::factory()->create(['role' => 'admin']);
+
+    for ($i = 0; $i < 12; $i++) {
+        createFinancialTransactionRecord(['transaction_date' => now()->subDays(5)->toDateString()]);
+    }
+
+    // Satu di luar range default 90 hari.
+    createFinancialTransactionRecord(['transaction_date' => now()->subDays(200)->toDateString()]);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('financial-transactions.export'));
+
+    $response->assertOk();
+    expect($response->headers->get('Content-Type'))->toContain('text/csv');
+
+    $lines = array_values(array_filter(explode("\n", trim($response->streamedContent()))));
+
+    // Header + 12 baris (tanpa paginasi, tanpa yang di luar range).
+    expect($lines)->toHaveCount(13);
+    expect($lines[0])->toContain('Tanggal');
+    expect($lines[0])->toContain('Metode Pembayaran');
+});
+
+test('export respects custom date range', function () {
+    $user = User::factory()->create(['role' => 'admin']);
+
+    createFinancialTransactionRecord(['transaction_date' => '2026-09-10']);
+    createFinancialTransactionRecord(['transaction_date' => '2026-09-20']);
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('financial-transactions.export', [
+            'from_date' => '2026-09-01',
+            'to_date' => '2026-09-15',
+        ]));
+
+    $response->assertOk();
+
+    $lines = array_values(array_filter(explode("\n", trim($response->streamedContent()))));
+
+    expect($lines)->toHaveCount(2);
+    expect($response->headers->get('Content-Disposition'))->toContain('transaksi-2026-09-01_2026-09-15.csv');
+});

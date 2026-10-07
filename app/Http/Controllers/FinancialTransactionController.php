@@ -8,11 +8,13 @@ use App\Models\FinancialTransaction;
 use App\Models\PaymentMethod;
 use App\Models\TransactionCategory;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FinancialTransactionController extends Controller
 {
@@ -21,35 +23,7 @@ class FinancialTransactionController extends Controller
      */
     public function index(Request $request): Response
     {
-        // Kalau user tidak set range tanggal, default ke 90 hari terakhir.
-        // Ini mencegah query mengembalikan ratusan ribu row saat volume tinggi.
-        // Menerima alias from_date/to_date dari frontend lama + from/to.
-        $from = $request->filled('from_date')
-            ? $request->date('from_date')
-            : ($request->filled('from') ? $request->date('from') : now()->subDays(90));
-        $to = $request->filled('to_date')
-            ? $request->date('to_date')
-            : ($request->filled('to') ? $request->date('to') : now());
-
-        // Normalisasi ke string tanggal untuk whereBetween — whereDate()
-        // membungkus kolom dengan DATE() sehingga index composite
-        // (type, transaction_date) tidak kepakai. whereBetween menjaga
-        // sargability karena kolom date dibanding langsung dengan string.
-        $fromDate = $from instanceof CarbonInterface ? $from->toDateString() : (string) $from;
-        $toDate = $to instanceof CarbonInterface ? $to->toDateString() : (string) $to;
-
-        $baseQuery = FinancialTransaction::query()
-            ->when($request->string('search')->isNotEmpty(), function ($query) use ($request) {
-                $search = $request->string('search')->toString();
-
-                $query->where(function ($query) use ($search) {
-                    $query->where('transaction_code', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
-            })
-            ->when($request->filled('type'), fn ($query) => $query->where('type', $request->string('type')->toString()))
-            ->when($request->filled('transaction_category_id'), fn ($query) => $query->where('transaction_category_id', $request->integer('transaction_category_id')))
-            ->whereBetween('transaction_date', [$fromDate, $toDate]);
+        [$baseQuery, $fromDate, $toDate] = $this->filteredQuery($request);
 
         // SATU query agregat untuk income+expense (bukan 2× SUM) — plus
         // chart GROUP BY day,type. Total 2 query ringan, bukan 3.
@@ -95,6 +69,90 @@ class FinancialTransactionController extends Controller
             'categories' => TransactionCategory::query()->orderBy('name')->get(),
             'payment_methods' => PaymentMethod::query()->orderBy('name')->get(),
         ]);
+    }
+
+    /**
+     * Ekspor CSV seluruh transaksi sesuai filter aktif (tanpa paginasi).
+     * Streaming + chunk agar hemat memori saat data banyak.
+     */
+    public function export(Request $request): StreamedResponse
+    {
+        [$query, $fromDate, $toDate] = $this->filteredQuery($request);
+
+        $filename = "transaksi-{$fromDate}_{$toDate}.csv";
+
+        return response()->streamDownload(function () use ($query): void {
+            $out = fopen('php://output', 'w');
+
+            // BOM agar Excel Windows membuka UTF-8 dengan benar.
+            fwrite($out, "\xEF\xBB\xBF");
+            fputcsv($out, ['Tanggal', 'Kode', 'Deskripsi', 'Kategori', 'Metode Pembayaran', 'Tipe', 'Jumlah']);
+
+            $query
+                ->with(['category:id,name', 'paymentMethod:id,name'])
+                ->orderBy('transaction_date')
+                ->orderBy('id')
+                ->chunk(500, function ($rows) use ($out): void {
+                    foreach ($rows as $row) {
+                        fputcsv($out, [
+                            $row->transaction_date,
+                            $row->transaction_code,
+                            $row->description ?? '',
+                            $row->category->name ?? '',
+                            $row->paymentMethod->name ?? '',
+                            $row->type === 'income' ? 'Pemasukan' : 'Pengeluaran',
+                            (float) $row->amount,
+                        ]);
+                    }
+                });
+
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv; charset=utf-8']);
+    }
+
+    /**
+     * Query filter bersama untuk index + export agar tidak divergen.
+     *
+     * @return array{0: Builder, 1: string, 2: string}
+     */
+    private function filteredQuery(Request $request): array
+    {
+        // Kalau user tidak set range tanggal, default ke 90 hari terakhir.
+        // Ini mencegah query mengembalikan ratusan ribu row saat volume tinggi.
+        // Menerima alias from_date/to_date dari frontend lama + from/to.
+        $from = $request->filled('from_date')
+            ? $request->date('from_date')
+            : ($request->filled('from') ? $request->date('from') : now()->subDays(90));
+        $to = $request->filled('to_date')
+            ? $request->date('to_date')
+            : ($request->filled('to') ? $request->date('to') : now());
+
+        // Normalisasi ke string tanggal untuk whereBetween — whereDate()
+        // membungkus kolom dengan DATE() sehingga index composite
+        // (type, transaction_date) tidak kepakai. whereBetween menjaga
+        // sargability karena kolom date dibanding langsung dengan string.
+        $fromDate = $from instanceof CarbonInterface ? $from->toDateString() : (string) $from;
+        $toDate = $to instanceof CarbonInterface ? $to->toDateString() : (string) $to;
+
+        // Toleran: tanggal awal > akhir → tukar otomatis.
+        if ($fromDate > $toDate) {
+            [$fromDate, $toDate] = [$toDate, $fromDate];
+        }
+
+        $query = FinancialTransaction::query()
+            ->when($request->string('search')->isNotEmpty(), function ($query) use ($request) {
+                $search = $request->string('search')->toString();
+
+                $query->where(function ($query) use ($search) {
+                    $query->where('transaction_code', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->filled('type'), fn ($query) => $query->where('type', $request->string('type')->toString()))
+            ->when($request->filled('transaction_category_id'), fn ($query) => $query->where('transaction_category_id', $request->integer('transaction_category_id')))
+            ->whereBetween('transaction_date', [$fromDate, $toDate]);
+
+        return [$query, $fromDate, $toDate];
     }
 
     /**
