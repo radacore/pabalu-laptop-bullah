@@ -1,12 +1,15 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import HalamanHeader from '@/components/layout/page-header';
 import DeleteDialog from '@/components/shared/delete-dialog';
 import Reveal from '@/components/shared/reveal';
 import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
 
 interface ItemData {
     id: number;
@@ -236,3 +239,15 @@ export default function LaptopSourceIndex({
         </>
     );
 }
+
+LaptopSourceIndex.layout = (page: ReactNode) => (
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Data Master', href: '/master-data' },
+            { title: 'Sumber Laptop', href: '/master-data/laptop-sources' },
+        ]}
+    >
+        {page}
+    </AppLayout>
+);
