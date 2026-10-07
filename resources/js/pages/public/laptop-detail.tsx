@@ -204,9 +204,6 @@ export default function LaptopDetail({ laptop, related, website }: Props) {
                     </div>
 
                     <div>
-                        {laptop.brand?.name && (
-                            <p className="tc-eyebrow">{laptop.brand.name}</p>
-                        )}
                         <h1 className="mt-2 tc-h1">
                             {laptopDisplayName(laptop)}
                         </h1>
