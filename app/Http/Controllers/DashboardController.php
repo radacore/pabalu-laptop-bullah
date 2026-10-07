@@ -79,10 +79,81 @@ class DashboardController extends Controller
                     ],
                     'recent_laptops' => Laptop::query()->with(['source', 'status', 'brand'])->latest()->limit(5)->get()->toArray(),
                     'recent_services' => Service::query()->with(['customer', 'status'])->latest()->limit(5)->get()->toArray(),
+                    'trend' => $this->trendPayload($terjualId, $finishedIds),
                 ];
             });
         });
 
         return Inertia::render('dashboard', $payload);
+    }
+
+    /**
+     * Tren aktual 8 bulan: unit terjual (sold_at) + servis selesai
+     * (completed_at). Satu range-scan per seri lalu bucket di PHP —
+     * tetap index-friendly tanpa fungsi MONTH()/YEAR() di SQL.
+     *
+     * Wajib array polos (string[] + int[]) agar selamat melewati
+     * database cache store (lihat catatan di index()).
+     *
+     * @param  list<int>  $finishedIds
+     * @return array{months: list<string>, sales: list<int>, service: list<int>}
+     */
+    private function trendPayload(?int $terjualId, array $finishedIds): array
+    {
+        $monthNames = [1 => 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+        $starts = [];
+        for ($i = 7; $i >= 0; $i--) {
+            $starts[] = now()->subMonthsNoOverflow($i)->startOfMonth();
+        }
+
+        $keys = [];
+        $labels = [];
+        foreach ($starts as $start) {
+            $keys[] = $start->format('Y-m');
+            $labels[] = $monthNames[(int) $start->format('n')];
+        }
+
+        $sales = array_fill_keys($keys, 0);
+        if ($terjualId) {
+            $soldDates = Laptop::query()
+                ->where('laptop_status_id', $terjualId)
+                ->whereBetween('sold_at', [$starts[0], now()->endOfMonth()])
+                ->pluck('sold_at');
+
+            foreach ($soldDates as $date) {
+                $key = $date instanceof \DateTimeInterface ? $date->format('Y-m') : substr((string) $date, 0, 7);
+
+                if (isset($sales[$key])) {
+                    $sales[$key]++;
+                }
+            }
+        }
+
+        $services = array_fill_keys($keys, 0);
+        if ($finishedIds !== []) {
+            $doneDates = Service::query()
+                ->whereIn('service_status_id', $finishedIds)
+                ->whereBetween('completed_at', [$starts[0], now()->endOfMonth()])
+                ->pluck('completed_at');
+
+            foreach ($doneDates as $date) {
+                $key = $date instanceof \DateTimeInterface ? $date->format('Y-m') : substr((string) $date, 0, 7);
+
+                if (isset($services[$key])) {
+                    $services[$key]++;
+                }
+            }
+        }
+
+        $ordered = function (array $buckets) use ($keys): array {
+            return array_map(fn (string $key): int => (int) $buckets[$key], $keys);
+        };
+
+        return [
+            'months' => $labels,
+            'sales' => $ordered($sales),
+            'service' => $ordered($services),
+        ];
     }
 }

@@ -31,6 +31,11 @@ interface DashboardPageProps {
     };
     recent_laptops: LaptopRecord[];
     recent_services: Service[];
+    trend: {
+        months: string[];
+        sales: number[];
+        service: number[];
+    };
 }
 
 const compactRupiahFormatter = new Intl.NumberFormat('id-ID', {
@@ -337,6 +342,7 @@ export default function Dashboard({
     stats,
     recent_laptops,
     recent_services,
+    trend,
 }: DashboardPageProps) {
     const activeServices = recent_services.filter((s) =>
         ['selesai', 'siap-diambil', 'sudah-diambil'].includes(
@@ -346,14 +352,11 @@ export default function Dashboard({
             : true,
     );
 
-    const servicesCount = recent_services.length;
-    // Grafik memakai angka dummy yang diskalakan dari jumlah servis —
-    // BUKAN data keuangan nyata. Jangan dibaca sebagai laporan.
-    const sales = [60, 45, 75, 55, 85, 70, 90, 80].map(
-        (v) => v * (1 + servicesCount * 0.02),
-    );
-    const service = [30, 25, 40, 35, 45, 60, 55, 70].map(
-        (v) => v * (1 + servicesCount * 0.02),
+    // Grafik memakai data aktual 8 bulan terakhir dari backend
+    // (unit terjual + servis selesai). Bukan lagi angka dummy.
+    const { months, sales, service } = trend;
+    const hasTrendData = [...sales, ...service].some(
+        (value) => value > 0,
     );
 
     return (
@@ -452,7 +455,7 @@ export default function Dashboard({
                                         Tren Penjualan & Servis
                                     </h3>
                                     <p className="text-xs text-slate-500">
-                                        Ilustrasi tren (belum data aktual)
+                                        8 bulan terakhir · data aktual
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-4 text-xs">
@@ -471,10 +474,23 @@ export default function Dashboard({
                                 </div>
                             </div>
                             <div className="min-h-[260px] flex-1">
-                                <BarChart
-                                    data={{ sales, service }}
-                                    height={260}
-                                />
+                                {hasTrendData ? (
+                                    <BarChart
+                                        data={{ sales, service, months }}
+                                        height={260}
+                                    />
+                                ) : (
+                                    <div className="flex min-h-[260px] flex-col items-center justify-center gap-2 text-center">
+                                        <p className="text-sm font-semibold text-slate-700">
+                                            Belum ada data penjualan & servis
+                                        </p>
+                                        <p className="max-w-xs text-xs text-slate-500">
+                                            Grafik terisi otomatis setelah ada
+                                            unit terjual atau servis selesai
+                                            dalam 8 bulan terakhir.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </section>
                     </Reveal>
