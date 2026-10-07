@@ -166,7 +166,7 @@ test('service part from inventory consumes stock and restores on delete', functi
         'created_by' => $staff->id,
     ]);
 
-    $this->actingAs($staff)->post(route('services.parts.store', $service), [
+    $this->actingAs($admin)->post(route('services.parts.store', $service), [
         'part_name' => $sparepart->name,
         'quantity' => 2,
         'unit_price' => 200000,
@@ -177,7 +177,7 @@ test('service part from inventory consumes stock and restores on delete', functi
 
     $part = $service->parts()->latest()->firstOrFail();
 
-    $this->actingAs($staff)
+    $this->actingAs($admin)
         ->delete(route('services.parts.destroy', [$service, $part]))
         ->assertSessionHasNoErrors();
 
@@ -209,7 +209,7 @@ test('service part rejects quantity exceeding inventory stock', function () {
         'created_by' => $staff->id,
     ]);
 
-    $this->actingAs($staff)
+    $this->actingAs($admin)
         ->from(route('services.show', $service))
         ->post(route('services.parts.store', $service), [
             'part_name' => $sparepart->name,

@@ -7,8 +7,6 @@ use App\Models\LaptopSource;
 use App\Models\LaptopStatus;
 use App\Models\Rental;
 use App\Models\RentalStatus;
-use App\Models\Service;
-use App\Models\ServiceStatus;
 use App\Models\Sparepart;
 use App\Models\User;
 use Database\Seeders\UserSeeder;
@@ -82,76 +80,6 @@ function wave3Rental(int $userId): Rental
         'created_by' => $userId,
     ]);
 }
-
-function wave3ServiceFor(User $technician, User $creator, string $statusSlug = 'diterima'): Service
-{
-    $status = ServiceStatus::query()->firstOrCreate(
-        ['slug' => $statusSlug],
-        ['name' => ucfirst($statusSlug), 'is_active' => true, 'sort_order' => 0],
-    );
-
-    return Service::query()->create([
-        'service_code' => 'SRV-'.now()->format('Ymd').'-'.fake()->unique()->numerify('######'),
-        'customer_id' => wave3Customer()->id,
-        'device_name' => 'Test Device',
-        'complaint' => 'Test complaint',
-        'service_status_id' => $status->id,
-        'technician_id' => $technician->id,
-        'tracking_code' => bin2hex(random_bytes(8)),
-        'payment_status' => 'unpaid',
-        'received_at' => now(),
-        'created_by' => $creator->id,
-    ]);
-}
-
-test('staff cannot upload or delete sparepart photos', function () {
-    $staff = User::factory()->staff()->create();
-    $admin = User::factory()->admin()->create();
-    $sparepart = wave3Sparepart($admin->id);
-
-    $this->actingAs($staff)
-        ->post(route('spareparts.photos.store', $sparepart), [])
-        ->assertForbidden();
-
-    $photo = $sparepart->photos()->create(['file_path' => 'spareparts/x.jpg']);
-
-    $this->actingAs($staff)
-        ->delete(route('spareparts.photos.destroy', [$sparepart, $photo]))
-        ->assertForbidden();
-});
-
-test('staff service index only shows own assigned or created services', function () {
-    $admin = User::factory()->admin()->create();
-    $staffA = User::factory()->staff()->create();
-    $staffB = User::factory()->staff()->create();
-
-    $own = wave3ServiceFor($staffA, $staffA);
-    $other = wave3ServiceFor($staffB, $staffB);
-
-    $response = $this->actingAs($staffA)->get(route('services.index'));
-
-    $response->assertOk();
-    $response->assertInertia(fn ($page) => $page
-        ->component('services/index')
-        ->where('services.data.0.id', $own->id)
-        ->missing('services.data.1')
-    );
-
-    // Admin tetap lihat semua.
-    $this->actingAs($admin)->get(route('services.index'))->assertOk();
-    expect($other->fresh())->not->toBeNull();
-});
-
-test('staff cannot view another technician service detail', function () {
-    $staffA = User::factory()->staff()->create();
-    $staffB = User::factory()->staff()->create();
-
-    $other = wave3ServiceFor($staffB, $staffB);
-
-    $this->actingAs($staffA)
-        ->get(route('services.show', $other))
-        ->assertForbidden();
-});
 
 test('rental paid status requires positive paid amount', function () {
     $admin = User::factory()->admin()->create();
@@ -229,9 +157,9 @@ test('admin cannot deactivate or demote self', function () {
     expect($admin->fresh()->role)->toBe('admin');
 });
 
-test('user seeder assigns admin and staff roles', function () {
+test('user seeder creates only the admin account', function () {
     $this->seed(UserSeeder::class);
 
     expect(User::query()->where('email', 'admin@pabalu.com')->value('role'))->toBe('admin');
-    expect(User::query()->where('email', 'teknisi@pabalu.com')->value('role'))->toBe('staff');
+    expect(User::query()->where('email', 'teknisi@pabalu.com')->exists())->toBeFalse();
 });

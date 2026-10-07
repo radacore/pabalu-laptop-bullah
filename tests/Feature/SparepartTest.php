@@ -4,7 +4,6 @@ use App\Models\Sparepart;
 use App\Models\SparepartType;
 use App\Models\TransactionCategory;
 use App\Models\User;
-use Inertia\Testing\AssertableInertia as Assert;
 
 function sparepartType(string $slug = 'baterai-test', string $name = 'Baterai Test'): SparepartType
 {
@@ -53,17 +52,12 @@ test('guests are redirected to the login page from spareparts index', function (
     $response->assertRedirect(route('login'));
 });
 
-test('staff can visit the spareparts index', function () {
+test('staff is locked out of the spareparts index while dormant', function () {
     $user = User::factory()->create(['role' => 'staff']);
 
     $this->actingAs($user)
         ->get(route('spareparts.index'))
-        ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('spareparts/index')
-            ->has('spareparts')
-            ->has('filters')
-        );
+        ->assertForbidden();
 });
 
 test('sparepart store validates required fields', function () {

@@ -14,11 +14,13 @@ test('customer role is blocked from laptops index', function () {
     $this->actingAs($customer)->get(route('laptops.index'))->assertForbidden();
 });
 
-test('staff role can access dashboard and services', function () {
+test('staff role is fully locked out while dormant', function () {
     $staff = User::factory()->staff()->create();
 
-    $this->actingAs($staff)->get(route('dashboard'))->assertOk();
-    $this->actingAs($staff)->get(route('services.index'))->assertOk();
+    // Role staff dinonaktifkan: semua halaman admin menolak, termasuk
+    // yang dulu boleh diakses teknisi (dashboard + servis).
+    $this->actingAs($staff)->get(route('dashboard'))->assertForbidden();
+    $this->actingAs($staff)->get(route('services.index'))->assertForbidden();
 });
 
 test('staff role is blocked from admin-only laptops', function () {

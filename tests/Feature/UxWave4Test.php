@@ -181,7 +181,7 @@ test('service show exposes inventory spareparts without cost price', function ()
 
     $service = wave4Service($staff->id);
 
-    $response = $this->actingAs($staff)->get(route('services.show', $service));
+    $response = $this->actingAs($admin)->get(route('services.show', $service));
 
     $response->assertOk();
     $response->assertInertia(fn ($page) => $page
@@ -209,7 +209,7 @@ test('service part from inventory via show form consumes stock', function () {
 
     $service = wave4Service($staff->id);
 
-    $this->actingAs($staff)
+    $this->actingAs($admin)
         ->post(route('services.parts.store', $service), [
             'part_name' => $sparepart->name,
             'quantity' => 2,

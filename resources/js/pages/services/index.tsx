@@ -8,13 +8,12 @@ import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatTanggal } from '@/lib/format';
-import type { Customer, ModelUser, Service, ServiceStatus } from '@/types';
+import type { Customer, Service, ServiceStatus } from '@/types';
 
 type ServiceListItem = Service & {
     code?: string | null;
     customer?: Customer | null;
     status?: ServiceStatus | null;
-    technician?: ModelUser | null;
     created_at?: string | null;
     received_date?: string | null;
 };
@@ -31,10 +30,8 @@ interface Props {
     filters: {
         search?: string;
         service_status_id?: string;
-        technician_id?: string;
     };
     statuses: ServiceStatus[];
-    technicians: ModelUser[];
 }
 
 type HalamanComponent = ((props: Props) => ReactNode) & {
@@ -79,18 +76,10 @@ function HapusServiceDialog({
     );
 }
 
-const ServicesIndex: HalamanComponent = ({
-    services,
-    filters,
-    statuses,
-    technicians,
-}) => {
+const ServicesIndex: HalamanComponent = ({ services, filters, statuses }) => {
     const [search, setSearch] = useState(filters.search ?? '');
     const [statusId, setStatusId] = useState(
         filters.service_status_id ?? 'all',
-    );
-    const [technicianId, setTeknisiId] = useState(
-        filters.technician_id ?? 'all',
     );
     const [deleteService, setDeleteService] = useState<Service | null>(null);
 
@@ -100,8 +89,6 @@ const ServicesIndex: HalamanComponent = ({
             {
                 search: search || undefined,
                 service_status_id: statusId === 'all' ? undefined : statusId,
-                technician_id:
-                    technicianId === 'all' ? undefined : technicianId,
             },
             { preserveState: true, replace: true },
         );
@@ -110,7 +97,6 @@ const ServicesIndex: HalamanComponent = ({
     const clearFilters = () => {
         setSearch('');
         setStatusId('all');
-        setTeknisiId('all');
         router.get('/services', {}, { preserveState: true, replace: true });
     };
 
@@ -160,35 +146,6 @@ const ServicesIndex: HalamanComponent = ({
                                 {statuses.map((s) => (
                                     <option key={s.id} value={String(s.id)}>
                                         {s.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500">
-                                <svg
-                                    className="h-4 w-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        d="M19 9l-7 7-7-7"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="relative w-56">
-                            <select
-                                value={technicianId}
-                                onChange={(e) => setTeknisiId(e.target.value)}
-                                className="block w-full appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pr-10 pl-4 text-base text-slate-700 focus:border-brand focus:ring-1 focus:ring-brand focus:outline-none sm:text-sm"
-                            >
-                                <option value="all">Semua teknisi</option>
-                                {technicians.map((t) => (
-                                    <option key={t.id} value={String(t.id)}>
-                                        {t.name}
                                     </option>
                                 ))}
                             </select>
@@ -266,12 +223,6 @@ const ServicesIndex: HalamanComponent = ({
                                                     scope="col"
                                                     className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase"
                                                 >
-                                                    Teknisi
-                                                </th>
-                                                <th
-                                                    scope="col"
-                                                    className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-slate-500 uppercase"
-                                                >
                                                     Status
                                                 </th>
                                                 <th
@@ -321,10 +272,6 @@ const ServicesIndex: HalamanComponent = ({
                                                                 .filter(Boolean)
                                                                 .join(' ')}
                                                         </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600">
-                                                        {service.technician
-                                                            ?.name ?? '-'}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <StatusBadge
@@ -406,7 +353,7 @@ const ServicesIndex: HalamanComponent = ({
                                             href={
                                                 services.current_page <= 1
                                                     ? '#'
-                                                    : `/services?page=${Math.max(1, services.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}${technicianId !== 'all' ? `&technician_id=${technicianId}` : ''}`
+                                                    : `/services?page=${Math.max(1, services.current_page - 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}`
                                             }
                                             className={`relative inline-flex items-center rounded-l-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                                 services.current_page <= 1
@@ -426,7 +373,7 @@ const ServicesIndex: HalamanComponent = ({
                                                 services.current_page >=
                                                 services.last_page
                                                     ? '#'
-                                                    : `/services?page=${Math.min(services.last_page, services.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}${technicianId !== 'all' ? `&technician_id=${technicianId}` : ''}`
+                                                    : `/services?page=${Math.min(services.last_page, services.current_page + 1)}${search ? `&search=${encodeURIComponent(search)}` : ''}${statusId !== 'all' ? `&service_status_id=${statusId}` : ''}`
                                             }
                                             className={`relative inline-flex items-center rounded-r-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium ${
                                                 services.current_page >=

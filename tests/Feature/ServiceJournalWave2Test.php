@@ -167,7 +167,7 @@ test('deleting a service restores inventory stock and cleans its journals', func
     ]);
 
     // Part dari inventori + cost → stok berkurang 2, expense tercatat.
-    $this->actingAs($staff)->post(route('services.parts.store', $service), [
+    $this->actingAs($admin)->post(route('services.parts.store', $service), [
         'part_name' => $sparepart->name,
         'quantity' => 2,
         'unit_price' => 200000,

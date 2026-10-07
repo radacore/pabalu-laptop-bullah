@@ -15,21 +15,17 @@ class UserSeeder extends Seeder
 
         // role/is_active SENGAJA tidak fillable (anti privilege escalation),
         // jadi set via assignment eksplisit per user — bukan via create().
+        // Hanya admin: role staff/teknisi dinonaktifkan (tidak di-seed dan
+        // menu Staff disembunyikan). Kode role staff tetap ada tapi dorman.
         $this->makeUser([
             'name' => 'Admin Pabalu',
             'email' => 'admin@pabalu.com',
             'phone' => '081234567890',
         ], 'admin', $password);
-
-        $this->makeUser([
-            'name' => 'Teknisi Pabalu',
-            'email' => 'teknisi@pabalu.com',
-            'phone' => '081234567891',
-        ], 'staff', $password);
     }
 
     /**
-     * Password awal akun seeder. Urutan prioritas:
+     * Password awal akun admin seeder. Urutan prioritas:
      *
      * 1. Env `SEED_ADMIN_PASSWORD` bila diisi (cara yang disarankan di
      *    production — set di `.env` SEBELUM `php artisan config:cache`).
@@ -49,8 +45,8 @@ class UserSeeder extends Seeder
         if (app()->isProduction()) {
             $generated = Str::random(16);
 
-            $this->command?->warn('SEED_ADMIN_PASSWORD kosong: memakai password acak untuk akun seeder.');
-            $this->command?->info("Password awal admin@pabalu.com / teknisi@pabalu.com: {$generated}");
+            $this->command?->warn('SEED_ADMIN_PASSWORD kosong: memakai password acak untuk akun admin.');
+            $this->command?->info("Password awal admin@pabalu.com: {$generated}");
             $this->command?->warn('Catat password di atas, lalu GANTI setelah login pertama.');
 
             return $generated;

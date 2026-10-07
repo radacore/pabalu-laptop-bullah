@@ -50,7 +50,7 @@ Jika password MySQL lokal berbeda, sesuaikan `DB_USERNAME` dan `DB_PASSWORD` di 
 
 - CRUD servis dengan kode otomatis `SRV-{tanggal}-{random}`.
 - Tracking publik memakai `tracking_code`.
-- Field perangkat: merek, model, kelengkapan, keluhan, kondisi awal, estimasi biaya, teknisi, status servis.
+- Field perangkat: merek, model, kelengkapan, keluhan, kondisi awal, estimasi biaya, dan status servis.
 - Timeline update servis.
 - Sparepart dinamis dengan 2 mode:
   - Pengambilan untuk servis (`used`).
@@ -131,7 +131,6 @@ flowchart TD
     D --> E{Role user}
     B -- Ya --> E
     E -- admin --> F[Dashboard dan semua modul admin]
-    E -- staff --> G[Dashboard, servis, update servis, part, foto laptop]
     E -- customer --> H[Tracking publik sesuai kode servis]
 ```
 
@@ -155,7 +154,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A[Admin buka /services/create] --> B[Pilih pelanggan dan isi data perangkat]
-    B --> C[Isi keluhan, kelengkapan, biaya, teknisi, status]
+    B --> C[Isi keluhan, kelengkapan, biaya, dan status]
     C --> D{Ada sparepart?}
     D -- Ya --> E[Tambah sparepart used atau sold]
     D -- Tidak --> F[Simpan servis]
@@ -229,13 +228,13 @@ erDiagram
 
 ## Role Pengguna
 
-Aplikasi memakai role sederhana:
+Aplikasi memakai satu role:
 
 | Role | Akses |
 | --- | --- |
 | `admin` | Akses penuh ke semua modul admin. |
-| `staff` | Dashboard, servis, service update, service part, dan foto laptop. |
-| `customer` | Tracking publik sesuai kebutuhan aplikasi. |
+
+Role `staff`/teknisi dinonaktifkan: tidak di-seed, menu Staff disembunyikan, dan form servis tidak lagi punya assignment teknisi. Kode role staff (middleware, policy, halaman Staff) tetap ada tapi dorman agar bisa diaktifkan lagi bila dibutuhkan.
 
 Proteksi route menggunakan middleware `EnsureUserHasRole`.
 
@@ -245,7 +244,7 @@ Proteksi route menggunakan middleware `EnsureUserHasRole`.
 
 - PHP `^8.3` (CI menguji 8.3, 8.4, 8.5; lokal memakai 8.4).
 - Laravel `^13.7` — routing, Eloquent ORM, validasi Form Request, policy otorisasi, cache database.
-- Laravel Fortify `^1.37.2` — autentikasi (login, reset password, 2FA opsional). Registrasi publik dimatikan; akun dibuat via seeder atau modul Staff.
+- Laravel Fortify `^1.37.2` — autentikasi (login, reset password, 2FA opsional). Registrasi publik dimatikan; akun admin dibuat via seeder.
 - MySQL/MariaDB untuk development lokal dan production (test memakai SQLite in-memory via `phpunit.xml`).
 - Intervention Image `^4.3` (driver GD) — semua foto upload dikonversi ke WebP (kualitas 82, lebar maks 1920px, EXIF dibuang) lewat `App\Services\WebpImage`.
 - Laravel Wayfinder (`laravel/wayfinder` + `@laravel/vite-plugin-wayfinder`) — helper route dan form Inertia yang type-safe, digenerate otomatis ke `resources/js/{actions,routes,wayfinder}` (gitignored, jangan edit manual).
@@ -364,7 +363,7 @@ Buka:
 /services/create
 ```
 
-Pilih pelanggan, isi informasi perangkat, keluhan, kelengkapan, status, teknisi, dan sparepart jika ada. Sparepart bisa dicatat sebagai pengambilan untuk servis atau penjualan ke customer.
+Pilih pelanggan, isi informasi perangkat, keluhan, kelengkapan, status, dan sparepart jika ada. Sparepart bisa dicatat sebagai pengambilan untuk servis atau penjualan ke customer.
 
 ### 6. Input Transaksi Keuangan
 
@@ -647,7 +646,7 @@ php artisan migrate --force --seed
 
 Password awal akun seeder diatur lewat env `SEED_ADMIN_PASSWORD` (lihat `.env.example`):
 
-- Bila `SEED_ADMIN_PASSWORD` diisi → dipakai sebagai password awal `admin@pabalu.com` (admin) dan `teknisi@pabalu.com` (staff).
+- Bila `SEED_ADMIN_PASSWORD` diisi → dipakai sebagai password awal `admin@pabalu.com`.
 - Bila kosong dan `APP_ENV=production` → seeder membuat password acak 16 karakter dan mencetaknya sekali ke console. Catat, lalu ganti setelah login pertama.
 - Bila kosong dan non-production → default `password` (untuk development dan test).
 
@@ -659,7 +658,7 @@ Butuh data contoh di server staging/dev? Jalankan eksplisit (jangan di produksi)
 php artisan db:seed --class=DemoSeeder --force
 ```
 
-**Segera setelah bisa login: ganti password kedua akun** (atau buat akun baru via menu Staff lalu nonaktifkan akun seeder). Tanpa `SEED_ADMIN_PASSWORD`, semua orang yang membaca repo ini tahu password default non-production.
+**Segera setelah bisa login: ganti password akun admin.** Tanpa `SEED_ADMIN_PASSWORD`, semua orang yang membaca repo ini tahu password default non-production.
 
 ### 6. Konfigurasi Nginx + HTTPS
 

@@ -47,7 +47,7 @@ Route::get('services/track/{trackingCode}', [ServiceController::class, 'track'])
     ->middleware('throttle:10,1')
     ->name('services.track');
 
-Route::middleware(['auth', 'verified', 'role:admin,staff'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Service Management — ownership gating lewat ServicePolicy.

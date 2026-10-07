@@ -89,7 +89,7 @@ test('authenticated users can visit the services index', function () {
             ->has('services')
             ->has('filters')
             ->has('statuses')
-            ->has('technicians')
+            ->missing('technicians')
         );
 });
 

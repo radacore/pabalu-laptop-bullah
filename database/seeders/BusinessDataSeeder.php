@@ -19,12 +19,9 @@ class BusinessDataSeeder extends Seeder
 {
     private int $adminId;
 
-    private int $teknisiId;
-
     public function run(): void
     {
         $this->adminId = User::where('role', 'admin')->first()->id;
-        $this->teknisiId = User::where('role', 'staff')->first()->id;
 
         $this->seedCustomers();
         $this->seedLaptops();
@@ -263,7 +260,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Kipas berisik, thermal paste kering, suhu CPU 95°C saat idle',
                 'estimated_cost' => 350000, 'final_cost' => 450000,
                 'estimated_completion_date' => '2026-06-06', 'service_status_id' => 7,
-                'tracking_code' => 'a1b2c3d4', 'technician_id' => $this->teknisiId, 'payment_status' => 'paid',
+                'tracking_code' => 'a1b2c3d4', 'technician_id' => $this->adminId, 'payment_status' => 'paid',
                 'received_at' => '2026-06-01 10:00:00', 'completed_at' => '2026-06-03 15:00:00',
                 'picked_up_at' => '2026-06-04 09:00:00', 'created_by' => $this->adminId,
             ],
@@ -274,7 +271,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Layar LCD pecah di pojok kiri bawah, touchpad tidak berfungsi',
                 'estimated_cost' => 800000, 'final_cost' => 1200000,
                 'estimated_completion_date' => '2026-06-07', 'service_status_id' => 4,
-                'tracking_code' => 'e5f6g7h8', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'e5f6g7h8', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-02 09:30:00', 'created_by' => $this->adminId,
             ],
             [
@@ -284,7 +281,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Baterai swollen, kapasitas tersisa 15% dari original',
                 'estimated_cost' => 500000,
                 'estimated_completion_date' => '2026-06-08', 'service_status_id' => 5,
-                'tracking_code' => 'i9j0k1l2', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'i9j0k1l2', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-02 14:00:00', 'created_by' => $this->adminId,
             ],
             [
@@ -294,7 +291,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'BSOD error IRQL_NOT_LESS_OR_EQUAL, kemungkinan RAM atau driver',
                 'estimated_cost' => 250000, 'final_cost' => 350000,
                 'estimated_completion_date' => '2026-06-05', 'service_status_id' => 7,
-                'tracking_code' => 'm3n4o5p6', 'technician_id' => $this->teknisiId, 'payment_status' => 'paid',
+                'tracking_code' => 'm3n4o5p6', 'technician_id' => $this->adminId, 'payment_status' => 'paid',
                 'received_at' => '2026-06-01 11:00:00', 'completed_at' => '2026-06-02 16:00:00',
                 'picked_up_at' => '2026-06-04 10:00:00', 'created_by' => $this->adminId,
             ],
@@ -305,7 +302,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Keyboard butterfly, tombol A, S, D, Spasi macet',
                 'estimated_cost' => 1500000,
                 'estimated_completion_date' => '2026-06-10', 'service_status_id' => 1,
-                'tracking_code' => 'q7r8s9t0', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'q7r8s9t0', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-03 08:00:00', 'created_by' => $this->adminId,
             ],
             [
@@ -315,7 +312,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'HDD bad sector, RAM 4GB tidak cukup untuk Windows 11',
                 'estimated_cost' => 700000, 'final_cost' => 950000,
                 'estimated_completion_date' => '2026-06-08', 'service_status_id' => 8,
-                'tracking_code' => 'u1v2w3x4', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'u1v2w3x4', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-01 13:00:00', 'completed_at' => '2026-06-04 11:00:00',
                 'created_by' => $this->adminId,
             ],
@@ -326,7 +323,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Thermal paste kering, fan clogged dengan debu',
                 'estimated_cost' => 300000, 'final_cost' => 300000,
                 'estimated_completion_date' => '2026-06-06', 'service_status_id' => 7,
-                'tracking_code' => 'y5z6a7b8', 'technician_id' => $this->teknisiId, 'payment_status' => 'paid',
+                'tracking_code' => 'y5z6a7b8', 'technician_id' => $this->adminId, 'payment_status' => 'paid',
                 'received_at' => '2026-06-02 10:00:00', 'completed_at' => '2026-06-03 14:00:00',
                 'picked_up_at' => '2026-06-04 08:00:00', 'created_by' => $this->adminId,
             ],
@@ -337,7 +334,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Port USB kendor, kemungkinan solder retak',
                 'estimated_cost' => 200000,
                 'estimated_completion_date' => '2026-06-09', 'service_status_id' => 2,
-                'tracking_code' => 'c9d0e1f2', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'c9d0e1f2', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-03 09:00:00', 'created_by' => $this->adminId,
             ],
             [
@@ -347,7 +344,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Flexible cable LCD rusak, display intermittent',
                 'estimated_cost' => 600000,
                 'estimated_completion_date' => '2026-06-10', 'service_status_id' => 4,
-                'tracking_code' => 'g3h4i5j6', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'g3h4i5j6', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-03 10:30:00', 'created_by' => $this->adminId,
             ],
             [
@@ -357,7 +354,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Baterai swollen, trackpad terangkat, trackpad tidak responsif',
                 'estimated_cost' => 1200000,
                 'estimated_completion_date' => '2026-06-11', 'service_status_id' => 5,
-                'tracking_code' => 'k7l8m9n0', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'k7l8m9n0', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-03 14:00:00', 'created_by' => $this->adminId,
             ],
             [
@@ -367,7 +364,7 @@ class BusinessDataSeeder extends Seeder
                 'initial_condition' => 'Keyboard korosi, kemungkinan korslet di area keyboard',
                 'estimated_cost' => 2000000,
                 'estimated_completion_date' => '2026-06-14', 'service_status_id' => 1,
-                'tracking_code' => 'o1p2q3r4', 'technician_id' => $this->teknisiId, 'payment_status' => 'unpaid',
+                'tracking_code' => 'o1p2q3r4', 'technician_id' => $this->adminId, 'payment_status' => 'unpaid',
                 'received_at' => '2026-06-04 08:30:00', 'created_by' => $this->adminId,
             ],
         ];
@@ -398,7 +395,7 @@ class BusinessDataSeeder extends Seeder
                         'old_status' => 'Diterima',
                         'new_status' => 'Dicek Teknisi',
                         'note' => 'Teknisi sedang mengecek kerusakan.',
-                        'created_by' => $this->teknisiId,
+                        'created_by' => $this->adminId,
                         'created_at' => Carbon::parse($service->received_at)->addHours(2),
                     ]
                 );
@@ -411,7 +408,7 @@ class BusinessDataSeeder extends Seeder
                         'old_status' => 'Dicek Teknisi',
                         'new_status' => 'Dalam Pengerjaan',
                         'note' => 'Memulai perbaikan sesuai diagnosa.',
-                        'created_by' => $this->teknisiId,
+                        'created_by' => $this->adminId,
                         'created_at' => Carbon::parse($service->received_at)->addDay(),
                     ]
                 );
@@ -424,7 +421,7 @@ class BusinessDataSeeder extends Seeder
                         'old_status' => 'Dalam Pengerjaan',
                         'new_status' => 'Selesai',
                         'note' => 'Perbaikan selesai, siap diambil.',
-                        'created_by' => $this->teknisiId,
+                        'created_by' => $this->adminId,
                         'created_at' => Carbon::parse($service->completed_at),
                     ]
                 );

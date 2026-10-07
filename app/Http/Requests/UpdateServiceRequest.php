@@ -24,7 +24,6 @@ class UpdateServiceRequest extends StoreServiceRequest
             'final_cost' => ['nullable', 'numeric', 'min:0'],
             'estimated_completion_date' => ['nullable', 'date'],
             'service_status_id' => ['nullable', 'exists:service_statuses,id'],
-            'technician_id' => ['nullable', 'exists:users,id'],
             'payment_status' => ['nullable', 'in:unpaid,paid'],
             'received_at' => ['nullable', 'date'],
             'completed_at' => ['nullable', 'date'],

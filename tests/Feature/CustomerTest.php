@@ -143,19 +143,15 @@ test('authenticated users can destroy a customer', function () {
     ]);
 });
 
-test('staff cannot enumerate customers via search', function () {
+test('staff cannot reach global search while dormant', function () {
     $staff = User::factory()->create(['role' => 'staff']);
     $customer = createCustomerRecord(['name' => 'UnikCariNama']);
 
-    $response = $this
-        ->actingAs($staff)
-        ->get(route('search', ['q' => 'UnikCariNama']));
+    // Role staff dinonaktifkan: tier search kini admin-only.
+    $this->actingAs($staff)
+        ->get(route('search', ['q' => 'UnikCariNama']))
+        ->assertForbidden();
 
-    $response->assertOk();
-
-    $customers = $response->viewData('page')['props']['customers'] ?? [];
-
-    expect($customers)->toBeEmpty();
     expect($customer->exists())->toBeTrue();
 });
 

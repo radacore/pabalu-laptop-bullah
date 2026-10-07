@@ -7,7 +7,6 @@ use App\Models\LaptopStatus;
 use App\Models\Rental;
 use App\Models\RentalStatus;
 use App\Models\User;
-use Inertia\Testing\AssertableInertia as Assert;
 
 function rentalTestCustomer(): Customer
 {
@@ -74,18 +73,12 @@ test('guests are redirected to the login page from rentals index', function () {
     $response->assertRedirect(route('login'));
 });
 
-test('staff can visit the rentals index', function () {
+test('staff is locked out of the rentals index while dormant', function () {
     $user = User::factory()->create(['role' => 'staff']);
 
     $this->actingAs($user)
         ->get(route('rentals.index'))
-        ->assertOk()
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('rentals/index')
-            ->has('rentals')
-            ->has('filters')
-            ->has('statuses')
-        );
+        ->assertForbidden();
 });
 
 test('rental store validates required fields', function () {

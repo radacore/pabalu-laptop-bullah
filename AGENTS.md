@@ -50,10 +50,10 @@ MySQL database `db_pabalu_laptop` must exist (utf8mb4). `phpunit.xml` overrides 
 Three route tiers in `routes/web.php` (single file, `routes/settings.php` is separate):
 
 1. **Public** — `/`, `/shop`, `/laptops/{laptop}`, `/services/track/{trackingCode}` (throttled `10,1`).
-2. **`auth + verified + role:admin,staff`** — dashboard, services CRUD, service updates/parts, laptop photos, global search.
+2. **`auth + verified + role:admin`** — dashboard, services, rentals, spareparts, foto, global search (dulu `role:admin,staff`; staff dinonaktifkan sehingga tier ini admin-only).
 3. **`auth + verified + role:admin`** — laptops CRUD, customers, financial transactions, master data, website settings.
 
-Roles: `admin` | `staff` | `customer`. Middleware alias `role` → `App\Http\Middleware\EnsureUserHasRole` (registered in `bootstrap/app.php`).
+Roles: `admin` saja (`staff`/teknisi dinonaktifkan — tidak di-seed, menu Staff disembunyikan, tanpa assignment teknisi di servis; kode role staff dorman). Middleware alias `role` → `App\Http\Middleware\EnsureUserHasRole` (registered in `bootstrap/app.php`).
 
 Cookies exempted from encryption: `appearance`, `sidebar_state`.
 

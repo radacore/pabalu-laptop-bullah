@@ -15,7 +15,6 @@ export async function loginAs(page, email, password = 'password') {
 }
 
 export const ADMIN_EMAIL = 'admin@pabalu.com';
-export const STAFF_EMAIL = 'teknisi@pabalu.com';
 
 /**
  * Tandai dokumen untuk membuktikan navigasi Inertia tanpa full reload.

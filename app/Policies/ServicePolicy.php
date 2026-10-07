@@ -21,30 +21,28 @@ class ServicePolicy
 
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, ['admin', 'staff'], true);
+        return $user->role === 'admin';
     }
 
     /**
-     * Staff hanya boleh lihat service yang di-assign ke dia atau yang dia buat.
+     * Hanya admin yang memakai sistem (role staff dinonaktifkan).
      */
     public function view(User $user, Service $service): bool
     {
-        return $service->technician_id === $user->id
-            || $service->created_by === $user->id;
+        return $user->role === 'admin';
     }
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'staff'], true);
+        return $user->role === 'admin';
     }
 
     /**
-     * Staff hanya boleh update service yang di-assign ke dia atau yang dia buat.
+     * Hanya admin yang memakai sistem (role staff dinonaktifkan).
      */
     public function update(User $user, Service $service): bool
     {
-        return $service->technician_id === $user->id
-            || $service->created_by === $user->id;
+        return $user->role === 'admin';
     }
 
     /**

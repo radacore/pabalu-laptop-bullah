@@ -14,7 +14,6 @@ use App\Models\ServiceStatus;
 use App\Models\Sparepart;
 use App\Models\SparepartType;
 use App\Models\TransactionCategory;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,21 +25,12 @@ use Inertia\Response;
 class ServiceController extends Controller
 {
     /**
-     * Display a paginated service listing.
-     *
-     * Staff hanya melihat servis yang di-assign ke dia atau yang dia buat
-     * (konsisten dengan ServicePolicy::view). Admin melihat semua.
+     * Display a paginated service listing (admin only).
      */
     public function index(Request $request): Response
     {
         $services = Service::query()
-            ->with(['customer', 'status', 'technician'])
-            ->when($request->user()?->role !== 'admin', function ($query) use ($request) {
-                $query->where(function ($query) use ($request) {
-                    $query->where('technician_id', $request->user()?->id)
-                        ->orWhere('created_by', $request->user()?->id);
-                });
-            })
+            ->with(['customer', 'status'])
             ->when($request->string('search')->isNotEmpty(), function ($query) use ($request) {
                 $search = $request->string('search')->toString();
 
@@ -59,7 +49,6 @@ class ServiceController extends Controller
             'services' => $services,
             'filters' => $request->only(['search', 'service_status_id']),
             'statuses' => ServiceStatus::query()->orderBy('sort_order')->orderBy('name')->get(),
-            'technicians' => User::query()->where('role', 'staff')->orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -133,7 +122,6 @@ class ServiceController extends Controller
             'service' => $service->load([
                 'customer',
                 'status',
-                'technician',
                 'updates' => fn ($query) => $query->with('creator')->latest('created_at'),
                 'parts.type',
                 'financialTransactions.category',
@@ -191,7 +179,7 @@ class ServiceController extends Controller
     public function edit(Service $service): Response
     {
         return Inertia::render('services/edit', [
-            'service' => $service->load(['customer', 'status', 'technician', 'parts.type']),
+            'service' => $service->load(['customer', 'status', 'parts.type']),
             ...$this->formOptions(),
         ]);
     }
@@ -308,7 +296,6 @@ class ServiceController extends Controller
         return [
             'customers' => Customer::query()->orderBy('name')->get(['id', 'name', 'phone']),
             'statuses' => ServiceStatus::query()->orderBy('sort_order')->orderBy('name')->get(),
-            'technicians' => User::query()->where('role', 'staff')->orderBy('name')->get(['id', 'name']),
             'sparepart_types' => SparepartType::query()->orderBy('sort_order')->orderBy('name')->get(),
             // Inventori aktif untuk dropdown "pakai stok" di form part.
             // Hanya id/nama/stok/harga — tanpa cost_price (modal internal).

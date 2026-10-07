@@ -5,7 +5,7 @@ import type { CustomerMode } from '@/components/shared/customer-picker';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import type { Customer, ServiceStatus, SparepartType, User } from '@/types';
+import type { Customer, ServiceStatus, SparepartType } from '@/types';
 
 type PartItem = {
     tempId: string;
@@ -31,7 +31,6 @@ type ServiceForm = {
     initial_condition: string;
     estimated_cost: string;
     estimated_completion_date: string;
-    technician_id: string;
     service_status_id: string;
     parts: PartItem[];
 };
@@ -39,7 +38,6 @@ type ServiceForm = {
 interface Props {
     customers: Customer[];
     statuses: ServiceStatus[];
-    technicians: User[];
     sparepart_types: SparepartType[];
 }
 
@@ -78,7 +76,6 @@ const selectClass = `${inputClass} admin-select`;
 const ServicesBuat: HalamanComponent = ({
     customers,
     statuses,
-    technicians,
     sparepart_types,
 }) => {
     const form = useForm<ServiceForm>({
@@ -93,7 +90,6 @@ const ServicesBuat: HalamanComponent = ({
         initial_condition: '',
         estimated_cost: '',
         estimated_completion_date: '',
-        technician_id: '',
         service_status_id: '',
         parts: [],
     });
@@ -303,28 +299,6 @@ const ServicesBuat: HalamanComponent = ({
                                 }
                                 className={inputClass}
                             />
-                        </div>
-                        <div>
-                            <label className="mb-1 block text-sm font-medium text-slate-700">
-                                Teknisi
-                            </label>
-                            <select
-                                value={form.data.technician_id || ''}
-                                onChange={(e) =>
-                                    form.setData(
-                                        'technician_id',
-                                        e.target.value,
-                                    )
-                                }
-                                className={selectClass}
-                            >
-                                <option value="">—</option>
-                                {technicians.map((t) => (
-                                    <option key={t.id} value={String(t.id)}>
-                                        {t.name}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
                         <div>
                             <label className="mb-1 block text-sm font-medium text-slate-700">

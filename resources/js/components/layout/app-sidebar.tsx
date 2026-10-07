@@ -6,7 +6,6 @@ import {
     CurrencyDollar,
     Database,
     Globe,
-    IdentificationBadge,
     Laptop,
     Wrench,
     UsersThree,
@@ -35,12 +34,6 @@ const navItems: NavItem[] = [
         title: 'Finance',
         href: '/financial-transactions',
         icon: CurrencyDollar,
-        adminOnly: true,
-    },
-    {
-        title: 'Staff',
-        href: '/staff',
-        icon: IdentificationBadge,
         adminOnly: true,
     },
     {
