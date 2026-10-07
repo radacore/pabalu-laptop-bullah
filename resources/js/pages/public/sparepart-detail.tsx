@@ -155,11 +155,6 @@ export default function SparepartDetail({
 
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
-                            {sparepart.type?.name && (
-                                <p className="tc-eyebrow">
-                                    {sparepart.type.name}
-                                </p>
-                            )}
                             <span
                                 className={`tc-badge ${
                                     sparepart.condition === 'baru'
@@ -181,7 +176,10 @@ export default function SparepartDetail({
                             {formatShortPrice(sparepart.selling_price)}
                         </p>
 
-                        <p className="mt-5 max-w-xl tc-body">
+                        <p
+                            className="mt-5 max-w-xl tc-body"
+                            style={{ whiteSpace: 'pre-line' }}
+                        >
                             {sparepart.description ??
                                 'Sparepart original dan alternatif berkualitas, siap dipasang oleh teknisi kami atau dibawa pulang.'}
                         </p>
