@@ -7,6 +7,7 @@ import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatTanggal } from '@/lib/format';
+import { dashboard } from '@/routes';
 import type { Customer as BaseCustomer, ModelUser } from '@/types';
 
 type Customer = BaseCustomer & {
@@ -410,7 +411,12 @@ const PelanggansIndex: HalamanComponent = ({ customers, filters }) => {
 };
 
 PelanggansIndex.layout = (page: ReactNode) => (
-    <AppLayout breadcrumbs={[{ title: 'Pelanggan', href: '/customers' }]}>
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Pelanggan', href: '/customers' },
+        ]}
+    >
         {page}
     </AppLayout>
 );

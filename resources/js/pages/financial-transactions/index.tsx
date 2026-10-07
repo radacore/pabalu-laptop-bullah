@@ -13,6 +13,7 @@ import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatCurrency, formatTanggal } from '@/lib/format';
+import { dashboard } from '@/routes';
 import { index as financialTransactionsIndex } from '@/routes/financial-transactions';
 import type {
     FinancialTransaction,
@@ -979,7 +980,7 @@ const FinancialTransactionsIndex: HalamanComponent = ({
 FinancialTransactionsIndex.layout = (page: ReactNode) => (
     <AppLayout
         breadcrumbs={[
-            { title: 'Dashboard', href: '/' },
+            { title: 'Dashboard', href: dashboard() },
             { title: 'Keuangan', href: financialTransactionsIndex() },
         ]}
     >

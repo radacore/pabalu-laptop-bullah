@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import { Fragment } from 'react';
+import { toUrl } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
 
 interface BreadcrumbsProps {
@@ -20,7 +21,8 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             <ol className="flex flex-wrap items-center gap-1">
                 {items.map((item, index) => {
                     const isLast = index === items.length - 1;
-                    const key = `${item.title}-${String(item.href)}`;
+                    const href = toUrl(item.href);
+                    const key = `${item.title}-${href}`;
 
                     return (
                         <Fragment key={key}>
@@ -34,7 +36,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                                     </span>
                                 ) : (
                                     <Link
-                                        href={item.href}
+                                        href={href}
                                         className="rounded-md px-1 py-0.5 hover:bg-slate-100 hover:text-slate-900"
                                     >
                                         {item.title}

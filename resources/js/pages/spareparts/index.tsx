@@ -7,6 +7,7 @@ import Reveal from '@/components/shared/reveal';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatCurrency } from '@/lib/format';
+import { dashboard } from '@/routes';
 import type { MasterData, PaginatedResponse, Sparepart } from '@/types';
 
 interface Props {
@@ -406,7 +407,12 @@ function Th({
 }
 
 SparepartsIndex.layout = (page) => (
-    <AppLayout breadcrumbs={[{ title: 'Sparepart', href: '/spareparts' }]}>
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Sparepart', href: '/spareparts' },
+        ]}
+    >
         {page}
     </AppLayout>
 );

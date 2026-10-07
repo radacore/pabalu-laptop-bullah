@@ -8,6 +8,7 @@ import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatTanggal } from '@/lib/format';
+import { dashboard } from '@/routes';
 import type { Customer, Service, ServiceStatus } from '@/types';
 
 type ServiceListItem = Service & {
@@ -404,7 +405,12 @@ const ServicesIndex: HalamanComponent = ({ services, filters, statuses }) => {
 };
 
 ServicesIndex.layout = (page) => (
-    <AppLayout breadcrumbs={[{ title: 'Servis', href: '/services' }]}>
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Servis', href: '/services' },
+        ]}
+    >
         {page}
     </AppLayout>
 );

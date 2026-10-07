@@ -8,6 +8,7 @@ import StatusBadge from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { formatCurrency, formatTanggal } from '@/lib/format';
+import { dashboard } from '@/routes';
 import type { PaginatedResponse, Rental, RentalStatus } from '@/types';
 
 interface Props {
@@ -377,7 +378,12 @@ function Th({
 }
 
 RentalsIndex.layout = (page) => (
-    <AppLayout breadcrumbs={[{ title: 'Penyewaan', href: '/rentals' }]}>
+    <AppLayout
+        breadcrumbs={[
+            { title: 'Dashboard', href: dashboard() },
+            { title: 'Penyewaan', href: '/rentals' },
+        ]}
+    >
         {page}
     </AppLayout>
 );
