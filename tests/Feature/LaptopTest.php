@@ -135,6 +135,26 @@ test('authenticated users can store a laptop', function () {
     ]);
 });
 
+test('laptop can be stored without serial number', function () {
+    $user = User::factory()->create();
+    // Form mengirim '' (jadi null via ConvertEmptyStringsToNull) bila
+    // SN dikosongkan — tidak boleh 500.
+    $payload = validLaptopPayload(['name' => '']);
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('laptops.store'), $payload);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('laptops.index'));
+
+    $this->assertDatabaseHas('laptops', [
+        'sku' => $payload['sku'],
+        'name' => null,
+    ]);
+});
+
 test('laptop update validates required fields', function () {
     $user = User::factory()->create();
     $laptop = createLaptopRecord(['created_by' => $user->id]);
