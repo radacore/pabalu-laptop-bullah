@@ -130,7 +130,7 @@ export default function ShowFinancialTransaction({ transaction }: Props) {
                             />
                             <DetailItem
                                 label="Metode Pembayaran"
-                                value={transaction.paymentMethod?.name ?? '-'}
+                                value={transaction.payment_method?.name ?? '-'}
                             />
                             <DetailItem
                                 label="Tipe Terkait"

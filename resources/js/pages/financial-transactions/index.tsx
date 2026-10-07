@@ -117,7 +117,7 @@ function exportVisibleTransactions(transactions: FinancialTransaction[]) {
         t.transaction_code,
         t.description ?? '',
         t.category?.name ?? '',
-        t.paymentMethod?.name ?? '',
+        t.payment_method?.name ?? '',
         t.type,
         String(Number(t.amount ?? 0)),
     ]);
@@ -135,6 +135,88 @@ function exportVisibleTransactions(transactions: FinancialTransaction[]) {
     link.download = 'financial-transactions.csv';
     link.click();
     URL.revokeObjectURL(url);
+}
+
+function RelatedSourceBadge({
+    transaction,
+}: {
+    transaction: FinancialTransaction;
+}) {
+    const linkClass =
+        'text-sm font-medium text-brand hover:text-brand-dark hover:underline';
+    const empty = <span className="text-sm text-slate-400">—</span>;
+    const related = transaction.related;
+
+    if (!related) {
+        return empty;
+    }
+
+    // Cabang berdasarkan related_type (bukan tebak field) agar sparepart
+    // tidak lagi salah render sebagai laptop.
+    switch (transaction.related_type) {
+        case 'service':
+            return related.service_code ? (
+                <Link
+                    href={`/services/${related.id}`}
+                    className={linkClass}
+                >
+                    Servis {related.service_code}
+                </Link>
+            ) : (
+                empty
+            );
+        case 'laptop':
+            return related.sku || related.name ? (
+                <Link href={`/laptops/${related.id}`} className={linkClass}>
+                    Laptop {related.name ?? related.sku}
+                </Link>
+            ) : (
+                empty
+            );
+        case 'sparepart':
+            return (
+                <Link
+                    href={`/spareparts/${related.id}`}
+                    className={linkClass}
+                >
+                    Sparepart {related.name ?? `#${related.id}`}
+                </Link>
+            );
+        case 'sparepart_sale':
+            return related.sparepart_id ? (
+                <Link
+                    href={`/spareparts/${related.sparepart_id}`}
+                    className={linkClass}
+                >
+                    Penjualan {related.sale_code ?? `#${related.id}`}
+                </Link>
+            ) : (
+                <span className="text-sm text-slate-600">
+                    Penjualan {related.sale_code ?? `#${related.id}`}
+                </span>
+            );
+        case 'rental':
+            return related.rental_code ? (
+                <Link href={`/rentals/${related.id}`} className={linkClass}>
+                    Sewa {related.rental_code}
+                </Link>
+            ) : (
+                empty
+            );
+        case 'service_part':
+            return related.service_id ? (
+                <Link
+                    href={`/services/${related.service_id}`}
+                    className={linkClass}
+                >
+                    Part {related.part_name ?? `#${related.id}`}
+                </Link>
+            ) : (
+                empty
+            );
+        default:
+            return empty;
+    }
 }
 
 function SummaryCard({
@@ -791,43 +873,15 @@ const FinancialTransactionsIndex: HalamanComponent = ({
                                                         </td>
                                                         <td className="px-5 py-3.5 text-sm whitespace-nowrap text-slate-600 sm:px-6">
                                                             {transaction
-                                                                .paymentMethod
+                                                                .payment_method
                                                                 ?.name ?? '—'}
                                                         </td>
                                                         <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
-                                                            {transaction.related
-                                                                ?.service_code ? (
-                                                                <Link
-                                                                    href={`/services/${transaction.related.id}`}
-                                                                    className="text-sm font-medium text-brand hover:text-brand-dark hover:underline"
-                                                                >
-                                                                    Servis{' '}
-                                                                    {
-                                                                        transaction
-                                                                            .related
-                                                                            .service_code
-                                                                    }
-                                                                </Link>
-                                                            ) : transaction
-                                                                  .related
-                                                                  ?.sku ? (
-                                                                <Link
-                                                                    href={`/laptops/${transaction.related.id}`}
-                                                                    className="text-sm font-medium text-brand hover:text-brand-dark hover:underline"
-                                                                >
-                                                                    Laptop{' '}
-                                                                    {transaction
-                                                                        .related
-                                                                        .name ??
-                                                                        transaction
-                                                                            .related
-                                                                            .sku}
-                                                                </Link>
-                                                            ) : (
-                                                                <span className="text-sm text-slate-400">
-                                                                    —
-                                                                </span>
-                                                            )}
+                                                            <RelatedSourceBadge
+                                                                transaction={
+                                                                    transaction
+                                                                }
+                                                            />
                                                         </td>
                                                         <td className="px-5 py-3.5 whitespace-nowrap sm:px-6">
                                                             <span

@@ -240,12 +240,18 @@ export type FinancialTransaction = {
     related_id?: number | null;
     created_by: number;
     category?: TransactionCategory | null;
-    paymentMethod?: PaymentMethod | null;
+    // Catatan: Laravel me-serialisasi key relasi ke snake_case.
+    payment_method?: PaymentMethod | null;
     related?: {
         id: number;
         service_code?: string;
+        sale_code?: string;
+        rental_code?: string;
         sku?: string;
         name?: string;
+        part_name?: string;
+        service_id?: number | null;
+        sparepart_id?: number | null;
         customer?: { name: string } | null;
     } | null;
 };
