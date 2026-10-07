@@ -19,6 +19,13 @@ type ServiceStatus = {
     color?: string;
 };
 
+type StockOption = {
+    id: number;
+    name: string;
+    stock: number;
+    selling_price: number | string;
+};
+
 type PartItem = {
     id?: number | string | null;
     tempId: string;
@@ -54,6 +61,7 @@ interface Props {
     customers: Customer[];
     statuses: ServiceStatus[];
     sparepart_types: SparepartType[];
+    spareparts: StockOption[];
 }
 
 type HalamanComponent = ((props: Props) => ReactNode) & {
@@ -151,6 +159,7 @@ const ServicesEdit: HalamanComponent = ({
     customers,
     statuses,
     sparepart_types,
+    spareparts,
 }) => {
     const form = useForm<ServiceForm>({
         customer_id: String(service.customer_id ?? service.customer?.id ?? ''),
@@ -198,6 +207,28 @@ const ServicesEdit: HalamanComponent = ({
             'parts',
             form.data.parts.map((p) =>
                 p.tempId === tempId ? { ...p, [key]: value } : p,
+            ),
+        );
+    };
+
+    // Pilih item dari stok inventori: nama + harga jual terisi otomatis,
+    // qty dibatasi sisa stok. Dikosongkan = mode manual (tanpa potong stok).
+    const applyStockOption = (tempId: string, stockId: string) => {
+        const option = spareparts.find((s) => String(s.id) === stockId);
+
+        form.setData(
+            'parts',
+            form.data.parts.map((p) =>
+                p.tempId === tempId
+                    ? {
+                          ...p,
+                          sparepart_id: option ? String(option.id) : '',
+                          part_name: option ? option.name : p.part_name,
+                          selling_price: option
+                              ? String(option.selling_price)
+                              : p.selling_price,
+                      }
+                    : p,
             ),
         );
     };
@@ -465,11 +496,18 @@ const ServicesEdit: HalamanComponent = ({
                         </div>
                     ) : (
                         <ul className="space-y-4">
-                            {form.data.parts.map((part, index) => (
-                                <li
-                                    key={part.tempId}
-                                    className="rounded-lg border border-slate-200 bg-slate-50 p-4"
-                                >
+                            {form.data.parts.map((part, index) => {
+                                const selectedStock = spareparts.find(
+                                    (s) =>
+                                        String(s.id) ===
+                                        (part.sparepart_id || ''),
+                                );
+
+                                return (
+                                    <li
+                                        key={part.tempId}
+                                        className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                                    >
                                     <div className="mb-3 flex items-center justify-between">
                                         <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
                                             Item #{index + 1}
@@ -523,27 +561,43 @@ const ServicesEdit: HalamanComponent = ({
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                        <div>
+                                        <div className="md:col-span-2">
                                             <label className="mb-1 block text-xs font-medium text-slate-600">
-                                                Stok Inventori (opsional)
+                                                Ambil dari Stok (opsional)
                                             </label>
-                                            <input
-                                                type="text"
-                                                value={part.sparepart_id}
+                                            <select
+                                                value={part.sparepart_id || ''}
                                                 onChange={(e) =>
-                                                    updatePart(
+                                                    applyStockOption(
                                                         part.tempId,
-                                                        'sparepart_id',
-                                                        e.target.value.replace(
-                                                            /[^0-9]/g,
-                                                            '',
-                                                        ),
+                                                        e.target.value,
                                                     )
                                                 }
-                                                placeholder="ID stok, kosongkan bila manual"
-                                                inputMode="numeric"
-                                                className={inputClass}
-                                            />
+                                                className={selectClass}
+                                            >
+                                                <option value="">
+                                                    — Manual (tanpa potong
+                                                    stok)
+                                                </option>
+                                                {spareparts.map((s) => (
+                                                    <option
+                                                        key={s.id}
+                                                        value={String(s.id)}
+                                                    >
+                                                        {s.name} (sisa{' '}
+                                                        {s.stock})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {selectedStock && (
+                                                <p className="mt-1 text-xs text-slate-500">
+                                                    Stok terhubung: qty
+                                                    maksimal{' '}
+                                                    {selectedStock.stock}.
+                                                    Stok berkurang otomatis
+                                                    saat servis disimpan.
+                                                </p>
+                                            )}
                                             <FieldError
                                                 message={
                                                     form.errors[
@@ -611,6 +665,11 @@ const ServicesEdit: HalamanComponent = ({
                                             <input
                                                 type="number"
                                                 min={1}
+                                                max={
+                                                    selectedStock
+                                                        ? selectedStock.stock
+                                                        : undefined
+                                                }
                                                 value={part.quantity}
                                                 onChange={(e) =>
                                                     updatePart(
@@ -694,8 +753,9 @@ const ServicesEdit: HalamanComponent = ({
                                             />
                                         </div>
                                     </div>
-                                </li>
-                            ))}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
                 </div>
