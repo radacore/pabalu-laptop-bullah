@@ -69,14 +69,17 @@ class SparepartController extends Controller
         $data['sku'] = $data['sku'] ?? $this->generateSku();
         $data['created_by'] = Auth::id();
 
-        DB::transaction(function () use ($data): void {
+        $sparepart = DB::transaction(function () use ($data): Sparepart {
             $sparepart = Sparepart::query()->create($data);
             $this->autoCreatePurchaseExpense($sparepart);
+
+            return $sparepart;
         });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Sparepart berhasil ditambahkan.']);
 
-        return to_route('spareparts.index');
+        // Arahkan ke Detail (bukan index) agar upload foto tinggal 1 klik.
+        return to_route('spareparts.show', $sparepart);
     }
 
     /**

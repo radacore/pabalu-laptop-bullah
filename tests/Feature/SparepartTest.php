@@ -98,11 +98,11 @@ test('authenticated users can store a sparepart with auto slug and purchase expe
         ->actingAs($user)
         ->post(route('spareparts.store'), $payload);
 
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('spareparts.index'));
+    $response->assertSessionHasNoErrors();
 
     $sparepart = Sparepart::query()->where('name', $payload['name'])->firstOrFail();
+
+    $response->assertRedirect(route('spareparts.show', $sparepart));
 
     expect($sparepart->slug)->not->toBeEmpty();
     expect($sparepart->sku)->toStartWith('SPR-');
