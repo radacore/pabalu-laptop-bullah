@@ -270,7 +270,9 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                     description="Foto akan dihapus permanen dari laptop ini."
                 />
 
-                {(laptop.description || laptop.internal_note) && (
+                {(laptop.description ||
+                    laptop.specification?.other_specifications ||
+                    laptop.internal_note) && (
                     <section className="grid gap-4 lg:grid-cols-2">
                         {laptop.description && (
                             <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
@@ -280,6 +282,21 @@ function LaptopShow({ laptop }: LaptopShowHalamanProps) {
                                 <CardContent>
                                     <p className="text-muted-foreground text-sm leading-6 whitespace-pre-wrap">
                                         {laptop.description}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        )}
+                        {laptop.specification?.other_specifications && (
+                            <Card className="border-sidebar-border/70 dark:border-sidebar-border shadow-sm">
+                                <CardHeader>
+                                    <CardTitle>Spesifikasi</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-muted-foreground text-sm leading-6 whitespace-pre-wrap">
+                                        {
+                                            laptop.specification
+                                                .other_specifications
+                                        }
                                     </p>
                                 </CardContent>
                             </Card>
