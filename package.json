@@ -35,7 +35,7 @@
         "@inertiajs/vite": "^3.0.0",
         "@phosphor-icons/react": "^2.1.10",
         "@radix-ui/react-select": "^2.1.6",
-        "@tailwindcss/vite": "^4.1.11",
+        "@tailwindcss/vite": "^4.3.3",
         "@types/react": "^19.2.0",
         "@types/react-dom": "^19.2.0",
         "@vitejs/plugin-react": "^5.2.0",
